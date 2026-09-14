@@ -50,22 +50,15 @@ function Window({
         windowElement.style.animation = ''
     }, [maximized])
 
-    const handleResizeStart = (
-        event,
-        direction,
-    ) => {
-        if (
-            maximized ||
-            event.button !== 0
-        ) {
+    const handleResizeStart = (event, direction) => {
+        if (maximized || event.button !== 0) {
             return
         }
 
         event.preventDefault()
         event.stopPropagation()
 
-        const windowElement =
-            windowRef.current
+        const windowElement = windowRef.current
 
         if (!windowElement) {
             return
@@ -73,11 +66,15 @@ function Window({
 
         onFocus?.()
 
-        const rect =
-            windowElement.getBoundingClientRect()
+        const rect = windowElement.getBoundingClientRect()
 
         const startX = event.clientX
         const startY = event.clientY
+
+        const startLeft = rect.left
+        const startTop = rect.top
+        const startRight = rect.right
+        const startBottom = rect.bottom
 
         const startWidth = rect.width
         const startHeight = rect.height
@@ -85,6 +82,8 @@ function Window({
         const minWidth = 420
         const minHeight = 280
 
+        let currentX = startLeft
+        let currentY = startTop
         let currentWidth = startWidth
         let currentHeight = startHeight
 
@@ -94,47 +93,75 @@ function Window({
             'window-resizing',
         )
 
-        const handlePointerMove = (
-            moveEvent,
-        ) => {
+        const handlePointerMove = (moveEvent) => {
             const deltaX =
                 moveEvent.clientX - startX
 
             const deltaY =
                 moveEvent.clientY - startY
 
-            if (
-                direction.includes('right')
-            ) {
+            // LADO DIREITO
+            if (direction.includes('right')) {
                 currentWidth = Math.min(
                     Math.max(
                         startWidth + deltaX,
                         minWidth,
                     ),
-                    window.innerWidth,
+                    window.innerWidth - startLeft,
                 )
             }
 
-            if (
-                direction.includes('bottom')
-            ) {
+            // LADO ESQUERDO
+            if (direction.includes('left')) {
+                currentWidth = Math.min(
+                    Math.max(
+                        startWidth - deltaX,
+                        minWidth,
+                    ),
+                    startRight,
+                )
+
+                currentX =
+                    startRight - currentWidth
+            }
+
+            // PARTE INFERIOR
+            if (direction.includes('bottom')) {
                 currentHeight = Math.min(
                     Math.max(
                         startHeight + deltaY,
                         minHeight,
                     ),
-                    window.innerHeight,
+                    window.innerHeight - startTop,
                 )
             }
 
-            if (animationFrame) {
-                cancelAnimationFrame(
-                    animationFrame,
+            // PARTE SUPERIOR
+            if (direction.includes('top')) {
+                currentHeight = Math.min(
+                    Math.max(
+                        startHeight - deltaY,
+                        minHeight,
+                    ),
+                    startBottom,
                 )
+
+                currentY =
+                    startBottom - currentHeight
+            }
+
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame)
             }
 
             animationFrame =
                 requestAnimationFrame(() => {
+                    windowElement.style.left = '0px'
+                    windowElement.style.top = '0px'
+
+                    windowElement.style.translate =
+                        `${currentX}px ${currentY}px`
+
                     windowElement.style.width =
                         `${currentWidth}px`
 
@@ -145,9 +172,7 @@ function Window({
 
         const finishResize = () => {
             if (animationFrame) {
-                cancelAnimationFrame(
-                    animationFrame,
-                )
+                cancelAnimationFrame(animationFrame)
             }
 
             windowElement.classList.remove(
@@ -157,6 +182,11 @@ function Window({
             onSizeChange?.({
                 width: currentWidth,
                 height: currentHeight,
+            })
+
+            onPositionChange?.({
+                x: currentX,
+                y: currentY,
             })
 
             window.removeEventListener(
@@ -591,31 +621,69 @@ function Window({
             </div>
 
             <div
-                className="resize-handle resize-right"
+                className="resize-handle resize-top"
                 onPointerDown={(event) =>
-                    handleResizeStart(
-                        event,
-                        'right',
-                    )
+                    handleResizeStart(event, 'top')
                 }
             />
 
             <div
                 className="resize-handle resize-bottom"
                 onPointerDown={(event) =>
+                    handleResizeStart(event, 'bottom')
+                }
+            />
+
+            <div
+                className="resize-handle resize-left"
+                onPointerDown={(event) =>
+                    handleResizeStart(event, 'left')
+                }
+            />
+
+            <div
+                className="resize-handle resize-right"
+                onPointerDown={(event) =>
+                    handleResizeStart(event, 'right')
+                }
+            />
+
+            <div
+                className="resize-handle resize-top-left"
+                onPointerDown={(event) =>
                     handleResizeStart(
                         event,
-                        'bottom',
+                        'top-left',
                     )
                 }
             />
 
             <div
-                className="resize-handle resize-corner"
+                className="resize-handle resize-top-right"
                 onPointerDown={(event) =>
                     handleResizeStart(
                         event,
-                        'right-bottom',
+                        'top-right',
+                    )
+                }
+            />
+
+            <div
+                className="resize-handle resize-bottom-left"
+                onPointerDown={(event) =>
+                    handleResizeStart(
+                        event,
+                        'bottom-left',
+                    )
+                }
+            />
+
+            <div
+                className="resize-handle resize-bottom-right"
+                onPointerDown={(event) =>
+                    handleResizeStart(
+                        event,
+                        'bottom-right',
                     )
                 }
             />

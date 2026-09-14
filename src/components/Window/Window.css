@@ -238,34 +238,113 @@
     z-index: 20;
 }
 
-.resize-right {
-    top: 0;
-    right: 0;
+/* =========================
+   REDIMENSIONAMENTO
+========================= */
 
-    width: 6px;
-    height: 100%;
-
-    cursor: ew-resize;
+.resize-handle {
+    position: absolute;
+    z-index: 20;
 }
 
-.resize-bottom {
-    bottom: 0;
-    left: 0;
+/* CIMA */
 
-    width: 100%;
+.resize-top {
+    top: 0;
+    left: 8px;
+
+    width: calc(100% - 16px);
     height: 6px;
 
     cursor: ns-resize;
 }
 
-.resize-corner {
+/* BAIXO */
+
+.resize-bottom {
+    bottom: 0;
+    left: 8px;
+
+    width: calc(100% - 16px);
+    height: 6px;
+
+    cursor: ns-resize;
+}
+
+/* ESQUERDA */
+
+.resize-left {
+    top: 8px;
+    left: 0;
+
+    width: 6px;
+    height: calc(100% - 16px);
+
+    cursor: ew-resize;
+}
+
+/* DIREITA */
+
+.resize-right {
+    top: 8px;
+    right: 0;
+
+    width: 6px;
+    height: calc(100% - 16px);
+
+    cursor: ew-resize;
+}
+
+/* CANTO SUPERIOR ESQUERDO */
+
+.resize-top-left {
+    top: 0;
+    left: 0;
+
+    width: 12px;
+    height: 12px;
+
+    cursor: nwse-resize;
+}
+
+/* CANTO SUPERIOR DIREITO */
+
+.resize-top-right {
+    top: 0;
+    right: 0;
+
+    width: 12px;
+    height: 12px;
+
+    cursor: nesw-resize;
+}
+
+/* CANTO INFERIOR ESQUERDO */
+
+.resize-bottom-left {
+    bottom: 0;
+    left: 0;
+
+    width: 12px;
+    height: 12px;
+
+    cursor: nesw-resize;
+}
+
+/* CANTO INFERIOR DIREITO */
+
+.resize-bottom-right {
     right: 0;
     bottom: 0;
 
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
 
     cursor: nwse-resize;
+}
+
+.window-maximized .resize-handle {
+    display: none;
 }
 
 .window-maximized .resize-handle {
