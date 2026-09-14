@@ -5,6 +5,23 @@ import Desktop from './components/Desktop/Desktop'
 function App() {
   const [loading, setLoading] = useState(true)
 
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('theme')
+
+    if (savedTheme) {
+      return savedTheme
+    }
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light'
+  })
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
   useEffect(() => {
     const startTime = Date.now()
     const minimumTime = 1200
@@ -29,7 +46,20 @@ function App() {
     }
   }, [])
 
-  return loading ? <BootScreen /> : <Desktop />
+  const toggleTheme = () => {
+    setTheme((currentTheme) =>
+      currentTheme === 'dark' ? 'light' : 'dark',
+    )
+  }
+
+  return loading ? (
+    <BootScreen />
+  ) : (
+    <Desktop
+      theme={theme}
+      toggleTheme={toggleTheme}
+    />
+  )
 }
 
 export default App

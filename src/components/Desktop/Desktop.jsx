@@ -10,7 +10,7 @@ import {
     TerminalSquare,
 } from 'lucide-react'
 
-function Desktop() {
+function Desktop({ theme, toggleTheme }) {
     const shortcuts = [
         {
             name: 'Sobre mim',
@@ -58,7 +58,10 @@ function Desktop() {
                 ))}
             </section>
 
-            <Taskbar />
+            <Taskbar
+                theme={theme}
+                toggleTheme={toggleTheme}
+            />
         </main>
     )
 }

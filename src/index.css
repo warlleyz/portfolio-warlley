@@ -14,3 +14,35 @@ body,
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
+
+:root {
+  --text-primary: #0f172a;
+  --text-secondary: rgba(15, 23, 42, 0.7);
+
+  --glass-background: rgba(255, 255, 255, 0.48);
+  --glass-border: rgba(255, 255, 255, 0.65);
+
+  --hover-background: rgba(255, 255, 255, 0.45);
+
+  --wallpaper-start: #eaf2ff;
+  --wallpaper-middle: #dbeafe;
+  --wallpaper-end: #c7d2fe;
+
+  --wallpaper-glow: rgba(37, 99, 235, 0.18);
+}
+
+[data-theme='dark'] {
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.75);
+
+  --glass-background: rgba(15, 23, 42, 0.58);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  --hover-background: rgba(255, 255, 255, 0.07);
+
+  --wallpaper-start: #0b1220;
+  --wallpaper-middle: #111827;
+  --wallpaper-end: #172554;
+
+  --wallpaper-glow: rgba(37, 99, 235, 0.12);
+}

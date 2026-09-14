@@ -15,8 +15,8 @@
 
     border-radius: 18px;
 
-    background: rgba(15, 23, 42, 0.58);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--glass-background);
+    border: 1px solid var(--glass-border);
 
     backdrop-filter: blur(18px);
 
@@ -47,7 +47,7 @@
     border-radius: 10px;
 
     background: transparent;
-    color: white;
+    color: var(--text-primary);
 
     cursor: pointer;
 
@@ -57,7 +57,7 @@
 }
 
 .theme-button:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--hover-background);
 }
 
 .theme-button:active {
@@ -75,5 +75,5 @@
     font-size: 12px;
     line-height: 1.35;
 
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-secondary);
 }

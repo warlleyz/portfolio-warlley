@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react'
 import { Moon, Sun } from 'lucide-react'
 import './Taskbar.css'
 
-function Taskbar() {
+function Taskbar({ theme, toggleTheme }) {
     const [dateTime, setDateTime] = useState(new Date())
-    const [darkMode, setDarkMode] = useState(true)
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -13,10 +12,6 @@ function Taskbar() {
 
         return () => clearInterval(interval)
     }, [])
-
-    const toggleTheme = () => {
-        setDarkMode((previous) => !previous)
-    }
 
     const time = dateTime.toLocaleTimeString('pt-BR', {
         hour: '2-digit',
@@ -40,7 +35,7 @@ function Taskbar() {
                     onClick={toggleTheme}
                     aria-label="Alterar tema"
                 >
-                    {darkMode ? (
+                    {theme === 'dark' ? (
                         <Sun size={20} strokeWidth={1.8} />
                     ) : (
                         <Moon size={20} strokeWidth={1.8} />
