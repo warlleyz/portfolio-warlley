@@ -13,9 +13,17 @@ function Window({
     onMinimize,
     onMaximize,
     maximized = false,
+    minimizing = false,
+    closing = false,
 }) {
     return (
-        <div className={`window ${maximized ? 'window-maximized' : ''}`}>
+        <div
+            className={`window
+              ${maximized ? 'window-maximized' : ''}
+              ${minimizing ? 'window-minimizing' : ''}
+              ${closing ? 'window-closing' : ''}
+            `}
+        >
             <div className="window-header">
                 <span className="window-title">{title}</span>
 

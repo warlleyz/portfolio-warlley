@@ -16,9 +16,42 @@ function Desktop({ theme, toggleTheme }) {
     const [testWindowOpen, setTestWindowOpen] = useState(true)
     const [testWindowMaximized, setTestWindowMaximized] = useState(false)
     const [testWindowMinimized, setTestWindowMinimized] = useState(false)
-    const toggleTestWindow = () => {
-        setTestWindowMinimized((previous) => !previous)
+    const [testWindowMinimizing, setTestWindowMinimizing] = useState(false)
+    const [testWindowClosing, setTestWindowClosing] = useState(false)
+
+    const minimizeTestWindow = () => {
+        setTestWindowMinimizing(true)
+
+        setTimeout(() => {
+            setTestWindowMinimized(true)
+            setTestWindowMinimizing(false)
+        }, 200)
     }
+
+    const restoreTestWindow = () => {
+        setTestWindowMinimized(false)
+    }
+
+    const toggleTestWindow = () => {
+        if (testWindowMinimized) {
+            restoreTestWindow()
+        } else {
+            minimizeTestWindow()
+        }
+    }
+
+    const closeTestWindow = () => {
+        setTestWindowClosing(true)
+
+        setTimeout(() => {
+            setTestWindowOpen(false)
+            setTestWindowMinimized(false)
+            setTestWindowMaximized(false)
+            setTestWindowMinimizing(false)
+            setTestWindowClosing(false)
+        }, 200)
+    }
+
     const shortcuts = [
         {
             name: 'Sobre mim',
@@ -76,11 +109,10 @@ function Desktop({ theme, toggleTheme }) {
                 <Window
                     title="Teste"
                     maximized={testWindowMaximized}
-                    onClose={() => {
-                        setTestWindowOpen(false)
-                        setTestWindowMinimized(false)
-                    }}
-                    onMinimize={() => setTestWindowMinimized(true)}
+                    minimizing={testWindowMinimizing}
+                    closing={testWindowClosing}
+                    onClose={closeTestWindow}
+                    onMinimize={minimizeTestWindow}
                     onMaximize={() =>
                         setTestWindowMaximized((previous) => !previous)
                     }
