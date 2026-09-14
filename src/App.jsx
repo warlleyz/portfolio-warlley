@@ -1,9 +1,7 @@
+import BootScreen from './components/BootScreen/BootScreen'
+
 function App() {
-  return (
-    <div>
-      <h1>Portfolio Warlley</h1>
-    </div>
-  )
+  return <BootScreen />
 }
 
 export default App
