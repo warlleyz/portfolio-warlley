@@ -1,5 +1,6 @@
 .taskbar {
     position: absolute;
+
     left: 50%;
     bottom: 18px;
     transform: translateX(-50%);
@@ -7,9 +8,9 @@
     width: 68%;
     height: 58px;
 
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
 
     padding: 0 14px;
 
@@ -76,4 +77,68 @@
     line-height: 1.35;
 
     color: var(--text-secondary);
+}
+
+.taskbar-left {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.taskbar-apps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+}
+
+.taskbar-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.taskbar-app {
+    position: relative;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 11px;
+
+    background: transparent;
+    color: var(--text-primary);
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease;
+}
+
+.taskbar-app:hover {
+    background: var(--hover-background);
+}
+
+.taskbar-app:active {
+    transform: scale(0.94);
+}
+
+.taskbar-app-active::after {
+    content: '';
+
+    position: absolute;
+    bottom: 3px;
+
+    width: 14px;
+    height: 2px;
+
+    border-radius: 99px;
+
+    background: #3b82f6;
 }

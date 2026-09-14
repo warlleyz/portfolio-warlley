@@ -1,5 +1,7 @@
 import './Desktop.css'
 import Taskbar from '../Taskbar/Taskbar'
+import Window from '../Window/Window'
+import { useState } from 'react'
 
 import {
     UserRound,
@@ -11,6 +13,12 @@ import {
 } from 'lucide-react'
 
 function Desktop({ theme, toggleTheme }) {
+    const [testWindowOpen, setTestWindowOpen] = useState(true)
+    const [testWindowMaximized, setTestWindowMaximized] = useState(false)
+    const [testWindowMinimized, setTestWindowMinimized] = useState(false)
+    const toggleTestWindow = () => {
+        setTestWindowMinimized((previous) => !previous)
+    }
     const shortcuts = [
         {
             name: 'Sobre mim',
@@ -46,6 +54,12 @@ function Desktop({ theme, toggleTheme }) {
                         key={shortcut.name}
                         className="shortcut"
                         type="button"
+                        onClick={() => {
+                            if (shortcut.name === 'Sobre mim') {
+                                setTestWindowOpen(true)
+                                setTestWindowMinimized(false)
+                            }
+                        }}
                     >
                         <span className="shortcut-icon">
                             {shortcut.icon}
@@ -58,9 +72,29 @@ function Desktop({ theme, toggleTheme }) {
                 ))}
             </section>
 
+            {testWindowOpen && !testWindowMinimized && (
+                <Window
+                    title="Teste"
+                    maximized={testWindowMaximized}
+                    onClose={() => {
+                        setTestWindowOpen(false)
+                        setTestWindowMinimized(false)
+                    }}
+                    onMinimize={() => setTestWindowMinimized(true)}
+                    onMaximize={() =>
+                        setTestWindowMaximized((previous) => !previous)
+                    }
+                >
+                    <p>Minha primeira janela.</p>
+                </Window>
+            )}
+
             <Taskbar
                 theme={theme}
                 toggleTheme={toggleTheme}
+                testWindowOpen={testWindowOpen}
+                testWindowMinimized={testWindowMinimized}
+                toggleTestWindow={toggleTestWindow}
             />
         </main>
     )
