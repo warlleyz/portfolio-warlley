@@ -81,6 +81,7 @@ function Desktop({ theme, toggleTheme }) {
                 closing: false,
                 maximized: previous[appId]?.maximized ?? false,
                 position: previous[appId]?.position ?? null,
+                size: previous[appId]?.size ?? null,
                 zIndex: nextZIndex,
             },
         }))
@@ -149,6 +150,16 @@ function Desktop({ theme, toggleTheme }) {
         }))
     }
 
+    const resizeApp = (appId, size) => {
+        setWindows((previous) => ({
+            ...previous,
+            [appId]: {
+                ...previous[appId],
+                size,
+            },
+        }))
+    }
+
     const closeApp = (appId) => {
         setWindows((previous) => ({
             ...previous,
@@ -213,6 +224,10 @@ function Desktop({ theme, toggleTheme }) {
                         closing={windowState.closing}
                         position={windowState.position}
                         zIndex={windowState.zIndex}
+                        size={windowState.size}
+                        onSizeChange={(size) =>
+                            resizeApp(app.id, size)
+                        }
                         onFocus={() => focusApp(app.id)}
                         onPositionChange={(position) =>
                             moveApp(app.id, position)

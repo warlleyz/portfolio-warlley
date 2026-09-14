@@ -18,10 +18,118 @@ function Window({
     closing = false,
     position,
     onPositionChange,
+    size,
+    onSizeChange,
     zIndex = 10,
     onFocus,
 }) {
     const windowRef = useRef(null)
+
+    const handleResizeStart = (event, direction) => {
+        if (maximized || event.button !== 0) {
+            return
+        }
+
+        event.preventDefault()
+        event.stopPropagation()
+
+        const windowElement = windowRef.current
+
+        if (!windowElement) {
+            return
+        }
+
+        onFocus?.()
+
+        const rect = windowElement.getBoundingClientRect()
+
+        const startX = event.clientX
+        const startY = event.clientY
+
+        const startWidth = rect.width
+        const startHeight = rect.height
+
+        const minWidth = 420
+        const minHeight = 280
+
+        let currentWidth = startWidth
+        let currentHeight = startHeight
+
+        let animationFrame = null
+
+        windowElement.classList.add('window-resizing')
+
+        const handlePointerMove = (moveEvent) => {
+            const deltaX = moveEvent.clientX - startX
+            const deltaY = moveEvent.clientY - startY
+
+            if (direction.includes('right')) {
+                currentWidth = Math.min(
+                    Math.max(startWidth + deltaX, minWidth),
+                    window.innerWidth,
+                )
+            }
+
+            if (direction.includes('bottom')) {
+                currentHeight = Math.min(
+                    Math.max(startHeight + deltaY, minHeight),
+                    window.innerHeight,
+                )
+            }
+
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame)
+            }
+
+            animationFrame = requestAnimationFrame(() => {
+                windowElement.style.width = `${currentWidth}px`
+                windowElement.style.height = `${currentHeight}px`
+            })
+        }
+
+        const finishResize = () => {
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame)
+            }
+
+            windowElement.classList.remove('window-resizing')
+
+            onSizeChange?.({
+                width: currentWidth,
+                height: currentHeight,
+            })
+
+            window.removeEventListener(
+                'pointermove',
+                handlePointerMove,
+            )
+
+            window.removeEventListener(
+                'pointerup',
+                finishResize,
+            )
+
+            window.removeEventListener(
+                'pointercancel',
+                finishResize,
+            )
+        }
+
+        window.addEventListener(
+            'pointermove',
+            handlePointerMove,
+        )
+
+        window.addEventListener(
+            'pointerup',
+            finishResize,
+        )
+
+        window.addEventListener(
+            'pointercancel',
+            finishResize,
+        )
+    }
 
     const handleDragStart = (event) => {
         if (maximized || event.button !== 0) {
@@ -124,11 +232,19 @@ function Window({
       `}
             style={{
                 zIndex,
+
                 ...(!maximized && position
                     ? {
                         left: '0px',
                         top: '0px',
                         translate: `${position.x}px ${position.y}px`,
+                    }
+                    : {}),
+
+                ...(!maximized && size
+                    ? {
+                        width: `${size.width}px`,
+                        height: `${size.height}px`,
                     }
                     : {}),
             }}
@@ -181,6 +297,27 @@ function Window({
             <div className="window-content">
                 {children}
             </div>
+
+            <div
+                className="resize-handle resize-right"
+                onPointerDown={(event) =>
+                    handleResizeStart(event, 'right')
+                }
+            />
+
+            <div
+                className="resize-handle resize-bottom"
+                onPointerDown={(event) =>
+                    handleResizeStart(event, 'bottom')
+                }
+            />
+
+            <div
+                className="resize-handle resize-corner"
+                onPointerDown={(event) =>
+                    handleResizeStart(event, 'right-bottom')
+                }
+            />
         </div>
     )
 }
