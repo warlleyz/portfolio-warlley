@@ -23,27 +23,62 @@
 
 .shortcut {
     width: 82px;
-    min-height: 72px;
+    min-height: 82px;
 
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 7px;
 
-    text-align: center;
-    font-size: 13px;
-
+    border: 1px solid transparent;
     border-radius: 12px;
 
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-
-    backdrop-filter: blur(8px);
+    background: transparent;
+    color: inherit;
 
     cursor: pointer;
 
     transition:
         background 0.2s ease,
+        border-color 0.2s ease,
         transform 0.2s ease;
+}
+
+.shortcut:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+}
+
+.shortcut:focus {
+    outline: none;
+}
+
+.shortcut:active {
+    transform: scale(0.96);
+}
+
+.shortcut-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 46px;
+    height: 46px;
+
+    border-radius: 13px;
+
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(8px);
+}
+
+.shortcut-name {
+    font-size: 12px;
+    line-height: 1.2;
+    text-align: center;
 }
 
 .shortcut:hover {
