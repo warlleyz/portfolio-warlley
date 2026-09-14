@@ -1,0 +1,127 @@
+.project-demo {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* === AVISO === */
+.project-demo-notice {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    padding: 12px 14px;
+
+    flex-shrink: 0;
+
+    border: 1px solid rgba(59, 130, 246, 0.16);
+    border-radius: 12px;
+
+    background: rgba(59, 130, 246, 0.06);
+}
+
+.project-demo-notice-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.project-demo-badge {
+    padding: 5px 8px;
+
+    flex-shrink: 0;
+
+    border-radius: 7px;
+
+    background: rgba(59, 130, 246, 0.14);
+
+    font-size: 10px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+
+    color: #3b82f6;
+}
+
+.project-demo-notice strong {
+    display: block;
+
+    margin-bottom: 2px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.project-demo-notice p {
+    margin: 0;
+
+    font-size: 11px;
+    line-height: 1.5;
+
+    color: var(--text-secondary);
+}
+
+/* === GITHUB === */
+.project-demo-github {
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    padding: 0 12px;
+
+    flex-shrink: 0;
+
+    border: 1px solid var(--glass-border);
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.025);
+
+    color: var(--text-primary);
+
+    font-size: 11px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.15s ease;
+}
+
+.project-demo-github:hover {
+    border-color: rgba(59, 130, 246, 0.2);
+
+    background: var(--hover-background);
+}
+
+.project-demo-github:active {
+    transform: scale(0.97);
+}
+
+/* === CONTEÚDO === */
+.project-demo-content {
+    flex: 1;
+
+    min-height: 0;
+}
+
+/* === RESPONSIVO === */
+@media (max-width: 650px) {
+    .project-demo-notice {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .project-demo-github {
+        width: 100%;
+    }
+}

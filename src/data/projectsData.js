@@ -20,6 +20,8 @@ const projectsData = [
 
         demoType: 'terminal',
 
+        demo: {},
+
         github:
             'https://github.com/warlleyz',
 
@@ -38,6 +40,8 @@ const projectsData = [
         ],
 
         demoType: 'terminal',
+
+        demo: {},
 
         github:
             'https://github.com/warlleyz',
@@ -60,6 +64,11 @@ const projectsData = [
 
         demoType: 'web',
 
+        demo: {
+            url:
+                `${import.meta.env.BASE_URL}projects/web/login-puc/index.html`,
+        },
+
         github:
             'https://github.com/warlleyz',
 
@@ -79,6 +88,11 @@ const projectsData = [
         ],
 
         demoType: 'media',
+
+        demo: {
+            video: '',
+            images: [],
+        },
 
         github:
             'https://github.com/warlleyz/SnakePy',

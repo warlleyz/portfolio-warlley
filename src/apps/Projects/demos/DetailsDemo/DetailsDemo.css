@@ -1,0 +1,169 @@
+/* === DETALHES DO PROJETO === */
+.details-demo {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* === CABEÇALHO === */
+.details-demo-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.details-demo-label {
+    font-size: 11px;
+    font-weight: 500;
+
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+
+    color: #3b82f6;
+}
+
+.details-demo-header h2 {
+    margin: 0;
+
+    font-size: 24px;
+    font-weight: 650;
+}
+
+.details-demo-header p {
+    max-width: 650px;
+
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.7;
+
+    color: var(--text-secondary);
+}
+
+/* === TECNOLOGIAS === */
+.details-demo-technologies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.details-demo-technologies span {
+    padding: 6px 10px;
+
+    border-radius: 9px;
+
+    background: rgba(59, 130, 246, 0.08);
+
+    font-size: 11px;
+    font-weight: 500;
+
+    color: var(--text-primary);
+}
+
+/* === FUNCIONALIDADES === */
+.details-demo-section {
+    padding: 18px;
+
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.details-demo-section h3 {
+    margin: 0 0 12px;
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.details-demo-section ul {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    margin: 0;
+    padding-left: 18px;
+}
+
+.details-demo-section li {
+    font-size: 12px;
+    line-height: 1.5;
+
+    color: var(--text-secondary);
+}
+
+/* === AÇÕES === */
+.details-demo-actions {
+    display: flex;
+    gap: 10px;
+
+    margin-top: auto;
+}
+
+.details-demo-button {
+    min-width: 110px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    padding: 0 14px;
+
+    border: 1px solid var(--glass-border);
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.025);
+
+    color: var(--text-primary);
+
+    font-size: 12px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.15s ease;
+}
+
+.details-demo-button:hover {
+    border-color: rgba(255, 255, 255, 0.14);
+
+    background: var(--hover-background);
+}
+
+.details-demo-button:active {
+    transform: scale(0.97);
+}
+
+.details-demo-button-primary {
+    border-color: rgba(59, 130, 246, 0.22);
+
+    background: rgba(59, 130, 246, 0.1);
+
+    color: #3b82f6;
+}
+
+.details-demo-button-primary:hover {
+    border-color: rgba(59, 130, 246, 0.32);
+
+    background: rgba(59, 130, 246, 0.16);
+}
+
+/* === RESPONSIVO === */
+@media (max-width: 650px) {
+    .details-demo-actions {
+        flex-direction: column;
+    }
+
+    .details-demo-button {
+        width: 100%;
+    }
+}

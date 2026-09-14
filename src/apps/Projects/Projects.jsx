@@ -95,7 +95,7 @@ function Projects({ onOpenProject }) {
                                         strokeWidth={1.8}
                                     />
 
-                                    Abrir
+                                    Ver demo
                                 </button>
                             </div>
                         </article>

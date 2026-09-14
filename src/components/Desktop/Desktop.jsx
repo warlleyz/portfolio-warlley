@@ -11,7 +11,7 @@ import {
 
 import About from '../../apps/About/About'
 import Projects from '../../apps/Projects/Projects'
-import TerminalDemo from '../../apps/Projects/demos/TerminalDemo/TerminalDemo'
+import ProjectDemo from '../../apps/Projects/ProjectDemo'
 
 import projectsData from '../../data/projectsData'
 
@@ -215,56 +215,6 @@ function Desktop({ theme, toggleTheme }) {
         }, 200)
     }
 
-    const renderProjectContent = (projectId) => {
-        const project = projectsData.find(
-            (item) => item.id === projectId,
-        )
-
-        if (!project) {
-            return <p>Projeto não encontrado.</p>
-        }
-
-        switch (project.demoType) {
-            case 'terminal':
-                return (
-                    <TerminalDemo
-                        project={project}
-                    />
-                )
-
-            case 'web':
-                return (
-                    <div>
-                        <h2>{project.title}</h2>
-                        <p>Projeto web.</p>
-                    </div>
-                )
-
-            case 'media':
-                return (
-                    <div>
-                        <h2>{project.title}</h2>
-                        <p>Demonstração em mídia.</p>
-                    </div>
-                )
-
-            case 'details':
-                return (
-                    <div>
-                        <h2>{project.title}</h2>
-                        <p>Detalhes do projeto.</p>
-                    </div>
-                )
-
-            default:
-                return (
-                    <p>
-                        Tipo de demonstração não suportado.
-                    </p>
-                )
-        }
-    }
-
     const renderAppContent = (appId) => {
         switch (appId) {
             case 'about':
@@ -285,8 +235,16 @@ function Desktop({ theme, toggleTheme }) {
                             '',
                         )
 
-                    return renderProjectContent(
-                        projectId,
+                    const project =
+                        projectsData.find(
+                            (item) =>
+                                item.id === projectId,
+                        )
+
+                    return (
+                        <ProjectDemo
+                            project={project}
+                        />
                     )
                 }
 

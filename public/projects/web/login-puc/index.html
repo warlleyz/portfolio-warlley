@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | PUC Minas</title>
+
+    <link rel="stylesheet" href="./css/login.css">
+</head>
+
+<body>
+    <main class="login-container">
+        <section class="login-image"></section>
+
+        <section class="login-content">
+            <div class="login-box">
+                <img src="./images/logo-puc.png" alt="Logo PUC Minas" class="logo">
+
+                <h1>Bem-vindo</h1>
+
+                <p class="subtitle">
+                    Acesse sua conta para continuar
+                </p>
+
+                <form id="login-form">
+                    <p id="form-message" 
+                    class="form-message">
+                    </p>
+
+                    <div class="input-group">
+                        <label for="username">
+                            Usuário ou e-mail
+                        </label>
+
+                        <input type="text" id="username" name="username" placeholder="Digite seu usuário ou e-mail">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">
+                            Senha
+                        </label>
+
+                        <input type="password" id="password" name="password" placeholder="Digite sua senha">
+                    </div>
+
+                    <div class="login-options">
+                        <label class="remember">
+                            <input type="checkbox">
+
+                            Lembrar-me
+                        </label>
+
+                        <a href="#">
+                            Esqueci minha senha
+                        </a>
+                    </div>
+
+                    <button type="submit">
+                        Entrar
+                    </button>
+                </form>
+
+                <p class="register">
+                    Ainda não possui uma conta?
+
+                    <a href="./register.html">
+                        Cadastre-se
+                    </a>
+                </p>
+            </div>
+        </section>
+    </main>
+    
+<script src="./js/app.js"></script>
+</body>
+
+</html>
