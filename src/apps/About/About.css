@@ -4,32 +4,26 @@
     gap: 22px;
 
     width: 100%;
-
     padding-bottom: 8px;
 
     color: var(--text-primary);
 }
 
-/* =========================
-   PERFIL
-========================= */
-
+/* === PERFIL === */
 .about-profile {
     display: grid;
     grid-template-columns: 140px 1fr;
-    gap: 24px;
-
     align-items: center;
+    gap: 24px;
 
     padding: 24px;
 
     border: 1px solid var(--glass-border);
     border-radius: 20px;
 
-    background:
-        linear-gradient(135deg,
-             rgba(59, 130, 246, 0.07),
-             rgba(255, 255, 255, 0.015));
+    background: linear-gradient(135deg,
+            rgba(59, 130, 246, 0.07),
+            rgba(255, 255, 255, 0.015));
 }
 
 .about-photo-wrapper {
@@ -38,9 +32,8 @@
 
     overflow: hidden;
 
-    border-radius: 24px;
-
     border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 24px;
 
     background: rgba(255, 255, 255, 0.04);
 
@@ -50,10 +43,10 @@
 }
 
 .about-photo {
+    display: block;
+
     width: 100%;
     height: 100%;
-
-    display: block;
 
     object-fit: cover;
     object-position: center 18%;
@@ -83,13 +76,11 @@
 
     font-size: 30px;
     font-weight: 650;
-    
     letter-spacing: -0.7px;
 }
 
 .about-profile-content p {
     max-width: 570px;
-
     margin: 0;
 
     font-size: 13.5px;
@@ -98,18 +89,14 @@
     color: var(--text-secondary);
 }
 
-/* =========================
-   SEÇÕES
-========================= */
-
+/* === SEÇÕES === */
 .about-section {
     padding: 21px;
 
     border: 1px solid var(--glass-border);
     border-radius: 18px;
 
-    background:
-        rgba(255, 255, 255, 0.018);
+    background: rgba(255, 255, 255, 0.018);
 
     transition:
         background 0.2s ease,
@@ -117,11 +104,8 @@
 }
 
 .about-section:hover {
-    background:
-        rgba(255, 255, 255, 0.03);
-
-    border-color:
-        rgba(59, 130, 246, 0.14);
+    border-color: rgba(59, 130, 246, 0.14);
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .about-section-title {
@@ -161,10 +145,7 @@
     font-weight: 600;
 }
 
-/* =========================
-   TEXTO
-========================= */
-
+/* === TEXTO === */
 .about-text {
     display: flex;
     flex-direction: column;
@@ -173,7 +154,6 @@
 
 .about-text p {
     max-width: 680px;
-
     margin: 0;
 
     font-size: 13px;
@@ -182,10 +162,7 @@
     color: var(--text-secondary);
 }
 
-/* =========================
-   ESTUDANDO
-========================= */
-
+/* === ESTUDANDO === */
 .about-tags {
     display: flex;
     flex-wrap: wrap;
@@ -198,8 +175,7 @@
     border: 1px solid var(--glass-border);
     border-radius: 10px;
 
-    background:
-        rgba(59, 130, 246, 0.055);
+    background: rgba(59, 130, 246, 0.055);
 
     font-size: 12px;
     font-weight: 500;
@@ -215,22 +191,14 @@
 .about-tags span:hover {
     transform: translateY(-1px);
 
-    background:
-        rgba(59, 130, 246, 0.12);
-
-    border-color:
-        rgba(59, 130, 246, 0.24);
+    border-color: rgba(59, 130, 246, 0.24);
+    background: rgba(59, 130, 246, 0.12);
 }
 
-/* =========================
-   CONHECIMENTOS
-========================= */
-
+/* === CONHECIMENTOS === */
 .about-knowledge-grid {
     display: grid;
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
 }
 
@@ -240,8 +208,7 @@
     border: 1px solid var(--glass-border);
     border-radius: 15px;
 
-    background:
-        rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.02);
 
     transition:
         transform 0.2s ease,
@@ -252,11 +219,8 @@
 .about-knowledge-card:hover {
     transform: translateY(-2px);
 
-    background:
-        rgba(255, 255, 255, 0.035);
-
-    border-color:
-        rgba(59, 130, 246, 0.16);
+    border-color: rgba(59, 130, 246, 0.16);
+    background: rgba(255, 255, 255, 0.035);
 }
 
 .about-knowledge-header {
@@ -268,19 +232,17 @@
 }
 
 .about-knowledge-icon {
-    width: 34px;
-    height: 34px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     flex-shrink: 0;
+
+    width: 34px;
+    height: 34px;
 
     border-radius: 10px;
 
-    background:
-        rgba(59, 130, 246, 0.09);
+    background: rgba(59, 130, 246, 0.09);
 
     color: #3b82f6;
 }
@@ -308,24 +270,16 @@
     color: var(--text-secondary);
 }
 
-/* =========================
-   OBJETIVOS
-========================= */
-
+/* === OBJETIVOS === */
 .about-goals {
-    border-color:
-        rgba(59, 130, 246, 0.16);
+    border-color: rgba(59, 130, 246, 0.16);
 
-    background:
-        linear-gradient(135deg,
+    background: linear-gradient(135deg,
             rgba(59, 130, 246, 0.07),
             rgba(99, 102, 241, 0.025));
 }
 
-/* =========================
-   RESPONSIVO
-========================= */
-
+/* === RESPONSIVO === */
 @media (max-width: 650px) {
     .about-profile {
         grid-template-columns: 1fr;

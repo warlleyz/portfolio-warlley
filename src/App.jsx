@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import BootScreen from './components/BootScreen/BootScreen'
 import Desktop from './components/Desktop/Desktop'
 
@@ -12,14 +13,26 @@ function App() {
       return savedTheme
     }
 
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
+    const prefersDark =
+      window.matchMedia(
+        '(prefers-color-scheme: dark)',
+      ).matches
+
+    return prefersDark
       ? 'dark'
       : 'light'
   })
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-    localStorage.setItem('theme', theme)
+    document.documentElement.setAttribute(
+      'data-theme',
+      theme,
+    )
+
+    localStorage.setItem(
+      'theme',
+      theme,
+    )
   }, [theme])
 
   useEffect(() => {
@@ -27,34 +40,53 @@ function App() {
     const minimumTime = 1200
 
     const finishLoading = () => {
-      const elapsed = Date.now() - startTime
-      const remaining = Math.max(minimumTime - elapsed, 0)
+      const elapsed =
+        Date.now() - startTime
+
+      const remaining =
+        Math.max(
+          minimumTime - elapsed,
+          0,
+        )
 
       setTimeout(() => {
         setLoading(false)
       }, remaining)
     }
 
-    if (document.readyState === 'complete') {
+    if (
+      document.readyState ===
+      'complete'
+    ) {
       finishLoading()
     } else {
-      window.addEventListener('load', finishLoading)
+      window.addEventListener(
+        'load',
+        finishLoading,
+      )
     }
 
     return () => {
-      window.removeEventListener('load', finishLoading)
+      window.removeEventListener(
+        'load',
+        finishLoading,
+      )
     }
   }, [])
 
   const toggleTheme = () => {
     setTheme((currentTheme) =>
-      currentTheme === 'dark' ? 'light' : 'dark',
+      currentTheme === 'dark'
+        ? 'light'
+        : 'dark',
     )
   }
 
-  return loading ? (
-    <BootScreen />
-  ) : (
+  if (loading) {
+    return <BootScreen />
+  }
+
+  return (
     <Desktop
       theme={theme}
       toggleTheme={toggleTheme}

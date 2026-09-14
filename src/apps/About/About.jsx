@@ -10,62 +10,64 @@ import {
 
 import './About.css'
 
-function About() {
-    const studying = [
-        'Java',
-        'Spring Boot',
-        'APIs REST',
-        'Docker',
-        'JavaScript',
-        'HTML',
-        'CSS',
-        'Python',
-        'PHP',
-        'Figma',
-    ]
+const studying = [
+    'Java',
+    'Spring Boot',
+    'APIs REST',
+    'Docker',
+    'JavaScript',
+    'HTML',
+    'CSS',
+    'Python',
+    'PHP',
+    'Figma',
+]
 
-    const knowledgeGroups = [
-        {
-            title: 'Desenvolvimento',
-            icon: <Code2 size={18} />,
-            items: [
-                'Programação Orientada a Objetos',
-                'Lógica de Programação',
-                'Desenvolvimento Web',
-                'Estruturação de aplicações backend',
-            ],
-        },
-        {
-            title: 'Integração',
-            icon: <Layers3 size={18} />,
-            items: [
-                'Criação e consumo de APIs REST',
-                'Spring Boot',
-                'Maven',
-                'Integração entre aplicações',
-            ],
-        },
-        {
-            title: 'Ferramentas',
-            icon: <Wrench size={18} />,
-            items: [
-                'Git',
-                'GitHub',
-                'Docker',
-                'Figma',
-            ],
-        },
-        {
-            title: 'Dados',
-            icon: <Database size={18} />,
-            items: [
-                'Modelagem de dados',
-                'Manipulação de dados',
-                'Organização de informações',
-                'Fundamentos de banco de dados',
-            ],
-        },
-    ]
+const knowledgeGroups = [
+    {
+        title: 'Desenvolvimento',
+        icon: Code2,
+        items: [
+            'Programação Orientada a Objetos',
+            'Lógica de Programação',
+            'Desenvolvimento Web',
+            'Estruturação de aplicações backend',
+        ],
+    },
+    {
+        title: 'Integração',
+        icon: Layers3,
+        items: [
+            'Criação e consumo de APIs REST',
+            'Spring Boot',
+            'Maven',
+            'Integração entre aplicações',
+        ],
+    },
+    {
+        title: 'Ferramentas',
+        icon: Wrench,
+        items: [
+            'Git',
+            'GitHub',
+            'Docker',
+            'Figma',
+        ],
+    },
+    {
+        title: 'Dados',
+        icon: Database,
+        items: [
+            'Modelagem de dados',
+            'Manipulação de dados',
+            'Organização de informações',
+            'Fundamentos de banco de dados',
+        ],
+    },
+]
+
+function About() {
+    const profileImage = `${import.meta.env.BASE_URL}images/profile.jpg`
 
     return (
         <div className="about">
@@ -73,7 +75,7 @@ function About() {
                 <div className="about-photo-wrapper">
                     <img
                         className="about-photo"
-                        src="/images/profile.jpg"
+                        src={profileImage}
                         alt="Foto de Warlley Silva"
                     />
                 </div>
@@ -101,7 +103,7 @@ function About() {
 
             <section className="about-section">
                 <div className="about-section-title">
-                    <BookOpen size={19} />
+                    <BookOpen size={19} strokeWidth={1.8} />
 
                     <div>
                         <span>Apresentação</span>
@@ -126,7 +128,7 @@ function About() {
 
             <section className="about-section">
                 <div className="about-section-title">
-                    <Rocket size={19} />
+                    <Rocket size={19} strokeWidth={1.8} />
 
                     <div>
                         <span>Aprendizado</span>
@@ -145,7 +147,7 @@ function About() {
 
             <section className="about-section">
                 <div className="about-section-title">
-                    <GitBranch size={19} />
+                    <GitBranch size={19} strokeWidth={1.8} />
 
                     <div>
                         <span>Base atual</span>
@@ -154,34 +156,38 @@ function About() {
                 </div>
 
                 <div className="about-knowledge-grid">
-                    {knowledgeGroups.map((group) => (
-                        <article
-                            className="about-knowledge-card"
-                            key={group.title}
-                        >
-                            <div className="about-knowledge-header">
-                                <div className="about-knowledge-icon">
-                                    {group.icon}
+                    {knowledgeGroups.map((group) => {
+                        const Icon = group.icon
+
+                        return (
+                            <article
+                                className="about-knowledge-card"
+                                key={group.title}
+                            >
+                                <div className="about-knowledge-header">
+                                    <div className="about-knowledge-icon">
+                                        <Icon size={18} strokeWidth={1.8} />
+                                    </div>
+
+                                    <h3>{group.title}</h3>
                                 </div>
 
-                                <h3>{group.title}</h3>
-                            </div>
-
-                            <ul>
-                                {group.items.map((item) => (
-                                    <li key={item}>
-                                        {item}
-                                    </li>
-                                ))}
-                            </ul>
-                        </article>
-                    ))}
+                                <ul>
+                                    {group.items.map((item) => (
+                                        <li key={item}>
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </article>
+                        )
+                    })}
                 </div>
             </section>
 
             <section className="about-section about-goals">
                 <div className="about-section-title">
-                    <Rocket size={19} />
+                    <Rocket size={19} strokeWidth={1.8} />
 
                     <div>
                         <span>Próximos passos</span>

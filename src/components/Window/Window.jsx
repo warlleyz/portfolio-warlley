@@ -34,8 +34,7 @@ function Window({
             return
         }
 
-        const windowElement =
-            windowRef.current
+        const windowElement = windowRef.current
 
         if (!windowElement) {
             return
@@ -66,7 +65,8 @@ function Window({
 
         onFocus?.()
 
-        const rect = windowElement.getBoundingClientRect()
+        const rect =
+            windowElement.getBoundingClientRect()
 
         const startX = event.clientX
         const startY = event.clientY
@@ -100,7 +100,6 @@ function Window({
             const deltaY =
                 moveEvent.clientY - startY
 
-            // LADO DIREITO
             if (direction.includes('right')) {
                 currentWidth = Math.min(
                     Math.max(
@@ -111,7 +110,6 @@ function Window({
                 )
             }
 
-            // LADO ESQUERDO
             if (direction.includes('left')) {
                 currentWidth = Math.min(
                     Math.max(
@@ -125,7 +123,6 @@ function Window({
                     startRight - currentWidth
             }
 
-            // PARTE INFERIOR
             if (direction.includes('bottom')) {
                 currentHeight = Math.min(
                     Math.max(
@@ -136,7 +133,6 @@ function Window({
                 )
             }
 
-            // PARTE SUPERIOR
             if (direction.includes('top')) {
                 currentHeight = Math.min(
                     Math.max(
@@ -151,13 +147,18 @@ function Window({
             }
 
             if (animationFrame) {
-                cancelAnimationFrame(animationFrame)
+                cancelAnimationFrame(
+                    animationFrame,
+                )
             }
 
             animationFrame =
                 requestAnimationFrame(() => {
-                    windowElement.style.left = '0px'
-                    windowElement.style.top = '0px'
+                    windowElement.style.left =
+                        '0px'
+
+                    windowElement.style.top =
+                        '0px'
 
                     windowElement.style.translate =
                         `${currentX}px ${currentY}px`
@@ -172,7 +173,9 @@ function Window({
 
         const finishResize = () => {
             if (animationFrame) {
-                cancelAnimationFrame(animationFrame)
+                cancelAnimationFrame(
+                    animationFrame,
+                )
             }
 
             windowElement.classList.remove(
@@ -526,41 +529,45 @@ function Window({
         <div
             ref={windowRef}
             className={`window
-        ${maximized
+                ${maximized
                     ? 'window-maximized'
                     : ''
                 }
-        ${minimizing
+                ${minimizing
                     ? 'window-minimizing'
                     : ''
                 }
-        ${closing
+                ${closing
                     ? 'window-closing'
                     : ''
                 }
-      `}
+            `}
             style={{
                 zIndex,
 
-                ...(!maximized &&
-                    position
-                    ? {
-                        left: '0px',
-                        top: '0px',
-                        translate:
-                            `${position.x}px ${position.y}px`,
-                    }
-                    : {}),
+                ...(
+                    !maximized &&
+                        position
+                        ? {
+                            left: '0px',
+                            top: '0px',
+                            translate:
+                                `${position.x}px ${position.y}px`,
+                        }
+                        : {}
+                ),
 
-                ...(!maximized &&
-                    size
-                    ? {
-                        width:
-                            `${size.width}px`,
-                        height:
-                            `${size.height}px`,
-                    }
-                    : {}),
+                ...(
+                    !maximized &&
+                        size
+                        ? {
+                            width:
+                                `${size.width}px`,
+                            height:
+                                `${size.height}px`,
+                        }
+                        : {}
+                ),
             }}
             onMouseDown={onFocus}
         >
@@ -591,7 +598,10 @@ function Window({
                         onClick={onMinimize}
                         aria-label="Minimizar"
                     >
-                        <Minus size={18} />
+                        <Minus
+                            size={18}
+                            strokeWidth={1.8}
+                        />
                     </button>
 
                     <button
@@ -603,7 +613,10 @@ function Window({
                                 : 'Maximizar'
                         }
                     >
-                        <Square size={16} />
+                        <Square
+                            size={16}
+                            strokeWidth={1.8}
+                        />
                     </button>
 
                     <button
@@ -611,7 +624,10 @@ function Window({
                         onClick={onClose}
                         aria-label="Fechar"
                     >
-                        <X size={18} />
+                        <X
+                            size={18}
+                            strokeWidth={1.8}
+                        />
                     </button>
                 </div>
             </div>
@@ -623,28 +639,40 @@ function Window({
             <div
                 className="resize-handle resize-top"
                 onPointerDown={(event) =>
-                    handleResizeStart(event, 'top')
+                    handleResizeStart(
+                        event,
+                        'top',
+                    )
                 }
             />
 
             <div
                 className="resize-handle resize-bottom"
                 onPointerDown={(event) =>
-                    handleResizeStart(event, 'bottom')
+                    handleResizeStart(
+                        event,
+                        'bottom',
+                    )
                 }
             />
 
             <div
                 className="resize-handle resize-left"
                 onPointerDown={(event) =>
-                    handleResizeStart(event, 'left')
+                    handleResizeStart(
+                        event,
+                        'left',
+                    )
                 }
             />
 
             <div
                 className="resize-handle resize-right"
                 onPointerDown={(event) =>
-                    handleResizeStart(event, 'right')
+                    handleResizeStart(
+                        event,
+                        'right',
+                    )
                 }
             />
 

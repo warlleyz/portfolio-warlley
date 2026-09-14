@@ -3,14 +3,21 @@ import './BootScreen.css'
 function BootScreen() {
     return (
         <div className="boot-screen">
-            <div className="boot-logo">WS</div>
+            <div className="boot-logo">
+                WS
+            </div>
 
-            <p className="boot-name">Warlley Silva Baião Braga</p>
+            <p className="boot-name">
+                Warlley Silva Baião Braga
+            </p>
 
-            <div className="boot-loader">
-                <span></span>
-                <span></span>
-                <span></span>
+            <div
+                className="boot-loader"
+                aria-label="Carregando"
+            >
+                <span />
+                <span />
+                <span />
             </div>
         </div>
     )

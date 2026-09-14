@@ -7,11 +7,13 @@ import {
     Mail,
     FileText,
     TerminalSquare,
-    LogIn,
 } from 'lucide-react'
 
 import About from '../../apps/About/About'
 import Projects from '../../apps/Projects/Projects'
+import TerminalDemo from '../../apps/Projects/demos/TerminalDemo/TerminalDemo'
+
+import projectsData from '../../data/projectsData'
 
 import Taskbar from '../Taskbar/Taskbar'
 import Window from '../Window/Window'
@@ -51,14 +53,16 @@ const apps = [
     },
 ]
 
-const projectApps = [
-    {
-        id: 'project-login-puc',
-        projectId: 'login-puc',
-        name: 'Login PUC',
-        icon: <LogIn size={30} strokeWidth={1.8} />,
-    },
-]
+const projectApps = projectsData.map((project) => {
+    const Icon = project.icon
+
+    return {
+        id: `project-${project.id}`,
+        projectId: project.id,
+        name: project.title,
+        icon: <Icon size={30} strokeWidth={1.8} />,
+    }
+})
 
 const allApps = [
     ...apps,
@@ -71,6 +75,7 @@ function Desktop({ theme, toggleTheme }) {
 
     const getNextZIndex = () => {
         topZIndex.current += 1
+
         return topZIndex.current
     }
 
@@ -109,15 +114,7 @@ function Desktop({ theme, toggleTheme }) {
     }
 
     const openProject = (project) => {
-        const projectApp = projectApps.find(
-            (app) => app.projectId === project.id,
-        )
-
-        if (!projectApp) {
-            return
-        }
-
-        openApp(projectApp.id)
+        openApp(`project-${project.id}`)
     }
 
     const moveApp = (appId, position) => {
@@ -218,6 +215,56 @@ function Desktop({ theme, toggleTheme }) {
         }, 200)
     }
 
+    const renderProjectContent = (projectId) => {
+        const project = projectsData.find(
+            (item) => item.id === projectId,
+        )
+
+        if (!project) {
+            return <p>Projeto não encontrado.</p>
+        }
+
+        switch (project.demoType) {
+            case 'terminal':
+                return (
+                    <TerminalDemo
+                        project={project}
+                    />
+                )
+
+            case 'web':
+                return (
+                    <div>
+                        <h2>{project.title}</h2>
+                        <p>Projeto web.</p>
+                    </div>
+                )
+
+            case 'media':
+                return (
+                    <div>
+                        <h2>{project.title}</h2>
+                        <p>Demonstração em mídia.</p>
+                    </div>
+                )
+
+            case 'details':
+                return (
+                    <div>
+                        <h2>{project.title}</h2>
+                        <p>Detalhes do projeto.</p>
+                    </div>
+                )
+
+            default:
+                return (
+                    <p>
+                        Tipo de demonstração não suportado.
+                    </p>
+                )
+        }
+    }
+
     const renderAppContent = (appId) => {
         switch (appId) {
             case 'about':
@@ -230,18 +277,19 @@ function Desktop({ theme, toggleTheme }) {
                     />
                 )
 
-            case 'project-login-puc':
-                return (
-                    <div>
-                        <h2>Login PUC</h2>
-
-                        <p>
-                            Projeto web em desenvolvimento.
-                        </p>
-                    </div>
-                )
-
             default:
+                if (appId.startsWith('project-')) {
+                    const projectId =
+                        appId.replace(
+                            'project-',
+                            '',
+                        )
+
+                    return renderProjectContent(
+                        projectId,
+                    )
+                }
+
                 return (
                     <p>
                         Aplicativo em desenvolvimento.
@@ -286,24 +334,12 @@ function Desktop({ theme, toggleTheme }) {
                     <Window
                         key={app.id}
                         title={app.name}
-                        maximized={
-                            windowState.maximized
-                        }
-                        minimizing={
-                            windowState.minimizing
-                        }
-                        closing={
-                            windowState.closing
-                        }
-                        position={
-                            windowState.position
-                        }
-                        size={
-                            windowState.size
-                        }
-                        zIndex={
-                            windowState.zIndex
-                        }
+                        maximized={windowState.maximized}
+                        minimizing={windowState.minimizing}
+                        closing={windowState.closing}
+                        position={windowState.position}
+                        size={windowState.size}
+                        zIndex={windowState.zIndex}
                         onFocus={() =>
                             focusApp(app.id)
                         }
@@ -333,9 +369,7 @@ function Desktop({ theme, toggleTheme }) {
                 toggleTheme={toggleTheme}
                 apps={allApps}
                 windows={windows}
-                toggleTaskbarApp={
-                    toggleTaskbarApp
-                }
+                toggleTaskbarApp={toggleTaskbarApp}
             />
         </main>
     )

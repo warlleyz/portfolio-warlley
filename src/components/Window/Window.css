@@ -17,10 +17,10 @@
 
     overflow: hidden;
 
+    border: 1px solid var(--glass-border);
     border-radius: 18px;
 
     background: var(--glass-background);
-    border: 1px solid var(--glass-border);
 
     backdrop-filter: blur(22px);
 
@@ -47,11 +47,7 @@
         height;
 }
 
-
-/* =========================
-   MAXIMIZADA
-========================= */
-
+/* === MAXIMIZADA === */
 .window-maximized {
     top: 12px;
     left: 12px;
@@ -64,32 +60,18 @@
     border-radius: 16px;
 }
 
-
-/* =========================
-   ARRASTANDO
-========================= */
-
+/* === ARRASTANDO === */
 .window-dragging {
     animation: none !important;
 
     transform: scale(0.9);
 
-    transition:
-        transform 0.14s ease;
+    transition: transform 0.14s ease;
 
     user-select: none;
 }
 
-.window-restore-dragging {
-    animation: none !important;
-    transition: none !important;
-}
-
-
-/* =========================
-   MINIMIZAR
-========================= */
-
+/* === MINIMIZAR === */
 .window-minimizing {
     opacity: 0;
 
@@ -97,11 +79,7 @@
         translateY(70px) scale(0.82);
 }
 
-
-/* =========================
-   FECHAR
-========================= */
-
+/* === FECHAR === */
 .window-closing {
     opacity: 0;
 
@@ -110,11 +88,7 @@
     filter: blur(2px);
 }
 
-
-/* =========================
-   CABEÇALHO
-========================= */
-
+/* === CABEÇALHO === */
 .window-header {
     height: 48px;
 
@@ -124,10 +98,9 @@
 
     padding: 0 10px 0 16px;
 
-    border-bottom:
-        1px solid var(--glass-border);
-
     flex-shrink: 0;
+
+    border-bottom: 1px solid var(--glass-border);
 
     cursor: grab;
 
@@ -139,10 +112,6 @@
     cursor: grabbing;
 }
 
-.window-maximized .window-header {
-    cursor: grab;
-}
-
 .window-title {
     font-size: 14px;
     font-weight: 500;
@@ -150,11 +119,7 @@
     pointer-events: none;
 }
 
-
-/* =========================
-   CONTROLES
-========================= */
-
+/* === CONTROLES === */
 .window-controls {
     display: flex;
     align-items: center;
@@ -173,6 +138,7 @@
     border-radius: 9px;
 
     background: transparent;
+
     color: var(--text-primary);
 
     cursor: pointer;
@@ -190,11 +156,7 @@
     transform: scale(0.92);
 }
 
-
-/* =========================
-   CONTEÚDO
-========================= */
-
+/* === CONTEÚDO === */
 .window-content {
     flex: 1;
 
@@ -210,44 +172,12 @@
     display: none;
 }
 
-
-/* =========================
-   ABRIR
-========================= */
-
-@keyframes windowOpen {
-    from {
-        opacity: 0;
-        transform: scale(0.97);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-
-/* =========================
-   REDIMENSIONAMENTO
-========================= */
-
+/* === REDIMENSIONAMENTO === */
 .resize-handle {
     position: absolute;
 
     z-index: 20;
 }
-
-/* =========================
-   REDIMENSIONAMENTO
-========================= */
-
-.resize-handle {
-    position: absolute;
-    z-index: 20;
-}
-
-/* CIMA */
 
 .resize-top {
     top: 0;
@@ -259,8 +189,6 @@
     cursor: ns-resize;
 }
 
-/* BAIXO */
-
 .resize-bottom {
     bottom: 0;
     left: 8px;
@@ -270,8 +198,6 @@
 
     cursor: ns-resize;
 }
-
-/* ESQUERDA */
 
 .resize-left {
     top: 8px;
@@ -283,8 +209,6 @@
     cursor: ew-resize;
 }
 
-/* DIREITA */
-
 .resize-right {
     top: 8px;
     right: 0;
@@ -294,8 +218,6 @@
 
     cursor: ew-resize;
 }
-
-/* CANTO SUPERIOR ESQUERDO */
 
 .resize-top-left {
     top: 0;
@@ -307,8 +229,6 @@
     cursor: nwse-resize;
 }
 
-/* CANTO SUPERIOR DIREITO */
-
 .resize-top-right {
     top: 0;
     right: 0;
@@ -319,8 +239,6 @@
     cursor: nesw-resize;
 }
 
-/* CANTO INFERIOR ESQUERDO */
-
 .resize-bottom-left {
     bottom: 0;
     left: 0;
@@ -330,8 +248,6 @@
 
     cursor: nesw-resize;
 }
-
-/* CANTO INFERIOR DIREITO */
 
 .resize-bottom-right {
     right: 0;
@@ -347,15 +263,6 @@
     display: none;
 }
 
-.window-maximized .resize-handle {
-    display: none;
-}
-
-
-/* =========================
-   REDIMENSIONANDO
-========================= */
-
 .window-resizing {
     transition: none !important;
 
@@ -365,4 +272,17 @@
         0 8px 20px rgba(0, 0, 0, 0.12);
 
     user-select: none;
+}
+
+/* === ANIMAÇÕES === */
+@keyframes windowOpen {
+    from {
+        opacity: 0;
+        transform: scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
