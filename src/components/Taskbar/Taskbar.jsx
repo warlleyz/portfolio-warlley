@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Moon, Sun, UserRound } from 'lucide-react'
+import { Moon, Sun } from 'lucide-react'
 import './Taskbar.css'
 
 function Taskbar({
     theme,
     toggleTheme,
-    testWindowOpen,
-    testWindowMinimized,
-    toggleTestWindow,
+    apps,
+    windows,
+    toggleTaskbarApp,
 }) {
     const [dateTime, setDateTime] = useState(new Date())
 
@@ -48,17 +48,29 @@ function Taskbar({
             </div>
 
             <div className="taskbar-apps">
-                {testWindowOpen && (
-                    <button
-                        type="button"
-                        className={`taskbar-app ${testWindowMinimized ? '' : 'taskbar-app-active'
-                            }`}
-                        onClick={toggleTestWindow}
-                        aria-label="Sobre mim"
-                    >
-                        <UserRound size={21} strokeWidth={1.8} />
-                    </button>
-                )}
+                {apps.map((app) => {
+                    const windowState = windows[app.id]
+
+                    if (!windowState?.open) {
+                        return null
+                    }
+
+                    return (
+                        <button
+                            key={app.id}
+                            type="button"
+                            className={`taskbar-app ${!windowState.minimized
+                                    ? 'taskbar-app-active'
+                                    : ''
+                                }`}
+                            onClick={() => toggleTaskbarApp(app.id)}
+                            aria-label={app.name}
+                            title={app.name}
+                        >
+                            {app.icon}
+                        </button>
+                    )
+                })}
             </div>
 
             <div className="taskbar-right">
