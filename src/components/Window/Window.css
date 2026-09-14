@@ -74,10 +74,17 @@
 
     transform: scale(0.9);
 
-    transition: transform 0.14s ease;
+    transition:
+        transform 0.14s ease;
 
     user-select: none;
 }
+
+.window-restore-dragging {
+    animation: none !important;
+    transition: none !important;
+}
+
 
 /* =========================
    MINIMIZAR
@@ -123,7 +130,9 @@
     flex-shrink: 0;
 
     cursor: grab;
+
     user-select: none;
+    touch-action: none;
 }
 
 .window-header:active {
@@ -131,12 +140,14 @@
 }
 
 .window-maximized .window-header {
-    cursor: default;
+    cursor: grab;
 }
 
 .window-title {
     font-size: 14px;
     font-weight: 500;
+
+    pointer-events: none;
 }
 
 
@@ -186,7 +197,9 @@
 
 .window-content {
     flex: 1;
+
     padding: 20px;
+
     overflow: auto;
 
     scrollbar-width: none;
@@ -196,6 +209,7 @@
 .window-content::-webkit-scrollbar {
     display: none;
 }
+
 
 /* =========================
    ABRIR
@@ -213,12 +227,14 @@
     }
 }
 
+
 /* =========================
    REDIMENSIONAMENTO
 ========================= */
 
 .resize-handle {
     position: absolute;
+
     z-index: 20;
 }
 
@@ -255,6 +271,11 @@
 .window-maximized .resize-handle {
     display: none;
 }
+
+
+/* =========================
+   REDIMENSIONANDO
+========================= */
 
 .window-resizing {
     transition: none !important;

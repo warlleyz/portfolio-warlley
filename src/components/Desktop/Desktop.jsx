@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+
 import {
     UserRound,
     Folder,
@@ -7,7 +8,10 @@ import {
     FileText,
     TerminalSquare,
 } from 'lucide-react'
+
 import About from '../../apps/About/About'
+import Projects from '../../apps/Projects/Projects'
+
 import Taskbar from '../Taskbar/Taskbar'
 import Window from '../Window/Window'
 
@@ -52,6 +56,7 @@ function Desktop({ theme, toggleTheme }) {
 
     const getNextZIndex = () => {
         topZIndex.current += 1
+
         return topZIndex.current
     }
 
@@ -67,16 +72,6 @@ function Desktop({ theme, toggleTheme }) {
         }))
     }
 
-    const renderAppContent = (appId) => {
-        switch (appId) {
-            case 'about':
-                return <About />
-
-            default:
-                return <p>Aplicativo em desenvolvimento.</p>
-        }
-    }
-
     const openApp = (appId) => {
         const nextZIndex = getNextZIndex()
 
@@ -86,12 +81,14 @@ function Desktop({ theme, toggleTheme }) {
                 ...previous[appId],
                 open: true,
                 minimized: false,
-                maximizing: false,
                 minimizing: false,
                 closing: false,
-                maximized: previous[appId]?.maximized ?? false,
-                position: previous[appId]?.position ?? null,
-                size: previous[appId]?.size ?? null,
+                maximized:
+                    previous[appId]?.maximized ?? false,
+                position:
+                    previous[appId]?.position ?? null,
+                size:
+                    previous[appId]?.size ?? null,
                 zIndex: nextZIndex,
             },
         }))
@@ -103,6 +100,16 @@ function Desktop({ theme, toggleTheme }) {
             [appId]: {
                 ...previous[appId],
                 position,
+            },
+        }))
+    }
+
+    const resizeApp = (appId, size) => {
+        setWindows((previous) => ({
+            ...previous,
+            [appId]: {
+                ...previous[appId],
+                size,
             },
         }))
     }
@@ -155,17 +162,8 @@ function Desktop({ theme, toggleTheme }) {
             ...previous,
             [appId]: {
                 ...previous[appId],
-                maximized: !previous[appId]?.maximized,
-            },
-        }))
-    }
-
-    const resizeApp = (appId, size) => {
-        setWindows((previous) => ({
-            ...previous,
-            [appId]: {
-                ...previous[appId],
-                size,
+                maximized:
+                    !previous[appId]?.maximized,
             },
         }))
     }
@@ -184,17 +182,39 @@ function Desktop({ theme, toggleTheme }) {
                 ...previous,
                 [appId]: {
                     ...previous[appId],
-
                     open: false,
                     minimized: false,
                     maximized: false,
                     minimizing: false,
                     closing: false,
-
-                    // position e zIndex continuam salvos
                 },
             }))
         }, 200)
+    }
+
+    const handleOpenProject = (project) => {
+        console.log('Abrir projeto:', project)
+    }
+
+    const renderAppContent = (appId) => {
+        switch (appId) {
+            case 'about':
+                return <About />
+
+            case 'projects':
+                return (
+                    <Projects
+                        onOpenProject={handleOpenProject}
+                    />
+                )
+
+            default:
+                return (
+                    <p>
+                        Aplicativo em desenvolvimento.
+                    </p>
+                )
+        }
     }
 
     return (
@@ -219,9 +239,13 @@ function Desktop({ theme, toggleTheme }) {
             </section>
 
             {apps.map((app) => {
-                const windowState = windows[app.id]
+                const windowState =
+                    windows[app.id]
 
-                if (!windowState?.open || windowState.minimized) {
+                if (
+                    !windowState?.open ||
+                    windowState.minimized
+                ) {
                     return null
                 }
 
@@ -229,22 +253,50 @@ function Desktop({ theme, toggleTheme }) {
                     <Window
                         key={app.id}
                         title={app.name}
-                        maximized={windowState.maximized}
-                        minimizing={windowState.minimizing}
-                        closing={windowState.closing}
-                        position={windowState.position}
-                        zIndex={windowState.zIndex}
-                        size={windowState.size}
-                        onSizeChange={(size) =>
-                            resizeApp(app.id, size)
+                        maximized={
+                            windowState.maximized
                         }
-                        onFocus={() => focusApp(app.id)}
+                        minimizing={
+                            windowState.minimizing
+                        }
+                        closing={
+                            windowState.closing
+                        }
+                        position={
+                            windowState.position
+                        }
+                        size={
+                            windowState.size
+                        }
+                        zIndex={
+                            windowState.zIndex
+                        }
+                        onFocus={() =>
+                            focusApp(app.id)
+                        }
                         onPositionChange={(position) =>
-                            moveApp(app.id, position)
+                            moveApp(
+                                app.id,
+                                position,
+                            )
                         }
-                        onClose={() => closeApp(app.id)}
-                        onMinimize={() => minimizeApp(app.id)}
-                        onMaximize={() => toggleMaximizeApp(app.id)}
+                        onSizeChange={(size) =>
+                            resizeApp(
+                                app.id,
+                                size,
+                            )
+                        }
+                        onClose={() =>
+                            closeApp(app.id)
+                        }
+                        onMinimize={() =>
+                            minimizeApp(app.id)
+                        }
+                        onMaximize={() =>
+                            toggleMaximizeApp(
+                                app.id,
+                            )
+                        }
                     >
                         {renderAppContent(app.id)}
                     </Window>
@@ -256,7 +308,9 @@ function Desktop({ theme, toggleTheme }) {
                 toggleTheme={toggleTheme}
                 apps={apps}
                 windows={windows}
-                toggleTaskbarApp={toggleTaskbarApp}
+                toggleTaskbarApp={
+                    toggleTaskbarApp
+                }
             />
         </main>
     )

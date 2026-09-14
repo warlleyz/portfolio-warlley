@@ -1,0 +1,292 @@
+.projects {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+
+    width: 100%;
+
+    padding-bottom: 8px;
+
+    color: var(--text-primary);
+}
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.projects-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.projects-header>div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.projects-label {
+    font-size: 11px;
+    font-weight: 500;
+
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+
+    color: #3b82f6;
+}
+
+.projects-header h1 {
+    margin: 0;
+
+    font-size: 26px;
+    font-weight: 650;
+
+    letter-spacing: -0.5px;
+}
+
+.projects-header p {
+    max-width: 520px;
+
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.6;
+
+    color: var(--text-secondary);
+}
+
+.projects-count {
+    flex-shrink: 0;
+
+    padding: 6px 10px;
+
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, 0.03);
+
+    font-size: 11px;
+
+    color: var(--text-secondary);
+}
+
+/* =========================
+   PROJETOS
+========================= */
+
+.projects-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.project-card {
+    min-height: 210px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    padding: 18px;
+
+    text-align: left;
+
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+
+    color: inherit;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-3px);
+
+    background:
+        rgba(255, 255, 255, 0.045);
+
+    border-color:
+        rgba(59, 130, 246, 0.18);
+}
+
+.project-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.project-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+        rgba(59, 130, 246, 0.09);
+
+    color: #3b82f6;
+}
+
+.project-arrow {
+    color: var(--text-secondary);
+
+    transition:
+        transform 0.2s ease,
+        color 0.2s ease;
+}
+
+.project-card:hover .project-arrow {
+    transform: translate(2px, -2px);
+
+    color: #3b82f6;
+}
+
+/* =========================
+   CONTEÚDO
+========================= */
+
+.project-content {
+    flex: 1;
+}
+
+.project-content h2 {
+    margin: 0 0 7px;
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.project-content p {
+    margin: 0;
+
+    font-size: 12px;
+    line-height: 1.65;
+
+    color: var(--text-secondary);
+}
+
+/* =========================
+   TECNOLOGIAS
+========================= */
+
+.project-technologies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.project-technologies span {
+    padding: 5px 8px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(59, 130, 246, 0.06);
+
+    font-size: 10px;
+    font-weight: 500;
+
+    color: var(--text-secondary);
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 650px) {
+    .projects-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================
+   AÇÕES
+========================= */
+
+.project-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+
+    margin-top: 2px;
+}
+
+.project-button {
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    border-radius: 9px;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+}
+
+.project-button:active {
+    transform: scale(0.97);
+}
+
+.project-button-secondary {
+    border: 1px solid var(--glass-border);
+
+    background:
+        rgba(255, 255, 255, 0.025);
+
+    color: var(--text-primary);
+}
+
+.project-button-secondary:hover {
+    background: var(--hover-background);
+
+    border-color:
+        rgba(255, 255, 255, 0.14);
+}
+
+.project-button-primary {
+    border:
+        1px solid rgba(59, 130, 246, 0.22);
+
+    background:
+        rgba(59, 130, 246, 0.1);
+
+    color: #3b82f6;
+}
+
+.project-button-primary:hover {
+    background:
+        rgba(59, 130, 246, 0.16);
+
+    border-color:
+        rgba(59, 130, 246, 0.32);
+}
