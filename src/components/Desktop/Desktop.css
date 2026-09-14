@@ -1,8 +1,12 @@
 .desktop {
+    position: relative;
+
     width: 100%;
     height: 100%;
-    position: relative;
+
     overflow: hidden;
+
+    color: var(--text-primary);
 
     background:
         radial-gradient(circle at top right,
@@ -13,18 +17,22 @@
             var(--wallpaper-middle) 55%,
             var(--wallpaper-end));
 
-    color: var(--text-primary);
-
     transition:
         background 0.4s ease,
         color 0.3s ease;
 }
 
+/* =========================
+   ATALHOS
+========================= */
+
 .desktop-shortcuts {
     position: absolute;
     top: 24px;
     left: 24px;
+
     z-index: 1;
+
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -56,7 +64,10 @@
 
 .shortcut:hover {
     background: var(--hover-background);
-    border-color: rgba(255, 255, 255, 0.08);
+
+    border-color:
+        rgba(255, 255, 255, 0.08);
+
     transform: translateY(-2px);
 }
 
@@ -69,17 +80,20 @@
 }
 
 .shortcut-icon {
+    width: 46px;
+    height: 46px;
+
     display: flex;
     align-items: center;
     justify-content: center;
 
-    width: 46px;
-    height: 46px;
-
     border-radius: 13px;
 
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.08);
 
     backdrop-filter: blur(8px);
 }
@@ -88,34 +102,4 @@
     font-size: 12px;
     line-height: 1.2;
     text-align: center;
-}
-
-.shortcut:hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateY(-2px);
-}
-
-.taskbar-placeholder {
-    position: absolute;
-
-    left: 50%;
-    bottom: 18px;
-    transform: translateX(-50%);
-
-    width: 68%;
-    height: 58px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 18px;
-
-    background: rgba(15, 23, 42, 0.58);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-
-    backdrop-filter: blur(16px);
-
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.6);
 }

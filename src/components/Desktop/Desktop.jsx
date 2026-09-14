@@ -1,8 +1,4 @@
-import './Desktop.css'
-import Taskbar from '../Taskbar/Taskbar'
-import Window from '../Window/Window'
 import { useRef, useState } from 'react'
-
 import {
     UserRound,
     Folder,
@@ -12,9 +8,47 @@ import {
     TerminalSquare,
 } from 'lucide-react'
 
+import Taskbar from '../Taskbar/Taskbar'
+import Window from '../Window/Window'
+
+import './Desktop.css'
+
+const apps = [
+    {
+        id: 'about',
+        name: 'Sobre mim',
+        icon: <UserRound size={30} strokeWidth={1.8} />,
+    },
+    {
+        id: 'projects',
+        name: 'Projetos',
+        icon: <Folder size={30} strokeWidth={1.8} />,
+    },
+    {
+        id: 'technologies',
+        name: 'Tecnologias',
+        icon: <Cpu size={30} strokeWidth={1.8} />,
+    },
+    {
+        id: 'contact',
+        name: 'Contato',
+        icon: <Mail size={30} strokeWidth={1.8} />,
+    },
+    {
+        id: 'resume',
+        name: 'Currículo',
+        icon: <FileText size={30} strokeWidth={1.8} />,
+    },
+    {
+        id: 'terminal',
+        name: 'Terminal',
+        icon: <TerminalSquare size={30} strokeWidth={1.8} />,
+    },
+]
+
 function Desktop({ theme, toggleTheme }) {
-    const topZIndex = useRef(10)
     const [windows, setWindows] = useState({})
+    const topZIndex = useRef(10)
 
     const getNextZIndex = () => {
         topZIndex.current += 1
@@ -33,50 +67,19 @@ function Desktop({ theme, toggleTheme }) {
         }))
     }
 
-    const apps = [
-        {
-            id: 'about',
-            name: 'Sobre mim',
-            icon: <UserRound size={30} strokeWidth={1.8} />,
-        },
-        {
-            id: 'projects',
-            name: 'Projetos',
-            icon: <Folder size={30} strokeWidth={1.8} />,
-        },
-        {
-            id: 'technologies',
-            name: 'Tecnologias',
-            icon: <Cpu size={30} strokeWidth={1.8} />,
-        },
-        {
-            id: 'contact',
-            name: 'Contato',
-            icon: <Mail size={30} strokeWidth={1.8} />,
-        },
-        {
-            id: 'resume',
-            name: 'Currículo',
-            icon: <FileText size={30} strokeWidth={1.8} />,
-        },
-        {
-            id: 'terminal',
-            name: 'Terminal',
-            icon: <TerminalSquare size={30} strokeWidth={1.8} />,
-        },
-    ]
-
     const openApp = (appId) => {
         const nextZIndex = getNextZIndex()
 
         setWindows((previous) => ({
             ...previous,
             [appId]: {
+                ...previous[appId],
                 open: true,
                 minimized: false,
-                maximized: previous[appId]?.maximized ?? false,
+                maximizing: false,
                 minimizing: false,
                 closing: false,
+                maximized: previous[appId]?.maximized ?? false,
                 position: previous[appId]?.position ?? null,
                 zIndex: nextZIndex,
             },
@@ -130,9 +133,10 @@ function Desktop({ theme, toggleTheme }) {
     const toggleTaskbarApp = (appId) => {
         if (windows[appId]?.minimized) {
             restoreApp(appId)
-        } else {
-            minimizeApp(appId)
+            return
         }
+
+        minimizeApp(appId)
     }
 
     const toggleMaximizeApp = (appId) => {
@@ -158,11 +162,15 @@ function Desktop({ theme, toggleTheme }) {
             setWindows((previous) => ({
                 ...previous,
                 [appId]: {
+                    ...previous[appId],
+
                     open: false,
                     minimized: false,
                     maximized: false,
                     minimizing: false,
                     closing: false,
+
+                    // position e zIndex continuam salvos
                 },
             }))
         }, 200)
@@ -204,11 +212,11 @@ function Desktop({ theme, toggleTheme }) {
                         minimizing={windowState.minimizing}
                         closing={windowState.closing}
                         position={windowState.position}
+                        zIndex={windowState.zIndex}
+                        onFocus={() => focusApp(app.id)}
                         onPositionChange={(position) =>
                             moveApp(app.id, position)
                         }
-                        zIndex={windowState.zIndex}
-                        onFocus={() => focusApp(app.id)}
                         onClose={() => closeApp(app.id)}
                         onMinimize={() => minimizeApp(app.id)}
                         onMaximize={() => toggleMaximizeApp(app.id)}

@@ -24,11 +24,7 @@ function Window({
     const windowRef = useRef(null)
 
     const handleDragStart = (event) => {
-        if (maximized) {
-            return
-        }
-
-        if (event.button !== 0) {
+        if (maximized || event.button !== 0) {
             return
         }
 
@@ -38,12 +34,16 @@ function Window({
             return
         }
 
+        event.preventDefault()
         onFocus?.()
 
         const rect = windowElement.getBoundingClientRect()
 
         const offsetX = event.clientX - rect.left
         const offsetY = event.clientY - rect.top
+
+        let currentX = rect.left
+        let currentY = rect.top
 
         windowElement.classList.add('window-dragging')
 
@@ -58,35 +58,28 @@ function Window({
                 0,
             )
 
-            const x = Math.min(
+            currentX = Math.min(
                 Math.max(moveEvent.clientX - offsetX, 0),
                 maxX,
             )
 
-            const y = Math.min(
+            currentY = Math.min(
                 Math.max(moveEvent.clientY - offsetY, 0),
                 maxY,
             )
 
-            // Movimento direto no DOM.
-            // Não causa re-render do React.
             windowElement.style.left = '0px'
             windowElement.style.top = '0px'
-            windowElement.style.translate = `${x}px ${y}px`
+            windowElement.style.translate =
+                `${currentX}px ${currentY}px`
         }
 
-        const handlePointerUp = () => {
-            const finalRect =
-                windowElement.getBoundingClientRect()
-
-            const x = finalRect.left
-            const y = finalRect.top
-
+        const finishDrag = () => {
             windowElement.classList.remove('window-dragging')
 
             onPositionChange?.({
-                x,
-                y,
+                x: currentX,
+                y: currentY,
             })
 
             window.removeEventListener(
@@ -96,7 +89,12 @@ function Window({
 
             window.removeEventListener(
                 'pointerup',
-                handlePointerUp,
+                finishDrag,
+            )
+
+            window.removeEventListener(
+                'pointercancel',
+                finishDrag,
             )
         }
 
@@ -107,7 +105,12 @@ function Window({
 
         window.addEventListener(
             'pointerup',
-            handlePointerUp,
+            finishDrag,
+        )
+
+        window.addEventListener(
+            'pointercancel',
+            finishDrag,
         )
     }
 
@@ -121,7 +124,6 @@ function Window({
       `}
             style={{
                 zIndex,
-
                 ...(!maximized && position
                     ? {
                         left: '0px',
