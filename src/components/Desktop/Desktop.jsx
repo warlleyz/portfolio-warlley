@@ -7,7 +7,7 @@ import {
     FileText,
     TerminalSquare,
 } from 'lucide-react'
-
+import About from '../../apps/About/About'
 import Taskbar from '../Taskbar/Taskbar'
 import Window from '../Window/Window'
 
@@ -65,6 +65,16 @@ function Desktop({ theme, toggleTheme }) {
                 zIndex: nextZIndex,
             },
         }))
+    }
+
+    const renderAppContent = (appId) => {
+        switch (appId) {
+            case 'about':
+                return <About />
+
+            default:
+                return <p>Aplicativo em desenvolvimento.</p>
+        }
     }
 
     const openApp = (appId) => {
@@ -236,7 +246,7 @@ function Desktop({ theme, toggleTheme }) {
                         onMinimize={() => minimizeApp(app.id)}
                         onMaximize={() => toggleMaximizeApp(app.id)}
                     >
-                        <p>{app.name}</p>
+                        {renderAppContent(app.id)}
                     </Window>
                 )
             })}

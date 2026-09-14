@@ -186,12 +186,16 @@
 
 .window-content {
     flex: 1;
-
     padding: 20px;
-
     overflow: auto;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
+.window-content::-webkit-scrollbar {
+    display: none;
+}
 
 /* =========================
    ABRIR
