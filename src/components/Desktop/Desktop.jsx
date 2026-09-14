@@ -52,28 +52,34 @@ function Desktop({ theme, toggleTheme }) {
         }, 200)
     }
 
-    const shortcuts = [
+    const apps = [
         {
+            id: 'about',
             name: 'Sobre mim',
             icon: <UserRound size={30} strokeWidth={1.8} />,
         },
         {
+            id: 'projects',
             name: 'Projetos',
             icon: <Folder size={30} strokeWidth={1.8} />,
         },
         {
+            id: 'technologies',
             name: 'Tecnologias',
             icon: <Cpu size={30} strokeWidth={1.8} />,
         },
         {
+            id: 'contact',
             name: 'Contato',
             icon: <Mail size={30} strokeWidth={1.8} />,
         },
         {
+            id: 'resume',
             name: 'Currículo',
             icon: <FileText size={30} strokeWidth={1.8} />,
         },
         {
+            id: 'terminal',
             name: 'Terminal',
             icon: <TerminalSquare size={30} strokeWidth={1.8} />,
         },
@@ -82,24 +88,24 @@ function Desktop({ theme, toggleTheme }) {
     return (
         <main className="desktop">
             <section className="desktop-shortcuts">
-                {shortcuts.map((shortcut) => (
+                {apps.map((app) => (
                     <button
-                        key={shortcut.name}
+                        key={app.id}
                         className="shortcut"
                         type="button"
                         onClick={() => {
-                            if (shortcut.name === 'Sobre mim') {
+                            if (app.id === 'about') {
                                 setTestWindowOpen(true)
                                 setTestWindowMinimized(false)
                             }
                         }}
                     >
                         <span className="shortcut-icon">
-                            {shortcut.icon}
+                            {app.icon}
                         </span>
 
                         <span className="shortcut-name">
-                            {shortcut.name}
+                            {app.name}
                         </span>
                     </button>
                 ))}

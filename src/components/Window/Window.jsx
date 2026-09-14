@@ -21,7 +21,9 @@ function Window({
             className={`window
               ${maximized ? 'window-maximized' : ''}
               ${minimizing ? 'window-minimizing' : ''}
+              ${minimizing && maximized ? 'window-maximized-minimizing' : ''}
               ${closing ? 'window-closing' : ''}
+              ${closing && maximized ? 'window-maximized-closing' : ''}
             `}
         >
             <div className="window-header">
