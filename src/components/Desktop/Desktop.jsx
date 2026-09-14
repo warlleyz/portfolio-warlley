@@ -1,4 +1,5 @@
 import './Desktop.css'
+import Taskbar from '../Taskbar/Taskbar'
 
 import {
     UserRound,
@@ -57,9 +58,7 @@ function Desktop() {
                 ))}
             </section>
 
-            <div className="taskbar-placeholder">
-                Barra de tarefas
-            </div>
+            <Taskbar />
         </main>
     )
 }

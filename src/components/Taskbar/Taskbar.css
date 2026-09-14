@@ -1,0 +1,79 @@
+.taskbar {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+
+    width: 68%;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 14px;
+
+    border-radius: 18px;
+
+    background: rgba(15, 23, 42, 0.58);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(18px);
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.taskbar-apps {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.taskbar-system {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.theme-button {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 10px;
+
+    background: transparent;
+    color: white;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.theme-button:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.theme-button:active {
+    transform: scale(0.94);
+}
+
+.taskbar-clock {
+    min-width: 90px;
+
+    display: flex;
+    flex-direction: column;
+
+    text-align: right;
+
+    font-size: 12px;
+    line-height: 1.35;
+
+    color: rgba(255, 255, 255, 0.8);
+}
