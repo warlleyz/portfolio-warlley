@@ -7,6 +7,7 @@ import {
     Mail,
     FileText,
     TerminalSquare,
+    LogIn,
 } from 'lucide-react'
 
 import About from '../../apps/About/About'
@@ -50,13 +51,26 @@ const apps = [
     },
 ]
 
+const projectApps = [
+    {
+        id: 'project-login-puc',
+        projectId: 'login-puc',
+        name: 'Login PUC',
+        icon: <LogIn size={30} strokeWidth={1.8} />,
+    },
+]
+
+const allApps = [
+    ...apps,
+    ...projectApps,
+]
+
 function Desktop({ theme, toggleTheme }) {
     const [windows, setWindows] = useState({})
     const topZIndex = useRef(10)
 
     const getNextZIndex = () => {
         topZIndex.current += 1
-
         return topZIndex.current
     }
 
@@ -92,6 +106,18 @@ function Desktop({ theme, toggleTheme }) {
                 zIndex: nextZIndex,
             },
         }))
+    }
+
+    const openProject = (project) => {
+        const projectApp = projectApps.find(
+            (app) => app.projectId === project.id,
+        )
+
+        if (!projectApp) {
+            return
+        }
+
+        openApp(projectApp.id)
     }
 
     const moveApp = (appId, position) => {
@@ -192,10 +218,6 @@ function Desktop({ theme, toggleTheme }) {
         }, 200)
     }
 
-    const handleOpenProject = (project) => {
-        console.log('Abrir projeto:', project)
-    }
-
     const renderAppContent = (appId) => {
         switch (appId) {
             case 'about':
@@ -204,8 +226,19 @@ function Desktop({ theme, toggleTheme }) {
             case 'projects':
                 return (
                     <Projects
-                        onOpenProject={handleOpenProject}
+                        onOpenProject={openProject}
                     />
+                )
+
+            case 'project-login-puc':
+                return (
+                    <div>
+                        <h2>Login PUC</h2>
+
+                        <p>
+                            Projeto web em desenvolvimento.
+                        </p>
+                    </div>
                 )
 
             default:
@@ -238,7 +271,7 @@ function Desktop({ theme, toggleTheme }) {
                 ))}
             </section>
 
-            {apps.map((app) => {
+            {allApps.map((app) => {
                 const windowState =
                     windows[app.id]
 
@@ -275,16 +308,10 @@ function Desktop({ theme, toggleTheme }) {
                             focusApp(app.id)
                         }
                         onPositionChange={(position) =>
-                            moveApp(
-                                app.id,
-                                position,
-                            )
+                            moveApp(app.id, position)
                         }
                         onSizeChange={(size) =>
-                            resizeApp(
-                                app.id,
-                                size,
-                            )
+                            resizeApp(app.id, size)
                         }
                         onClose={() =>
                             closeApp(app.id)
@@ -293,9 +320,7 @@ function Desktop({ theme, toggleTheme }) {
                             minimizeApp(app.id)
                         }
                         onMaximize={() =>
-                            toggleMaximizeApp(
-                                app.id,
-                            )
+                            toggleMaximizeApp(app.id)
                         }
                     >
                         {renderAppContent(app.id)}
@@ -306,7 +331,7 @@ function Desktop({ theme, toggleTheme }) {
             <Taskbar
                 theme={theme}
                 toggleTheme={toggleTheme}
-                apps={apps}
+                apps={allApps}
                 windows={windows}
                 toggleTaskbarApp={
                     toggleTaskbarApp
