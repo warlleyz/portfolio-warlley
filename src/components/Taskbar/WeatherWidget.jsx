@@ -46,7 +46,13 @@ const getWeatherEmoji = (
     }
 
     if (
-        [51, 53, 55, 56, 57].includes(code)
+        [
+            51,
+            53,
+            55,
+            56,
+            57,
+        ].includes(code)
     ) {
         return '🌦️'
     }
@@ -67,97 +73,200 @@ const getWeatherEmoji = (
 }
 
 function WeatherWidget() {
-    const [temperature, setTemperature] =
-        useState(null)
+    const geolocationSupported =
+        typeof navigator !== 'undefined' &&
+        Boolean(
+            navigator.geolocation,
+        )
 
-    const [weatherCode, setWeatherCode] =
-        useState(null)
-    
-    const [cloudCover, setCloudCover] =
-        useState(null)
+    const [
+        temperature,
+        setTemperature,
+    ] = useState(null)
+
+    const [
+        weatherCode,
+        setWeatherCode,
+    ] = useState(null)
+
+    const [
+        cloudCover,
+        setCloudCover,
+    ] = useState(null)
 
     const [status, setStatus] =
-        useState('loading')
+        useState(
+            geolocationSupported
+                ? 'loading'
+                : 'error',
+        )
+
+    const [
+        errorMessage,
+        setErrorMessage,
+    ] = useState(
+        geolocationSupported
+            ? ''
+            : 'Geolocalização não suportada',
+    )
 
     useEffect(() => {
-        if (!navigator.geolocation) {
-            setStatus('error')
+        if (!geolocationSupported) {
             return
         }
 
-        const loadWeather = () => {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    try {
-                        const {
-                            latitude,
-                            longitude,
-                        } = position.coords
+        let interval = null
+        let cancelled = false
 
-                        console.log('Latitude:', latitude)
-                        console.log('Longitude:', longitude)
-                        console.log(
-                            'Precisão:',
-                            position.coords.accuracy,
-                            'metros',
-                        )
+        const loadWeather = async (
+            latitude,
+            longitude,
+        ) => {
+            try {
+                const url =
+                    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,cloud_cover&timezone=auto`
 
-                        const url =
-                            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,cloud_cover&timezone=auto`
+                const response =
+                    await fetch(url)
 
-                        const response =
-                            await fetch(url)
+                if (!response.ok) {
+                    throw new Error(
+                        'Erro ao carregar clima',
+                    )
+                }
 
-                        if (!response.ok) {
-                            throw new Error(
-                                'Erro ao carregar clima',
+                const data =
+                    await response.json()
+
+                const current =
+                    data?.current
+
+                if (
+                    !current ||
+                    typeof current.temperature_2m !==
+                    'number'
+                ) {
+                    throw new Error(
+                        'Dados climáticos inválidos',
+                    )
+                }
+
+                if (cancelled) {
+                    return
+                }
+
+                setTemperature(
+                    current.temperature_2m
+                        .toFixed(1),
+                )
+
+                setWeatherCode(
+                    current.weather_code ??
+                    null,
+                )
+
+                setCloudCover(
+                    current.cloud_cover ??
+                    0,
+                )
+
+                setErrorMessage('')
+                setStatus('success')
+            } catch (error) {
+                if (cancelled) {
+                    return
+                }
+
+                console.error(
+                    'Erro ao carregar clima:',
+                    error,
+                )
+
+                setErrorMessage(
+                    'Clima indisponível',
+                )
+
+                setStatus('error')
+            }
+        }
+
+        navigator.geolocation
+            .getCurrentPosition(
+                (position) => {
+                    const {
+                        latitude,
+                        longitude,
+                    } = position.coords
+
+                    loadWeather(
+                        latitude,
+                        longitude,
+                    )
+
+                    interval =
+                        setInterval(() => {
+                            loadWeather(
+                                latitude,
+                                longitude,
                             )
-                        }
-
-                        const data =
-                            await response.json()
-
-                        setTemperature(
-                            data.current.temperature_2m.toFixed(1),
-                        )
-
-                        setWeatherCode(
-                            data.current.weather_code,
-                        )
-
-                        setCloudCover(
-                            data.current.cloud_cover,
-                        )
-
-                        setStatus('success')
-                    } catch {
-                        setStatus('error')
-                    }
+                        }, 10 * 60 * 1000)
                 },
 
-                () => {
+                (error) => {
+                    if (cancelled) {
+                        return
+                    }
+
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            setErrorMessage(
+                                'Localização bloqueada',
+                            )
+                            break
+
+                        case error.POSITION_UNAVAILABLE:
+                            setErrorMessage(
+                                'Localização indisponível',
+                            )
+                            break
+
+                        case error.TIMEOUT:
+                            setErrorMessage(
+                                'Tempo limite da localização',
+                            )
+                            break
+
+                        default:
+                            setErrorMessage(
+                                'Erro de localização',
+                            )
+                    }
+
                     setStatus('error')
                 },
 
                 {
-                    enableHighAccuracy: true,
-                    timeout: 15000,
-                    maximumAge: 0,
+                    enableHighAccuracy:
+                        false,
+
+                    timeout:
+                        10000,
+
+                    maximumAge:
+                        10 * 60 * 1000,
                 },
             )
-        }
-
-        loadWeather()
-
-        const interval = setInterval(
-            loadWeather,
-            10 * 60 * 1000,
-        )
 
         return () => {
-            clearInterval(interval)
+            cancelled = true
+
+            if (interval) {
+                clearInterval(
+                    interval,
+                )
+            }
         }
-    }, [])
+    }, [geolocationSupported])
 
     if (status === 'loading') {
         return (
@@ -175,7 +284,7 @@ function WeatherWidget() {
         return (
             <div
                 className="weather-widget"
-                title="Localização indisponível"
+                title={errorMessage}
             >
                 <span>🌡️</span>
                 <span>--°</span>

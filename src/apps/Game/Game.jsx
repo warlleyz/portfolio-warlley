@@ -4,7 +4,10 @@ import {
     useState,
 } from 'react'
 
-import { supabase } from '../../lib/supabase'
+import {
+    isSupabaseConfigured,
+    supabase,
+} from '../../lib/supabase'
 
 import './Game.css'
 
@@ -21,6 +24,11 @@ const initialDirection = {
     y: 0,
 }
 
+const initialFood = {
+    x: 14,
+    y: 10,
+}
+
 function Game({
     isActive = true,
 }) {
@@ -28,10 +36,7 @@ function Game({
         useState(initialSnake)
 
     const [food, setFood] =
-        useState({
-            x: 14,
-            y: 10,
-        })
+        useState(initialFood)
 
     const [score, setScore] =
         useState(0)
@@ -61,13 +66,23 @@ function Game({
     ] = useState([])
 
     const [
-        newGlobalRecord,
-        setNewGlobalRecord,
+        rankingStatus,
+        setRankingStatus,
+    ] = useState('loading')
+
+    const [
+        qualifiesForRanking,
+        setQualifiesForRanking,
     ] = useState(false)
 
     const [
         playerName,
         setPlayerName,
+    ] = useState('')
+
+    const [
+        saveError,
+        setSaveError,
     ] = useState('')
 
     const [gameOver, setGameOver] =
@@ -82,10 +97,46 @@ function Game({
     const globalRecordRef =
         useRef(0)
 
+    const rankingRef =
+        useRef([])
+
+    const snakeRef =
+        useRef(initialSnake)
+
+    const foodRef =
+        useRef(initialFood)
+
+    const scoreRef =
+        useRef(0)
+
+    const recordRef =
+        useRef(record)
+
     /* === RANKING GLOBAL === */
 
     const loadRanking =
         async () => {
+            if (
+                !isSupabaseConfigured ||
+                !supabase
+            ) {
+                setRanking([])
+                setGlobalRecord(0)
+                setGlobalPlayer('')
+                setRankingStatus(
+                    'unavailable',
+                )
+
+                rankingRef.current = []
+                globalRecordRef.current = 0
+
+                return
+            }
+
+            setRankingStatus(
+                'loading',
+            )
+
             const {
                 data,
                 error,
@@ -108,6 +159,10 @@ function Game({
                     error,
                 )
 
+                setRankingStatus(
+                    'error',
+                )
+
                 return
             }
 
@@ -117,6 +172,9 @@ function Game({
             setRanking(
                 scores,
             )
+
+            rankingRef.current =
+                scores
 
             const bestScore =
                 scores[0]?.score ?? 0
@@ -135,6 +193,41 @@ function Game({
 
             globalRecordRef.current =
                 bestScore
+
+            setRankingStatus(
+                'success',
+            )
+        }
+
+    const scoreQualifiesForTop5 =
+        (finalScore) => {
+            if (
+                !isSupabaseConfigured ||
+                !supabase ||
+                finalScore <= 0
+            ) {
+                return false
+            }
+
+            const currentRanking =
+                rankingRef.current
+
+            if (
+                currentRanking.length < 5
+            ) {
+                return true
+            }
+
+            const fifthPlaceScore =
+                Number(
+                    currentRanking[4]
+                        ?.score ?? 0,
+                )
+
+            return (
+                finalScore >
+                fifthPlaceScore
+            )
         }
 
     const saveGlobalRecord =
@@ -142,9 +235,22 @@ function Game({
             newScore,
             name = '',
         ) => {
+            if (
+                !isSupabaseConfigured ||
+                !supabase
+            ) {
+                setSaveError(
+                    'Ranking global indisponível.',
+                )
+
+                return
+            }
+
             const trimmedName =
                 name.trim() ||
                 'Visitante'
+
+            setSaveError('')
 
             const {
                 error,
@@ -160,14 +266,18 @@ function Game({
 
             if (error) {
                 console.error(
-                    'Erro ao salvar recorde:',
+                    'Erro ao salvar pontuação:',
                     error,
+                )
+
+                setSaveError(
+                    'Não foi possível salvar. Tente novamente.',
                 )
 
                 return
             }
 
-            setNewGlobalRecord(
+            setQualifiesForRanking(
                 false,
             )
 
@@ -177,17 +287,33 @@ function Game({
         }
 
     useEffect(() => {
-        loadRanking()
+        const timer =
+            setTimeout(() => {
+                loadRanking()
+            }, 0)
+
+        return () => {
+            clearTimeout(timer)
+        }
     }, [])
 
     /* === FOCO DO JOGO === */
 
     useEffect(() => {
         if (
-            !isActive &&
-            !gameOver
+            isActive ||
+            gameOver
         ) {
-            setPaused(true)
+            return
+        }
+
+        const timer =
+            setTimeout(() => {
+                setPaused(true)
+            }, 0)
+
+        return () => {
+            clearTimeout(timer)
         }
     }, [
         isActive,
@@ -195,11 +321,12 @@ function Game({
     ])
 
     useEffect(() => {
-        const handleWindowBlur = () => {
-            if (!gameOver) {
-                setPaused(true)
+        const handleWindowBlur =
+            () => {
+                if (!gameOver) {
+                    setPaused(true)
+                }
             }
-        }
 
         const handleVisibilityChange =
             () => {
@@ -232,10 +359,7 @@ function Game({
                 handleVisibilityChange,
             )
         }
-    }, [
-        gameOver,
-        isActive,
-    ])
+    }, [gameOver])
 
     /* === COMIDA === */
 
@@ -276,19 +400,31 @@ function Game({
             initialSnake,
         )
 
-        setFood({
-            x: 14,
-            y: 10,
-        })
+        setFood(
+            initialFood,
+        )
 
         directionRef.current =
             initialDirection
 
+        snakeRef.current =
+            initialSnake
+
+        foodRef.current =
+            initialFood
+
+        scoreRef.current = 0
+
         setScore(0)
         setGameOver(false)
         setPaused(false)
-        setNewGlobalRecord(false)
+
+        setQualifiesForRanking(
+            false,
+        )
+
         setPlayerName('')
+        setSaveError('')
     }
 
     /* === CONTROLES === */
@@ -416,14 +552,18 @@ function Game({
                 handleKeyDown,
             )
         }
-    }, [gameOver])
+    }, [
+        gameOver,
+        isActive,
+    ])
 
     /* === LOOP DO JOGO === */
 
     useEffect(() => {
         if (
             gameOver ||
-            paused
+            paused ||
+            !isActive
         ) {
             return
         }
@@ -436,126 +576,135 @@ function Game({
 
         const interval =
             setInterval(() => {
+                const currentSnake =
+                    snakeRef.current
+
+                const currentFood =
+                    foodRef.current
+
+                const head =
+                    currentSnake[0]
+
+                const nextHead = {
+                    x:
+                        head.x +
+                        directionRef
+                            .current.x,
+
+                    y:
+                        head.y +
+                        directionRef
+                            .current.y,
+                }
+
+                const hitWall =
+                    nextHead.x < 0 ||
+                    nextHead.x >=
+                    boardSize ||
+                    nextHead.y < 0 ||
+                    nextHead.y >=
+                    boardSize
+
+                const ateFood =
+                    nextHead.x ===
+                    currentFood.x &&
+                    nextHead.y ===
+                    currentFood.y
+
+                const bodyToCheck =
+                    ateFood
+                        ? currentSnake
+                        : currentSnake.slice(
+                            0,
+                            -1,
+                        )
+
+                const hitSnake =
+                    bodyToCheck.some(
+                        (segment) =>
+                            segment.x ===
+                            nextHead.x &&
+                            segment.y ===
+                            nextHead.y,
+                    )
+
+                if (
+                    hitWall ||
+                    hitSnake
+                ) {
+                    const finalScore =
+                        scoreRef.current
+
+                    setGameOver(true)
+
+                    setQualifiesForRanking(
+                        scoreQualifiesForTop5(
+                            finalScore,
+                        ),
+                    )
+
+                    return
+                }
+
+                const nextSnake = [
+                    nextHead,
+                    ...currentSnake,
+                ]
+
+                if (ateFood) {
+                    const newScore =
+                        scoreRef.current + 1
+
+                    scoreRef.current =
+                        newScore
+
+                    setScore(
+                        newScore,
+                    )
+
+                    const newRecord =
+                        Math.max(
+                            recordRef.current,
+                            newScore,
+                        )
+
+                    if (
+                        newRecord >
+                        recordRef.current
+                    ) {
+                        recordRef.current =
+                            newRecord
+
+                        setRecord(
+                            newRecord,
+                        )
+
+                        localStorage.setItem(
+                            'snake-record',
+                            newRecord,
+                        )
+                    }
+
+                    const newFood =
+                        getRandomFood(
+                            nextSnake,
+                        )
+
+                    foodRef.current =
+                        newFood
+
+                    setFood(
+                        newFood,
+                    )
+                } else {
+                    nextSnake.pop()
+                }
+
+                snakeRef.current =
+                    nextSnake
+
                 setSnake(
-                    (currentSnake) => {
-                        const head =
-                            currentSnake[0]
-
-                        const nextHead = {
-                            x:
-                                head.x +
-                                directionRef
-                                    .current.x,
-
-                            y:
-                                head.y +
-                                directionRef
-                                    .current.y,
-                        }
-
-                        const hitWall =
-                            nextHead.x < 0 ||
-                            nextHead.x >=
-                            boardSize ||
-                            nextHead.y < 0 ||
-                            nextHead.y >=
-                            boardSize
-
-                        const ateFood =
-                            nextHead.x ===
-                            food.x &&
-                            nextHead.y ===
-                            food.y
-
-                        const bodyToCheck =
-                            ateFood
-                                ? currentSnake
-                                : currentSnake.slice(
-                                    0,
-                                    -1,
-                                )
-
-                        const hitSnake =
-                            bodyToCheck.some(
-                                (segment) =>
-                                    segment.x ===
-                                    nextHead.x &&
-                                    segment.y ===
-                                    nextHead.y,
-                            )
-
-                        if (
-                            hitWall ||
-                            hitSnake
-                        ) {
-                            setGameOver(
-                                true,
-                            )
-
-                            if (
-                                score >
-                                globalRecordRef
-                                    .current
-                            ) {
-                                setNewGlobalRecord(
-                                    true,
-                                )
-                            }
-
-                            return currentSnake
-                        }
-
-                        const nextSnake = [
-                            nextHead,
-                            ...currentSnake,
-                        ]
-
-                        if (ateFood) {
-                            setScore(
-                                (
-                                    currentScore,
-                                ) => {
-                                    const newScore =
-                                        currentScore +
-                                        1
-
-                                    setRecord(
-                                        (
-                                            currentRecord,
-                                        ) => {
-                                            const newRecord =
-                                                Math.max(
-                                                    currentRecord,
-                                                    newScore,
-                                                )
-
-                                            localStorage
-                                                .setItem(
-                                                    'snake-record',
-                                                    newRecord,
-                                                )
-
-                                            return newRecord
-                                        },
-                                    )
-
-                                    return newScore
-                                },
-                            )
-
-                            setFood(
-                                getRandomFood(
-                                    nextSnake,
-                                ),
-                            )
-
-                            return nextSnake
-                        }
-
-                        nextSnake.pop()
-
-                        return nextSnake
-                    },
+                    nextSnake,
                 )
             }, speed)
 
@@ -565,10 +714,10 @@ function Game({
             )
         }
     }, [
-        food,
         score,
         gameOver,
         paused,
+        isActive,
     ])
 
     /* === POSIÇÃO === */
@@ -702,10 +851,10 @@ function Game({
                                                 Pontuação: {score}
                                             </span>
 
-                                            {newGlobalRecord ? (
+                                            {qualifiesForRanking ? (
                                                 <div className="game-record-form">
                                                     <span className="game-global-record">
-                                                        Novo recorde global!
+                                                        Você entrou no Top 5!
                                                     </span>
 
                                                     <input
@@ -726,6 +875,12 @@ function Game({
                                                         }
                                                     />
 
+                                                    {saveError && (
+                                                        <span>
+                                                            {saveError}
+                                                        </span>
+                                                    )}
+
                                                     <button
                                                         type="button"
                                                         onClick={() =>
@@ -735,7 +890,7 @@ function Game({
                                                             )
                                                         }
                                                     >
-                                                        Salvar recorde
+                                                        Salvar pontuação
                                                     </button>
                                                 </div>
                                             ) : (
@@ -777,7 +932,38 @@ function Game({
                     </div>
 
                     <div className="game-ranking-list">
-                        {ranking.length > 0 ? (
+                        {rankingStatus ===
+                            'loading' && (
+                                <div className="game-ranking-empty">
+                                    Carregando ranking...
+                                </div>
+                            )}
+
+                        {rankingStatus ===
+                            'error' && (
+                                <div className="game-ranking-empty">
+                                    Não foi possível carregar o ranking.
+                                </div>
+                            )}
+
+                        {rankingStatus ===
+                            'unavailable' && (
+                                <div className="game-ranking-empty">
+                                    Ranking indisponível.
+                                </div>
+                            )}
+
+                        {rankingStatus ===
+                            'success' &&
+                            ranking.length ===
+                            0 && (
+                                <div className="game-ranking-empty">
+                                    Nenhum recorde ainda.
+                                </div>
+                            )}
+
+                        {rankingStatus ===
+                            'success' &&
                             ranking.map(
                                 (
                                     player,
@@ -803,12 +989,7 @@ function Game({
                                         </strong>
                                     </div>
                                 ),
-                            )
-                        ) : (
-                            <div className="game-ranking-empty">
-                                Nenhum recorde ainda.
-                            </div>
-                        )}
+                            )}
                     </div>
                 </div>
             </div>

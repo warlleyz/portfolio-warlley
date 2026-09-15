@@ -167,9 +167,16 @@ Digite help para visualizar os aplicativos disponíveis.`,
             return
         }
 
+        const commandExists =
+            Object.prototype.hasOwnProperty.call(
+                commands,
+                typedCommand,
+            )
+
         const output =
-            commands[typedCommand] ??
-            `Comando não encontrado: ${typedCommand}
+            commandExists
+                ? commands[typedCommand]
+                : `Comando não encontrado: ${typedCommand}
 
 Digite help para visualizar os comandos disponíveis.`
 

@@ -44,6 +44,21 @@ function Taskbar({
         },
     )
 
+    const activeZIndex =
+        Math.max(
+            ...Object.values(windows)
+                .filter(
+                    (item) =>
+                        item?.open &&
+                        !item?.minimized,
+                )
+                .map(
+                    (item) =>
+                        item.zIndex ?? 0,
+                ),
+            0,
+        )
+
     return (
         <footer className="taskbar">
             <div className="taskbar-left">
@@ -78,7 +93,9 @@ function Taskbar({
                     }
 
                     const isActive =
-                        !windowState.minimized
+                        !windowState.minimized &&
+                        windowState.zIndex ===
+                        activeZIndex
 
                     return (
                         <button

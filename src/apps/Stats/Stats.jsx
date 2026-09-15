@@ -25,15 +25,15 @@ const wakatimeTimelineUrl =
 const activityOptions = [
     {
         id: 'annual',
-        label: 'Anual',
+        label: '12 meses',
     },
     {
         id: 'weekly',
-        label: 'Semanal',
+        label: '4 semanas',
     },
     {
         id: 'daily',
-        label: 'Diário',
+        label: '7 dias',
     },
 ]
 
@@ -61,6 +61,23 @@ function Stats() {
 
     const [activityPeriod, setActivityPeriod] =
         useState('annual')
+
+    const extractTimelineDays = (timelineData) => {
+        const possibleArrays = [
+            timelineData?.data,
+            timelineData?.days,
+            timelineData?.data?.days,
+            timelineData?.data?.data,
+        ]
+
+        const foundArray =
+            possibleArrays.find(
+                (value) =>
+                    Array.isArray(value),
+            )
+
+        return foundArray ?? []
+    }
 
     useEffect(() => {
         const loadGithubData = async () => {
@@ -175,23 +192,6 @@ function Stats() {
         loadWakatimeData()
     }, [])
 
-    const extractTimelineDays = (timelineData) => {
-        const possibleArrays = [
-            timelineData?.data,
-            timelineData?.days,
-            timelineData?.data?.days,
-            timelineData?.data?.data,
-        ]
-
-        const foundArray =
-            possibleArrays.find(
-                (value) =>
-                    Array.isArray(value),
-            )
-
-        return foundArray ?? []
-    }
-
     const getMainLanguage = () => {
         const languages = {}
 
@@ -272,6 +272,27 @@ function Stats() {
 
         if (!dateValue) {
             return null
+        }
+
+        if (
+            typeof dateValue === 'string' &&
+            /^\d{4}-\d{2}-\d{2}$/.test(
+                dateValue,
+            )
+        ) {
+            const [
+                year,
+                month,
+                dayNumber,
+            ] = dateValue
+                .split('-')
+                .map(Number)
+
+            return new Date(
+                year,
+                month - 1,
+                dayNumber,
+            )
         }
 
         const date =
@@ -374,6 +395,12 @@ function Stats() {
                     index + 7,
                 )
 
+            if (
+                weekDays.length === 0
+            ) {
+                continue
+            }
+
             const totalHours =
                 weekDays.reduce(
                     (total, day) =>
@@ -382,12 +409,41 @@ function Stats() {
                     0,
                 )
 
-            weeks.push({
-                label:
-                    `Sem ${weeks.length + 1}`,
+            const startDate =
+                getDayDate(
+                    weekDays[0],
+                )
 
-                value:
-                    totalHours,
+            const endDate =
+                getDayDate(
+                    weekDays[
+                    weekDays.length - 1
+                    ],
+                )
+
+            const label =
+                startDate &&
+                    endDate
+                    ? `${startDate
+                        .toLocaleDateString(
+                            'pt-BR',
+                            {
+                                day: '2-digit',
+                                month: '2-digit',
+                            },
+                        )}–${endDate
+                            .toLocaleDateString(
+                                'pt-BR',
+                                {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                },
+                            )}`
+                    : `Sem ${weeks.length + 1}`
+
+            weeks.push({
+                label,
+                value: totalHours,
             })
         }
 
@@ -477,7 +533,7 @@ function Stats() {
                 return 'Média semanal'
 
             default:
-                return 'Média anual'
+                return 'Média mensal'
         }
     }
 

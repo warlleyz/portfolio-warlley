@@ -261,21 +261,28 @@ ${getCartMenu()}`,
         }
 
         if (currentStep === 'remove-product') {
-            const index =
-                Number(typedCommand) - 1
+            const productNumber =
+                Number(typedCommand)
 
-            if (
-                Number.isNaN(index) ||
-                index < 0 ||
-                index >= cart.length
-            ) {
+            const isValidProductNumber =
+                Number.isInteger(
+                    productNumber,
+                ) &&
+                productNumber >= 1 &&
+                productNumber <=
+                cart.length
+
+            if (!isValidProductNumber) {
                 addHistory(
                     typedCommand,
-                    'Produto inválido. Digite um número válido:',
+                    'Produto inválido. Digite um número inteiro válido:',
                 )
 
                 return
             }
+
+            const index =
+                productNumber - 1
 
             const removedProduct =
                 cart[index]

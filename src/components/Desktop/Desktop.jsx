@@ -254,12 +254,43 @@ function Desktop({ theme, toggleTheme }) {
     }
 
     const toggleTaskbarApp = (appId) => {
-        if (windows[appId]?.minimized) {
+        const currentWindow =
+            windows[appId]
+
+        if (!currentWindow) {
+            return
+        }
+
+        if (currentWindow.minimized) {
             restoreApp(appId)
             return
         }
 
-        minimizeApp(appId)
+        const activeZIndex =
+            Math.max(
+                ...Object.values(windows)
+                    .filter(
+                        (item) =>
+                            item?.open &&
+                            !item?.minimized,
+                    )
+                    .map(
+                        (item) =>
+                            item.zIndex ?? 0,
+                    ),
+                0,
+            )
+
+        const isActive =
+            currentWindow.zIndex ===
+            activeZIndex
+
+        if (isActive) {
+            minimizeApp(appId)
+            return
+        }
+
+        focusApp(appId)
     }
 
     const toggleMaximizeApp = (appId) => {
