@@ -8,6 +8,7 @@ import {
     FileText,
     TerminalSquare,
     Code2,
+    Gamepad2,
 } from 'lucide-react'
 
 import About from '../../apps/About/About'
@@ -17,6 +18,7 @@ import Contact from '../../apps/Contact/Contact'
 import Resume from '../../apps/Resume/Resume'
 import Terminal from '../../apps/Terminal/Terminal'
 import Stats from '../../apps/Stats/Stats'
+import Game from '../../apps/Game/Game'
 import ProjectDemo from '../../apps/Projects/ProjectDemo'
 
 import projectsData from '../../data/projectsData'
@@ -64,6 +66,11 @@ const apps = [
             <Code2 size={30} strokeWidth={1.8} />
         ),
     },
+    {
+        id: 'game',
+        name: 'Snake',
+        icon: <Gamepad2 size={26} strokeWidth={1.7} />,
+    },
 ]
 
 const projectApps = projectsData.map((project) => {
@@ -105,25 +112,87 @@ function Desktop({ theme, toggleTheme }) {
     }
 
     const openApp = (appId) => {
-        const nextZIndex = getNextZIndex()
+        const nextZIndex =
+            getNextZIndex()
 
-        setWindows((previous) => ({
-            ...previous,
-            [appId]: {
-                ...previous[appId],
-                open: true,
-                minimized: false,
-                minimizing: false,
-                closing: false,
-                maximized:
-                    previous[appId]?.maximized ?? false,
-                position:
-                    previous[appId]?.position ?? null,
-                size:
-                    previous[appId]?.size ?? null,
-                zIndex: nextZIndex,
-            },
-        }))
+        setWindows((previous) => {
+            const currentWindow =
+                previous[appId]
+
+            const isGame =
+                appId === 'game'
+
+            let initialSize =
+                currentWindow?.size ?? null
+
+            let initialPosition =
+                currentWindow?.position ?? null
+
+            if (
+                isGame &&
+                !currentWindow?.size
+            ) {
+                const width =
+                    Math.min(
+                        920,
+                        window.innerWidth - 80,
+                    )
+
+                const height =
+                    Math.min(
+                        680,
+                        window.innerHeight - 110,
+                    )
+
+                initialSize = {
+                    width,
+                    height,
+                }
+
+                initialPosition = {
+                    x: Math.max(
+                        (window.innerWidth -
+                            width) /
+                        2,
+                        0,
+                    ),
+
+                    y: Math.max(
+                        (window.innerHeight -
+                            height) /
+                        2,
+                        0,
+                    ),
+                }
+            }
+
+            return {
+                ...previous,
+
+                [appId]: {
+                    ...currentWindow,
+
+                    open: true,
+                    minimized: false,
+                    minimizing: false,
+                    closing: false,
+
+                    maximized:
+                        currentWindow
+                            ?.maximized ??
+                        false,
+
+                    position:
+                        initialPosition,
+
+                    size:
+                        initialSize,
+
+                    zIndex:
+                        nextZIndex,
+                },
+            }
+        })
     }
 
     const openProject = (project) => {
@@ -314,15 +383,33 @@ function Desktop({ theme, toggleTheme }) {
                 const windowState =
                     windows[app.id]
 
-                if (
-                    !windowState?.open ||
-                    windowState.minimized
-                ) {
+                if (!windowState?.open) {
                     return null
                 }
 
+                const activeZIndex =
+                    Math.max(
+                        ...Object.values(windows)
+                            .filter(
+                                (item) =>
+                                    item?.open &&
+                                    !item?.minimized,
+                            )
+                            .map(
+                                (item) =>
+                                    item.zIndex ?? 0,
+                            ),
+                        0,
+                    )
+
+                const isActive =
+                    !windowState.minimized &&
+                    windowState.zIndex ===
+                    activeZIndex
+
                 return (
                     <Window
+                        hidden={windowState.minimized}
                         key={app.id}
                         title={app.name}
                         maximized={windowState.maximized}
@@ -350,7 +437,13 @@ function Desktop({ theme, toggleTheme }) {
                             toggleMaximizeApp(app.id)
                         }
                     >
-                        {renderAppContent(app.id)}
+                        {app.id === 'game'
+                            ? (
+                                <Game
+                                    isActive={isActive}
+                                />
+                            )
+                            : renderAppContent(app.id)}
                     </Window>
                 )
             })}

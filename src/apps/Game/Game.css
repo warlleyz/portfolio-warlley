@@ -1,0 +1,490 @@
+.game {
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    overflow: hidden;
+
+    color: var(--text-primary);
+}
+
+/* === CABEÇALHO === */
+
+.game-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+
+    flex-shrink: 0;
+}
+
+.game-label {
+    font-size: 10px;
+    font-weight: 500;
+
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+
+    color: #3b82f6;
+}
+
+.game-header h1 {
+    margin: 2px 0 0;
+
+    font-size: 24px;
+    font-weight: 650;
+}
+
+.game-header p {
+    margin: 3px 0 0;
+
+    font-size: 11px;
+
+    color: var(--text-secondary);
+}
+
+/* === PONTUAÇÃO === */
+
+.game-score {
+    display: flex;
+    gap: 7px;
+
+    flex-shrink: 0;
+}
+
+.game-score>div {
+    min-width: 66px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    padding: 8px 10px;
+
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+}
+
+.game-score span {
+    font-size: 9px;
+
+    color: var(--text-secondary);
+}
+
+.game-score strong {
+    font-size: 15px;
+    font-weight: 650;
+}
+
+.game-score small {
+    max-width: 100px;
+
+    overflow: hidden;
+
+    margin-top: 1px;
+
+    font-size: 10px;
+    font-weight: 500;
+
+    color: #60a5fa;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* === ÁREA PRINCIPAL === */
+
+.game-main {
+    width: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1fr) minmax(190px, 240px);
+    gap: 16px;
+
+    flex: 1;
+
+    overflow: hidden;
+}
+
+/* === JOGO === */
+
+.game-container {
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.game-board {
+    position: relative;
+
+    width: min(100%, 520px);
+    height: auto;
+
+    max-width: 520px;
+    max-height: 100%;
+
+    aspect-ratio: 1 / 1;
+
+    overflow: hidden;
+
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+
+    background-color:
+        rgba(0, 0, 0, 0.28);
+
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.018) 1px,
+            transparent 1px),
+        linear-gradient(90deg,
+            rgba(255, 255, 255, 0.018) 1px,
+            transparent 1px);
+
+    background-size:
+        5% 5%;
+
+    user-select: none;
+
+    contain:
+        layout paint;
+}
+
+/* === COBRA === */
+
+.snake-segment {
+    position: absolute;
+
+    box-sizing: border-box;
+
+    padding: 1px;
+
+    border: 1px solid rgba(5, 10, 20, 0.45);
+    border-radius: 4px;
+
+    background: #3b82f6;
+
+    transition:
+        left 0.04s linear,
+        top 0.04s linear;
+
+    will-change:
+        left,
+        top;
+}
+
+.snake-head {
+    background: #60a5fa;
+}
+
+/* === COMIDA === */
+
+.game-food {
+    position: absolute;
+
+    box-sizing: border-box;
+
+    border: 5px solid transparent;
+    border-radius: 50%;
+
+    background: #ef4444;
+    background-clip:
+        padding-box;
+}
+
+/* === RANKING === */
+
+.game-ranking {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    align-self: center;
+
+    padding: 14px;
+
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+
+    background:
+        rgba(255, 255, 255, 0.025);
+}
+
+.game-ranking-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    margin-bottom: 2px;
+}
+
+.game-ranking-header span:first-child {
+    font-size: 14px;
+    font-weight: 650;
+
+    color: var(--text-primary);
+}
+
+.game-ranking-header span:last-child {
+    font-size: 9px;
+
+    color: var(--text-secondary);
+}
+
+.game-ranking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.game-ranking-item {
+    display: grid;
+    grid-template-columns:
+        30px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 7px;
+
+    padding: 8px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(255, 255, 255, 0.03);
+}
+
+.game-ranking-position {
+    font-size: 10px;
+    font-weight: 650;
+
+    color: #60a5fa;
+}
+
+.game-ranking-name {
+    overflow: hidden;
+
+    font-size: 10px;
+
+    color: var(--text-secondary);
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.game-ranking-item strong {
+    font-size: 11px;
+    font-weight: 650;
+
+    color: var(--text-primary);
+}
+
+.game-ranking-empty {
+    padding: 10px 0;
+
+    font-size: 10px;
+
+    color: var(--text-secondary);
+}
+
+/* === OVERLAY === */
+
+.game-overlay {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 20px;
+
+    background:
+        rgba(5, 10, 20, 0.78);
+
+    backdrop-filter:
+        blur(5px);
+
+    text-align: center;
+
+    z-index: 5;
+}
+
+.game-overlay>strong {
+    font-size: 24px;
+    font-weight: 650;
+
+    color: #ffffff;
+}
+
+.game-overlay>span {
+    font-size: 11px;
+
+    color:
+        rgba(255, 255, 255, 0.72);
+}
+
+.game-overlay button {
+    margin-top: 7px;
+    padding: 8px 13px;
+
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    border-radius: 9px;
+
+    background:
+        rgba(59, 130, 246, 0.15);
+
+    color: #93c5fd;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+/* === RECORDE GLOBAL === */
+
+.game-record-form {
+    width: min(250px, 80%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    margin-top: 6px;
+}
+
+.game-global-record {
+    font-size: 12px;
+    font-weight: 600;
+
+    color: #60a5fa;
+}
+
+.game-record-form input {
+    width: 100%;
+
+    padding: 9px 11px;
+
+    border: 1px solid var(--glass-border);
+    border-radius: 9px;
+
+    outline: none;
+
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    color: #ffffff;
+
+    font-size: 11px;
+    text-align: center;
+}
+
+.game-record-form input::placeholder {
+    color:
+        rgba(255, 255, 255, 0.45);
+}
+
+.game-record-form input:focus {
+    border-color:
+        rgba(96, 165, 250, 0.65);
+}
+
+/* === RESPONSIVO === */
+
+@media (max-width: 700px) {
+    .game-main {
+        grid-template-columns: 1fr;
+
+        overflow-y: auto;
+    }
+
+    .game-ranking {
+        width: 100%;
+
+        align-self: auto;
+    }
+
+    .game-board {
+        width: min(100%, 440px);
+    }
+}
+
+@media (max-width: 600px) {
+    .game-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .game-score {
+        width: 100%;
+    }
+
+    .game-score>div {
+        flex: 1;
+
+        min-width: 0;
+    }
+}
+
+@media (max-width: 430px) {
+    .game {
+        gap: 9px;
+    }
+
+    .game-header p {
+        display: none;
+    }
+
+    .game-score {
+        gap: 4px;
+    }
+
+    .game-score>div {
+        padding: 6px;
+    }
+
+    .game-score span {
+        font-size: 8px;
+    }
+
+    .game-score strong {
+        font-size: 13px;
+    }
+
+    .game-ranking {
+        padding: 10px;
+    }
+
+    .game-ranking-item {
+        padding: 6px;
+    }
+
+    .game-board {
+        border-radius: 11px;
+    }
+}

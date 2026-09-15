@@ -26,6 +26,7 @@ function Window({
     onSizeChange,
     zIndex = 10,
     onFocus,
+    hidden = false,
 }) {
     const windowRef = useRef(null)
 
@@ -543,6 +544,10 @@ function Window({
                 }
             `}
             style={{
+                display: hidden
+                    ? 'none'
+                    : undefined,
+                
                 zIndex,
 
                 ...(
