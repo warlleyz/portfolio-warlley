@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import WeatherWidget from './WeatherWidget'
 
 import {
     Moon,
@@ -100,6 +101,10 @@ function Taskbar({
             </div>
 
             <div className="taskbar-right">
+                <div className="taskbar-right">
+                    <WeatherWidget />
+                </div>
+                
                 <div className="taskbar-clock">
                     <span>{time}</span>
                     <span>{date}</span>

@@ -14,6 +14,7 @@ import Projects from '../../apps/Projects/Projects'
 import Technologies from '../../apps/Technologies/Technologies'
 import Contact from '../../apps/Contact/Contact'
 import Resume from '../../apps/Resume/Resume'
+import Terminal from '../../apps/Terminal/Terminal'
 import ProjectDemo from '../../apps/Projects/ProjectDemo'
 
 import projectsData from '../../data/projectsData'
@@ -238,6 +239,13 @@ function Desktop({ theme, toggleTheme }) {
 
             case 'resume':
                 return <Resume />
+
+            case 'terminal':
+                return (
+                    <Terminal
+                        onOpenApp={openApp}
+                    />
+                )
 
             default:
                 if (appId.startsWith('project-')) {

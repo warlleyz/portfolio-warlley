@@ -1,0 +1,39 @@
+/* === CLIMA === */
+.weather-widget {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    height: 34px;
+
+    padding: 0 9px;
+
+    border-radius: 9px;
+
+    color: var(--text-primary);
+
+    font-size: 12px;
+    font-weight: 500;
+
+    user-select: none;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.weather-widget:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.weather-widget-emoji {
+    font-size: 15px;
+    line-height: 1;
+}
+
+.weather-widget-temperature {
+    min-width: 24px;
+
+    text-align: center;
+}
