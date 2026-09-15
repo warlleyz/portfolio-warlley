@@ -1,0 +1,182 @@
+.resume {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    width: 100%;
+
+    padding-bottom: 8px;
+
+    color: var(--text-primary);
+}
+
+/* === CABEÇALHO === */
+.resume-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.resume-label {
+    font-size: 11px;
+    font-weight: 500;
+
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+
+    color: #3b82f6;
+}
+
+.resume-header h1 {
+    margin: 0;
+
+    font-size: 26px;
+    font-weight: 650;
+    letter-spacing: -0.5px;
+}
+
+.resume-header p {
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.6;
+
+    color: var(--text-secondary);
+}
+
+/* === CURRÍCULO === */
+.resume-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 18px;
+
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.resume-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 13px;
+
+    background: rgba(59, 130, 246, 0.09);
+
+    color: #3b82f6;
+}
+
+.resume-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.resume-info span {
+    font-size: 11px;
+
+    color: var(--text-secondary);
+}
+
+.resume-info strong {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.resume-info p {
+    margin: 0;
+
+    font-size: 12px;
+
+    color: var(--text-secondary);
+}
+
+/* === DETALHES === */
+.resume-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.resume-detail {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    padding: 14px;
+
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+}
+
+.resume-detail svg {
+    flex-shrink: 0;
+
+    margin-top: 2px;
+
+    color: #3b82f6;
+}
+
+.resume-detail div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.resume-detail span {
+    font-size: 10px;
+
+    color: var(--text-secondary);
+}
+
+.resume-detail strong {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.resume-detail p {
+    margin: 0;
+
+    font-size: 11px;
+
+    color: var(--text-secondary);
+}
+
+/* === BOTÃO === */
+.resume-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    width: fit-content;
+
+    padding: 9px 14px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #3b82f6;
+
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.resume-button:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}

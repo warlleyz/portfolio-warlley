@@ -13,6 +13,7 @@ import About from '../../apps/About/About'
 import Projects from '../../apps/Projects/Projects'
 import Technologies from '../../apps/Technologies/Technologies'
 import Contact from '../../apps/Contact/Contact'
+import Resume from '../../apps/Resume/Resume'
 import ProjectDemo from '../../apps/Projects/ProjectDemo'
 
 import projectsData from '../../data/projectsData'
@@ -234,6 +235,9 @@ function Desktop({ theme, toggleTheme }) {
 
             case 'contact':
                 return <Contact />
+
+            case 'resume':
+                return <Resume />
 
             default:
                 if (appId.startsWith('project-')) {
