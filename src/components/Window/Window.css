@@ -259,6 +259,26 @@
     cursor: nwse-resize;
 }
 
+.resize-handle-top,
+.resize-handle-bottom {
+    cursor: ns-resize;
+}
+
+.resize-handle-left,
+.resize-handle-right {
+    cursor: ew-resize;
+}
+
+.resize-handle-top-left,
+.resize-handle-bottom-right {
+    cursor: nwse-resize;
+}
+
+.resize-handle-top-right,
+.resize-handle-bottom-left {
+    cursor: nesw-resize;
+}
+
 .window-maximized .resize-handle {
     display: none;
 }

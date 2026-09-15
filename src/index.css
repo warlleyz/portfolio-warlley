@@ -52,3 +52,42 @@ body {
 
   --wallpaper-glow: rgba(37, 99, 235, 0.12);
 }
+
+/* === CURSOR === */
+html,
+body,
+#root {
+  cursor:
+    url('/cursor-default.svg') 4 2,
+    default;
+}
+
+button,
+a,
+[role='button'],
+.taskbar-button,
+.desktop-shortcut,
+.contact-card,
+.resume-button,
+.project-button {
+  cursor:
+    url('/cursor-pointer.svg') 4 2,
+    pointer !important;
+}
+
+input,
+textarea {
+  cursor: text;
+}
+
+.window-header {
+  cursor:
+    url('/cursor-grab.svg') 8 8,
+    grab;
+}
+
+.window-dragging .window-header {
+  cursor:
+    url('/cursor-grab.svg') 8 8,
+    grabbing;
+}
