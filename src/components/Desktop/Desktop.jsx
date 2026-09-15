@@ -12,6 +12,7 @@ import {
 import About from '../../apps/About/About'
 import Projects from '../../apps/Projects/Projects'
 import Technologies from '../../apps/Technologies/Technologies'
+import Contact from '../../apps/Contact/Contact'
 import ProjectDemo from '../../apps/Projects/ProjectDemo'
 
 import projectsData from '../../data/projectsData'
@@ -227,9 +228,12 @@ function Desktop({ theme, toggleTheme }) {
                         onOpenProject={openProject}
                     />
                 )
-                
+
             case 'technologies':
                 return <Technologies />
+
+            case 'contact':
+                return <Contact />
 
             default:
                 if (appId.startsWith('project-')) {
