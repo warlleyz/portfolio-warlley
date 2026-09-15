@@ -20,7 +20,23 @@ const projectsData = [
 
         demoType: 'terminal',
 
-        demo: {},
+        demo: {
+            mode: 'simple',
+
+            command: 'curl GET /clima',
+
+            output: `HTTP/1.1 200 OK
+
+            {
+                "cidade": "Belo Horizonte",
+                "temperatura": 27.4,
+                "umidade": 51,
+                "vento": 12.3,
+                "direcaoVento": 135,
+                "temperaturaMaxima": 29.1,
+                "temperaturaMinima": 18.7
+            }`,
+        },
 
         github:
             'https://github.com/warlleyz',
@@ -41,7 +57,11 @@ const projectsData = [
 
         demoType: 'terminal',
 
-        demo: {},
+        demo: {
+            mode: 'cart',
+
+            command: 'java Main',
+        },
 
         github:
             'https://github.com/warlleyz',
@@ -90,8 +110,13 @@ const projectsData = [
         demoType: 'media',
 
         demo: {
-            video: '',
-            images: [],
+            video:
+                `${import.meta.env.BASE_URL}projects/media/snakepy/demo.mp4`,
+
+            images: [
+                `${import.meta.env.BASE_URL}projects/media/snakepy/images/menu.png`,
+                `${import.meta.env.BASE_URL}projects/media/snakepy/images/game.png`,
+            ],
         },
 
         github:
