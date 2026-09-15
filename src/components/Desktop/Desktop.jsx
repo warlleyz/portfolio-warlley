@@ -7,6 +7,7 @@ import {
     Mail,
     FileText,
     TerminalSquare,
+    Code2,
 } from 'lucide-react'
 
 import About from '../../apps/About/About'
@@ -15,6 +16,7 @@ import Technologies from '../../apps/Technologies/Technologies'
 import Contact from '../../apps/Contact/Contact'
 import Resume from '../../apps/Resume/Resume'
 import Terminal from '../../apps/Terminal/Terminal'
+import Stats from '../../apps/Stats/Stats'
 import ProjectDemo from '../../apps/Projects/ProjectDemo'
 
 import projectsData from '../../data/projectsData'
@@ -54,6 +56,13 @@ const apps = [
         id: 'terminal',
         name: 'Terminal',
         icon: <TerminalSquare size={30} strokeWidth={1.8} />,
+    },
+    {
+        id: 'stats',
+        name: 'Estatísticas',
+        icon: (
+            <Code2 size={30} strokeWidth={1.8} />
+        ),
     },
 ]
 
@@ -247,6 +256,9 @@ function Desktop({ theme, toggleTheme }) {
                     />
                 )
 
+            case 'stats':
+                return <Stats />
+
             default:
                 if (appId.startsWith('project-')) {
                     const projectId =
@@ -284,6 +296,7 @@ function Desktop({ theme, toggleTheme }) {
                         key={app.id}
                         className="shortcut"
                         type="button"
+                        data-app-id={app.id}
                         onClick={() => openApp(app.id)}
                     >
                         <span className="shortcut-icon">

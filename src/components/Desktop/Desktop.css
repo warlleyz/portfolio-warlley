@@ -98,3 +98,19 @@
     line-height: 1.2;
     text-align: center;
 }
+
+/* === RESPONSIVO === */
+
+@media (max-height: 760px) {
+    .desktop-shortcuts {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-content: flex-start;
+
+        max-height: calc(100vh - 45px);
+
+        column-gap: 18px;
+        row-gap: 18px;
+    }
+}
