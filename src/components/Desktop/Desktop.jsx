@@ -398,6 +398,8 @@ function Desktop({ theme, toggleTheme }) {
                         type="button"
                         data-app-id={app.id}
                         onClick={() => openApp(app.id)}
+                        aria-label={`Abrir ${app.name}`}
+                        title={app.name}
                     >
                         <span className="shortcut-icon">
                             {app.icon}
