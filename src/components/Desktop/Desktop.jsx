@@ -445,6 +445,7 @@ function Desktop({ theme, toggleTheme }) {
                         hidden={windowState.minimized}
                         key={app.id}
                         title={app.name}
+                        active={isActive}
                         maximized={windowState.maximized}
                         minimizing={windowState.minimizing}
                         closing={windowState.closing}

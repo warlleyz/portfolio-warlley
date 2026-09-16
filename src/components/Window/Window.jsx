@@ -27,6 +27,7 @@ function Window({
     zIndex = 10,
     onFocus,
     hidden = false,
+    active = false,
 }) {
     const windowRef = useRef(null)
 
@@ -35,7 +36,8 @@ function Window({
             return
         }
 
-        const windowElement = windowRef.current
+        const windowElement =
+            windowRef.current
 
         if (!windowElement) {
             return
@@ -50,15 +52,22 @@ function Window({
         windowElement.style.animation = ''
     }, [maximized])
 
-    const handleResizeStart = (event, direction) => {
-        if (maximized || event.button !== 0) {
+    const handleResizeStart = (
+        event,
+        direction,
+    ) => {
+        if (
+            maximized ||
+            event.button !== 0
+        ) {
             return
         }
 
         event.preventDefault()
         event.stopPropagation()
 
-        const windowElement = windowRef.current
+        const windowElement =
+            windowRef.current
 
         if (!windowElement) {
             return
@@ -69,24 +78,44 @@ function Window({
         const rect =
             windowElement.getBoundingClientRect()
 
-        const startX = event.clientX
-        const startY = event.clientY
+        const startX =
+            event.clientX
 
-        const startLeft = rect.left
-        const startTop = rect.top
-        const startRight = rect.right
-        const startBottom = rect.bottom
+        const startY =
+            event.clientY
 
-        const startWidth = rect.width
-        const startHeight = rect.height
+        const startLeft =
+            rect.left
+
+        const startTop =
+            rect.top
+
+        const startRight =
+            rect.right
+
+        const startBottom =
+            rect.bottom
+
+        const startWidth =
+            rect.width
+
+        const startHeight =
+            rect.height
 
         const minWidth = 420
         const minHeight = 280
 
-        let currentX = startLeft
-        let currentY = startTop
-        let currentWidth = startWidth
-        let currentHeight = startHeight
+        let currentX =
+            startLeft
+
+        let currentY =
+            startTop
+
+        let currentWidth =
+            startWidth
+
+        let currentHeight =
+            startHeight
 
         let animationFrame = null
 
@@ -94,57 +123,89 @@ function Window({
             'window-resizing',
         )
 
-        const handlePointerMove = (moveEvent) => {
+        const handlePointerMove = (
+            moveEvent,
+        ) => {
             const deltaX =
-                moveEvent.clientX - startX
+                moveEvent.clientX -
+                startX
 
             const deltaY =
-                moveEvent.clientY - startY
+                moveEvent.clientY -
+                startY
 
-            if (direction.includes('right')) {
-                currentWidth = Math.min(
-                    Math.max(
-                        startWidth + deltaX,
-                        minWidth,
-                    ),
-                    window.innerWidth - startLeft,
+            if (
+                direction.includes(
+                    'right',
                 )
+            ) {
+                currentWidth =
+                    Math.min(
+                        Math.max(
+                            startWidth +
+                            deltaX,
+                            minWidth,
+                        ),
+                        window.innerWidth -
+                        startLeft,
+                    )
             }
 
-            if (direction.includes('left')) {
-                currentWidth = Math.min(
-                    Math.max(
-                        startWidth - deltaX,
-                        minWidth,
-                    ),
-                    startRight,
+            if (
+                direction.includes(
+                    'left',
                 )
+            ) {
+                currentWidth =
+                    Math.min(
+                        Math.max(
+                            startWidth -
+                            deltaX,
+                            minWidth,
+                        ),
+                        startRight,
+                    )
 
                 currentX =
-                    startRight - currentWidth
+                    startRight -
+                    currentWidth
             }
 
-            if (direction.includes('bottom')) {
-                currentHeight = Math.min(
-                    Math.max(
-                        startHeight + deltaY,
-                        minHeight,
-                    ),
-                    window.innerHeight - startTop,
+            if (
+                direction.includes(
+                    'bottom',
                 )
+            ) {
+                currentHeight =
+                    Math.min(
+                        Math.max(
+                            startHeight +
+                            deltaY,
+                            minHeight,
+                        ),
+                        window.innerHeight -
+                        startTop,
+                    )
             }
 
-            if (direction.includes('top')) {
-                currentHeight = Math.min(
-                    Math.max(
-                        startHeight - deltaY,
-                        minHeight,
-                    ),
-                    startBottom,
+            if (
+                direction.includes(
+                    'top',
                 )
+            ) {
+                currentHeight =
+                    Math.min(
+                        Math.max(
+                            startHeight -
+                            deltaY,
+                            minHeight,
+                        ),
+                        startBottom,
+                    )
 
                 currentY =
-                    startBottom - currentHeight
+                    startBottom -
+                    currentHeight
             }
 
             if (animationFrame) {
@@ -154,22 +215,24 @@ function Window({
             }
 
             animationFrame =
-                requestAnimationFrame(() => {
-                    windowElement.style.left =
-                        '0px'
+                requestAnimationFrame(
+                    () => {
+                        windowElement.style.left =
+                            '0px'
 
-                    windowElement.style.top =
-                        '0px'
+                        windowElement.style.top =
+                            '0px'
 
-                    windowElement.style.translate =
-                        `${currentX}px ${currentY}px`
+                        windowElement.style.translate =
+                            `${currentX}px ${currentY}px`
 
-                    windowElement.style.width =
-                        `${currentWidth}px`
+                        windowElement.style.width =
+                            `${currentWidth}px`
 
-                    windowElement.style.height =
-                        `${currentHeight}px`
-                })
+                        windowElement.style.height =
+                            `${currentHeight}px`
+                    },
+                )
         }
 
         const finishResize = () => {
@@ -184,13 +247,19 @@ function Window({
             )
 
             onSizeChange?.({
-                width: currentWidth,
-                height: currentHeight,
+                width:
+                    currentWidth,
+
+                height:
+                    currentHeight,
             })
 
             onPositionChange?.({
-                x: currentX,
-                y: currentY,
+                x:
+                    currentX,
+
+                y:
+                    currentY,
             })
 
             window.removeEventListener(
@@ -225,7 +294,9 @@ function Window({
         )
     }
 
-    const handleDragStart = (event) => {
+    const handleDragStart = (
+        event,
+    ) => {
         if (event.button !== 0) {
             return
         }
@@ -238,6 +309,7 @@ function Window({
         }
 
         event.preventDefault()
+
         onFocus?.()
 
         const startPointerX =
@@ -321,10 +393,12 @@ function Window({
                         true
 
                     const restoredWidth =
-                        size?.width ?? 720
+                        size?.width ??
+                        720
 
                     const restoredHeight =
-                        size?.height ?? 480
+                        size?.height ??
+                        480
 
                     currentWidth =
                         Math.min(
@@ -340,68 +414,73 @@ function Window({
 
                     onMaximize?.()
 
-                    requestAnimationFrame(() => {
-                        const restoredElement =
-                            windowRef.current
+                    requestAnimationFrame(
+                        () => {
+                            const restoredElement =
+                                windowRef.current
 
-                        if (!restoredElement) {
-                            return
-                        }
+                            if (
+                                !restoredElement
+                            ) {
+                                return
+                            }
 
-                        restoredElement.style.transition =
-                            'none'
+                            restoredElement.style.transition =
+                                'none'
 
-                        restoredElement.style.animation =
-                            'none'
+                            restoredElement.style.animation =
+                                'none'
 
-                        restoredElement.style.width =
-                            `${currentWidth}px`
+                            restoredElement.style.width =
+                                `${currentWidth}px`
 
-                        restoredElement.style.height =
-                            `${currentHeight}px`
+                            restoredElement.style.height =
+                                `${currentHeight}px`
 
-                        currentX =
-                            Math.min(
+                            currentX =
+                                Math.min(
+                                    Math.max(
+                                        moveEvent.clientX -
+                                        currentWidth *
+                                        pointerRatioX,
+                                        0,
+                                    ),
+                                    Math.max(
+                                        window.innerWidth -
+                                        currentWidth,
+                                        0,
+                                    ),
+                                )
+
+                            currentY =
                                 Math.max(
-                                    moveEvent.clientX -
-                                    currentWidth *
-                                    pointerRatioX,
+                                    moveEvent.clientY -
+                                    20,
                                     0,
-                                ),
-                                Math.max(
-                                    window.innerWidth -
-                                    currentWidth,
-                                    0,
-                                ),
+                                )
+
+                            restoredElement.style.left =
+                                '0px'
+
+                            restoredElement.style.top =
+                                '0px'
+
+                            restoredElement.style.translate =
+                                `${currentX}px ${currentY}px`
+
+                            offsetX =
+                                moveEvent.clientX -
+                                currentX
+
+                            offsetY =
+                                moveEvent.clientY -
+                                currentY
+
+                            restoredElement.classList.add(
+                                'window-dragging',
                             )
-
-                        currentY =
-                            Math.max(
-                                moveEvent.clientY - 20,
-                                0,
-                            )
-
-                        restoredElement.style.left =
-                            '0px'
-
-                        restoredElement.style.top =
-                            '0px'
-
-                        restoredElement.style.translate =
-                            `${currentX}px ${currentY}px`
-
-                        offsetX =
-                            moveEvent.clientX -
-                            currentX
-
-                        offsetY =
-                            moveEvent.clientY -
-                            currentY
-
-                        restoredElement.classList.add(
-                            'window-dragging',
-                        )
-                    })
+                        },
+                    )
 
                     return
                 }
@@ -418,35 +497,39 @@ function Window({
                 return
             }
 
-            const maxX = Math.max(
-                window.innerWidth -
-                currentWidth,
-                0,
-            )
-
-            const maxY = Math.max(
-                window.innerHeight -
-                currentHeight,
-                0,
-            )
-
-            currentX = Math.min(
+            const maxX =
                 Math.max(
-                    moveEvent.clientX -
-                    offsetX,
+                    window.innerWidth -
+                    currentWidth,
                     0,
-                ),
-                maxX,
-            )
+                )
 
-            currentY = Math.min(
+            const maxY =
                 Math.max(
-                    moveEvent.clientY -
-                    offsetY,
+                    window.innerHeight -
+                    currentHeight,
                     0,
-                ),
-                maxY,
-            )
+                )
+
+            currentX =
+                Math.min(
+                    Math.max(
+                        moveEvent.clientX -
+                        offsetX,
+                        0,
+                    ),
+                    maxX,
+                )
+
+            currentY =
+                Math.min(
+                    Math.max(
+                        moveEvent.clientY -
+                        offsetY,
+                        0,
+                    ),
+                    maxY,
+                )
 
             activeWindow.style.left =
                 '0px'
@@ -480,8 +563,11 @@ function Window({
 
             if (dragging) {
                 onPositionChange?.({
-                    x: currentX,
-                    y: currentY,
+                    x:
+                        currentX,
+
+                    y:
+                        currentY,
                 })
             }
 
@@ -526,36 +612,50 @@ function Window({
         onMaximize?.()
     }
 
+    const windowClassName = [
+        'window',
+
+        active
+            ? 'window-active'
+            : 'window-inactive',
+
+        maximized
+            ? 'window-maximized'
+            : '',
+
+        minimizing
+            ? 'window-minimizing'
+            : '',
+
+        closing
+            ? 'window-closing'
+            : '',
+    ]
+        .filter(Boolean)
+        .join(' ')
+
     return (
         <div
             ref={windowRef}
-            className={`window
-                ${maximized
-                    ? 'window-maximized'
-                    : ''
-                }
-                ${minimizing
-                    ? 'window-minimizing'
-                    : ''
-                }
-                ${closing
-                    ? 'window-closing'
-                    : ''
-                }
-            `}
+            className={windowClassName}
             style={{
-                display: hidden
-                    ? 'none'
-                    : undefined,
-                
+                display:
+                    hidden
+                        ? 'none'
+                        : undefined,
+
                 zIndex,
 
                 ...(
                     !maximized &&
                         position
                         ? {
-                            left: '0px',
-                            top: '0px',
+                            left:
+                                '0px',
+
+                            top:
+                                '0px',
+
                             translate:
                                 `${position.x}px ${position.y}px`,
                         }
@@ -568,6 +668,7 @@ function Window({
                         ? {
                             width:
                                 `${size.width}px`,
+
                             height:
                                 `${size.height}px`,
                         }
@@ -591,17 +692,23 @@ function Window({
 
                 <div
                     className="window-controls"
-                    onPointerDown={(event) =>
+                    onPointerDown={(
+                        event,
+                    ) =>
                         event.stopPropagation()
                     }
-                    onDoubleClick={(event) =>
+                    onDoubleClick={(
+                        event,
+                    ) =>
                         event.stopPropagation()
                     }
                 >
                     <button
+                        className="window-control"
                         type="button"
                         onClick={onMinimize}
                         aria-label="Minimizar"
+                        title="Minimizar"
                     >
                         <Minus
                             size={18}
@@ -610,9 +717,15 @@ function Window({
                     </button>
 
                     <button
+                        className="window-control"
                         type="button"
                         onClick={onMaximize}
                         aria-label={
+                            maximized
+                                ? 'Restaurar'
+                                : 'Maximizar'
+                        }
+                        title={
                             maximized
                                 ? 'Restaurar'
                                 : 'Maximizar'
@@ -625,9 +738,11 @@ function Window({
                     </button>
 
                     <button
+                        className="window-control window-control-close"
                         type="button"
                         onClick={onClose}
                         aria-label="Fechar"
+                        title="Fechar"
                     >
                         <X
                             size={18}
@@ -643,7 +758,9 @@ function Window({
 
             <div
                 className="resize-handle resize-top"
-                onPointerDown={(event) =>
+                onPointerDown={(
+                    event,
+                ) =>
                     handleResizeStart(
                         event,
                         'top',
@@ -653,7 +770,9 @@ function Window({
 
             <div
                 className="resize-handle resize-bottom"
-                onPointerDown={(event) =>
+                onPointerDown={(
+                    event,
+                ) =>
                     handleResizeStart(
                         event,
                         'bottom',
@@ -663,7 +782,9 @@ function Window({
 
             <div
                 className="resize-handle resize-left"
-                onPointerDown={(event) =>
+                onPointerDown={(
+                    event,
+                ) =>
                     handleResizeStart(
                         event,
                         'left',
@@ -673,7 +794,9 @@ function Window({
 
             <div
                 className="resize-handle resize-right"
-                onPointerDown={(event) =>
+                onPointerDown={(
+                    event,
+                ) =>
                     handleResizeStart(
                         event,
                         'right',
@@ -683,7 +806,9 @@ function Window({
 
             <div
                 className="resize-handle resize-top-left"
-                onPointerDown={(event) =>
+                onPointerDown={(
+                    event,
+                ) =>
                     handleResizeStart(
                         event,
                         'top-left',
@@ -693,7 +818,9 @@ function Window({
 
             <div
                 className="resize-handle resize-top-right"
-                onPointerDown={(event) =>
+                onPointerDown={(
+                    event,
+                ) =>
                     handleResizeStart(
                         event,
                         'top-right',
@@ -703,7 +830,9 @@ function Window({
 
             <div
                 className="resize-handle resize-bottom-left"
-                onPointerDown={(event) =>
+                onPointerDown={(
+                    event,
+                ) =>
                     handleResizeStart(
                         event,
                         'bottom-left',
@@ -713,7 +842,9 @@ function Window({
 
             <div
                 className="resize-handle resize-bottom-right"
-                onPointerDown={(event) =>
+                onPointerDown={(
+                    event,
+                ) =>
                     handleResizeStart(
                         event,
                         'bottom-right',
