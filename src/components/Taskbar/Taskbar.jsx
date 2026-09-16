@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react'
-import WeatherWidget from './WeatherWidget'
+import {
+    useEffect,
+    useState,
+} from 'react'
 
 import {
     Moon,
     Sun,
 } from 'lucide-react'
+
+import WeatherWidget from './WeatherWidget'
 
 import './Taskbar.css'
 
@@ -15,34 +19,46 @@ function Taskbar({
     windows,
     toggleTaskbarApp,
 }) {
-    const [dateTime, setDateTime] = useState(
+    const [
+        dateTime,
+        setDateTime,
+    ] = useState(
         new Date(),
     )
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setDateTime(new Date())
-        }, 1000)
+        const interval =
+            setInterval(() => {
+                setDateTime(
+                    new Date(),
+                )
+            }, 1000)
 
-        return () => clearInterval(interval)
+        return () => {
+            clearInterval(
+                interval,
+            )
+        }
     }, [])
 
-    const time = dateTime.toLocaleTimeString(
-        'pt-BR',
-        {
-            hour: '2-digit',
-            minute: '2-digit',
-        },
-    )
+    const time =
+        dateTime.toLocaleTimeString(
+            'pt-BR',
+            {
+                hour: '2-digit',
+                minute: '2-digit',
+            },
+        )
 
-    const date = dateTime.toLocaleDateString(
-        'pt-BR',
-        {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        },
-    )
+    const date =
+        dateTime.toLocaleDateString(
+            'pt-BR',
+            {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+            },
+        )
 
     const activeZIndex =
         Math.max(
@@ -66,17 +82,25 @@ function Taskbar({
                     className="theme-button"
                     type="button"
                     onClick={toggleTheme}
-                    aria-label="Alterar tema"
-                    title="Alterar tema"
+                    aria-label={
+                        theme === 'dark'
+                            ? 'Ativar tema claro'
+                            : 'Ativar tema escuro'
+                    }
+                    title={
+                        theme === 'dark'
+                            ? 'Tema claro'
+                            : 'Tema escuro'
+                    }
                 >
                     {theme === 'dark' ? (
                         <Sun
-                            size={20}
+                            size={19}
                             strokeWidth={1.8}
                         />
                     ) : (
                         <Moon
-                            size={20}
+                            size={19}
                             strokeWidth={1.8}
                         />
                     )}
@@ -97,16 +121,29 @@ function Taskbar({
                         windowState.zIndex ===
                         activeZIndex
 
+                    const className = [
+                        'taskbar-app',
+
+                        isActive
+                            ? 'taskbar-app-active'
+                            : '',
+
+                        windowState.minimized
+                            ? 'taskbar-app-minimized'
+                            : '',
+                    ]
+                        .filter(Boolean)
+                        .join(' ')
+
                     return (
                         <button
                             key={app.id}
                             type="button"
-                            className={`taskbar-app ${isActive
-                                    ? 'taskbar-app-active'
-                                    : ''
-                                }`}
+                            className={className}
                             onClick={() =>
-                                toggleTaskbarApp(app.id)
+                                toggleTaskbarApp(
+                                    app.id,
+                                )
                             }
                             aria-label={app.name}
                             title={app.name}
@@ -118,13 +155,19 @@ function Taskbar({
             </div>
 
             <div className="taskbar-right">
-                <div className="taskbar-right">
-                    <WeatherWidget />
-                </div>
-                
-                <div className="taskbar-clock">
-                    <span>{time}</span>
-                    <span>{date}</span>
+                <WeatherWidget />
+
+                <div
+                    className="taskbar-clock"
+                    title={`${time} • ${date}`}
+                >
+                    <span className="taskbar-time">
+                        {time}
+                    </span>
+
+                    <span className="taskbar-date">
+                        {date}
+                    </span>
                 </div>
             </div>
         </footer>

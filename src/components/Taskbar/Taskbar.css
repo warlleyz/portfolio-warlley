@@ -1,3 +1,4 @@
+/* === TASKBAR === */
 .taskbar {
     position: absolute;
 
@@ -7,45 +8,78 @@
     z-index: 5;
 
     width: 68%;
-    height: 58px;
+    min-width: 620px;
+    height: 60px;
 
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns:
+        1fr auto 1fr;
+
     align-items: center;
 
-    padding: 0 14px;
+    padding:
+        0 12px;
 
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%);
 
-    border: 1px solid var(--glass-border);
+    border:
+        1px solid var(--glass-border);
+
     border-radius: 18px;
 
-    background: var(--glass-background);
+    background:
+        var(--glass-background);
 
-    backdrop-filter: blur(18px);
+    backdrop-filter:
+        blur(20px) saturate(135%);
+
+    -webkit-backdrop-filter:
+        blur(20px) saturate(135%);
 
     box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.15);
+        0 12px 32px var(--shadow-medium);
+
+    color:
+        var(--text-primary);
 }
 
-/* === ÁREAS DA BARRA === */
-.taskbar-left {
+/* === ÁREAS === */
+.taskbar-left,
+.taskbar-right,
+.taskbar-apps {
     display: flex;
     align-items: center;
+}
+
+.taskbar-left {
     justify-content: flex-start;
 }
 
 .taskbar-apps {
-    display: flex;
-    align-items: center;
     justify-content: center;
+
     gap: 6px;
 }
 
 .taskbar-right {
-    display: flex;
-    align-items: center;
     justify-content: flex-end;
+
+    gap: 6px;
+}
+
+/* === BOTÕES BASE === */
+.theme-button,
+.taskbar-app {
+    border: none;
+
+    color:
+        var(--text-primary);
+
+    background:
+        transparent;
+
+    outline: none;
 }
 
 /* === TEMA === */
@@ -57,86 +91,182 @@
     align-items: center;
     justify-content: center;
 
-    border: none;
     border-radius: 10px;
 
-    background: transparent;
-
-    color: var(--text-primary);
-
-    cursor: pointer;
-
     transition:
-        background 0.2s ease,
-        transform 0.2s ease;
+        background 160ms ease,
+        transform 120ms ease;
 }
 
 .theme-button:hover {
-    background: var(--hover-background);
+    background:
+        var(--hover-background);
 }
 
 .theme-button:active {
-    transform: scale(0.94);
+    transform:
+        scale(0.94);
 }
 
-/* === APPS ABERTOS === */
+/* === APPS === */
 .taskbar-app {
     position: relative;
 
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    border: none;
     border-radius: 11px;
 
-    background: transparent;
-
-    color: var(--text-primary);
-
-    cursor: pointer;
+    color:
+        var(--text-primary,
+            #F4F8FC);
 
     transition:
-        background 0.2s ease,
-        transform 0.15s ease;
+        background 160ms ease,
+        color 160ms ease,
+        transform 120ms ease,
+        opacity 160ms ease;
 }
 
 .taskbar-app:hover {
-    background: var(--hover-background);
+    background:
+        var(--hover-background,
+            rgba(31, 140, 255, 0.08));
 }
 
 .taskbar-app:active {
-    transform: scale(0.94);
+    transform:
+        scale(0.94);
 }
 
-.taskbar-app-active::after {
+/* === INDICADOR === */
+.taskbar-app::after {
     content: '';
 
     position: absolute;
-    bottom: 3px;
 
-    width: 14px;
-    height: 2px;
+    left: 50%;
+    bottom: 1px;
 
-    border-radius: 99px;
+    width: 10px;
+    height: 3px;
 
-    background: #3b82f6;
+    transform:
+        translateX(-50%);
+
+    border-radius: 999px;
+
+    background:
+        var(--text-secondary,
+            #A8B6C8);
+
+    opacity: 0.65;
+
+    pointer-events: none;
+
+    z-index: 10;
+}
+
+/* === APP ATIVO === */
+.taskbar-app-active {
+    background:
+        var(--active-background,
+            rgba(31, 140, 255, 0.16));
+}
+
+.taskbar-app-active::after {
+    width: 18px;
+    height: 3px;
+
+    background:
+        var(--accent-primary,
+            #1F8CFF);
+
+    opacity: 1;
+}
+
+/* === APP MINIMIZADO === */
+.taskbar-app-minimized {
+    opacity: 0.7;
+}
+
+.taskbar-app-minimized::after {
+    width: 7px;
+
+    background:
+        var(--text-secondary,
+            #A8B6C8);
+
+    opacity: 0.6;
+}
+
+/* === FOCO === */
+.theme-button:focus-visible {
+    box-shadow:
+        0 0 0 2px var(--accent-primary);
+}
+
+.taskbar-app:focus-visible {
+    outline:
+        2px solid var(--accent-primary);
+
+    outline-offset: 2px;
 }
 
 /* === RELÓGIO === */
 .taskbar-clock {
-    min-width: 90px;
+    min-width: 86px;
 
     display: flex;
     flex-direction: column;
 
-    text-align: right;
+    align-items: flex-end;
+
+    padding:
+        4px 8px;
+
+    border-radius: 9px;
+
+    user-select: none;
+
+    transition:
+        background 160ms ease;
+}
+
+.taskbar-clock:hover {
+    background:
+        var(--hover-background);
+}
+
+.taskbar-time {
+    color:
+        var(--text-primary);
 
     font-size: 12px;
-    line-height: 1.35;
+    font-weight: 500;
 
-    color: var(--text-secondary);
+    line-height: 1.25;
+}
+
+.taskbar-date {
+    color:
+        var(--text-secondary);
+
+    font-size: 11px;
+
+    line-height: 1.25;
+}
+
+/* === REDUÇÃO DE MOVIMENTO === */
+@media (prefers-reduced-motion: reduce) {
+
+    .theme-button,
+    .taskbar-app,
+    .taskbar-clock {
+        transition: none;
+    }
 }
