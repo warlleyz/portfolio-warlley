@@ -9,6 +9,27 @@ import Desktop from './components/Desktop/Desktop'
 const BOOT_MINIMUM_TIME = 1200
 const BOOT_EXIT_TIME = 420
 
+const getInitialTheme = () => {
+  const savedTheme =
+    localStorage.getItem('theme')
+
+  if (
+    savedTheme === 'light' ||
+    savedTheme === 'dark'
+  ) {
+    return savedTheme
+  }
+
+  const prefersDark =
+    window.matchMedia(
+      '(prefers-color-scheme: dark)',
+    ).matches
+
+  return prefersDark
+    ? 'dark'
+    : 'light'
+}
+
 function App() {
   const [
     bootState,
@@ -18,24 +39,10 @@ function App() {
   const [
     theme,
     setTheme,
-  ] = useState(() => {
-    const savedTheme =
-      localStorage.getItem('theme')
+  ] = useState(getInitialTheme)
 
-    if (savedTheme) {
-      return savedTheme
-    }
 
-    const prefersDark =
-      window.matchMedia(
-        '(prefers-color-scheme: dark)',
-      ).matches
-
-    return prefersDark
-      ? 'dark'
-      : 'light'
-  })
-
+  /* === TEMA === */
   useEffect(() => {
     document.documentElement.setAttribute(
       'data-theme',
@@ -48,6 +55,8 @@ function App() {
     )
   }, [theme])
 
+
+  /* === INICIALIZAÇÃO === */
   useEffect(() => {
     const startTime =
       Date.now()
@@ -73,29 +82,25 @@ function App() {
 
       loadingFinished = true
 
-      const elapsed =
+      const elapsedTime =
         Date.now() - startTime
 
-      const remaining =
+      const remainingTime =
         Math.max(
           BOOT_MINIMUM_TIME -
-          elapsed,
+          elapsedTime,
           0,
         )
 
       startExitTimer =
         setTimeout(() => {
-          setBootState(
-            'leaving',
-          )
+          setBootState('leaving')
 
           finishExitTimer =
             setTimeout(() => {
-              setBootState(
-                'done',
-              )
+              setBootState('done')
             }, exitDuration)
-        }, remaining)
+        }, remainingTime)
     }
 
     if (
@@ -133,6 +138,8 @@ function App() {
     }
   }, [])
 
+
+  /* === AÇÕES === */
   const toggleTheme = () => {
     setTheme((currentTheme) =>
       currentTheme === 'dark'
@@ -141,6 +148,8 @@ function App() {
     )
   }
 
+
+  /* === RENDERIZAÇÃO === */
   return (
     <>
       {bootState !== 'visible' && (
