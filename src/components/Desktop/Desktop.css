@@ -8,156 +8,180 @@
     overflow: hidden;
 
     color:
-        var(--text-primary,
-            #F4F8FC);
+        var(--text-primary);
 
     background:
-        radial-gradient(circle at 82% 12%,
-            var(--wallpaper-glow,
-                rgba(31, 140, 255, 0.14)),
-            transparent 30%),
-        radial-gradient(circle at 12% 88%,
-            rgba(56, 189, 248, 0.06),
-            transparent 28%),
-        linear-gradient(135deg,
-            var(--wallpaper-start,
-                #07111F),
-            var(--wallpaper-middle,
-                #0D1B2A) 55%,
-            var(--wallpaper-end,
-                #122235));
+        radial-gradient(circle at 78% 18%,
+            var(--wallpaper-glow),
+            transparent 34%),
+        radial-gradient(circle at 16% 82%,
+            rgba(96, 165, 250, 0.055),
+            transparent 32%),
+        linear-gradient(145deg,
+            var(--wallpaper-start),
+            var(--wallpaper-middle) 52%,
+            var(--wallpaper-end));
 
     transition:
-        background 400ms ease,
-        color 300ms ease;
+        background var(--transition-slow),
+        color var(--transition-default);
+
+    user-select: none;
 }
 
-/* === DETALHES DO WALLPAPER === */
-.desktop::before,
+
+/* === WALLPAPER === */
+/* ----- LUZ SUPERIOR ----- */
+.desktop::before {
+    content: '';
+
+    position: absolute;
+
+    top: -280px;
+    right: -210px;
+
+    width: 620px;
+    height: 620px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(circle,
+            var(--wallpaper-glow),
+            transparent 68%);
+
+    opacity: 0.55;
+
+    pointer-events: none;
+}
+
+
+/* ----- LUZ INFERIOR ----- */
 .desktop::after {
     content: '';
 
     position: absolute;
 
-    pointer-events: none;
+    bottom: -320px;
+    left: 10%;
+
+    width: 680px;
+    height: 680px;
 
     border-radius: 50%;
 
-    filter:
-        blur(2px);
+    background:
+        radial-gradient(circle,
+            rgba(96, 165, 250, 0.045),
+            transparent 70%);
 
     opacity: 0.7;
+
+    pointer-events: none;
 }
 
-.desktop::before {
-    top: -220px;
-    right: -160px;
-
-    width: 540px;
-    height: 540px;
-
-    background:
-        radial-gradient(circle,
-            var(--wallpaper-glow,
-                rgba(31, 140, 255, 0.12)),
-            transparent 67%);
-}
-
-.desktop::after {
-    bottom: -260px;
-    left: 18%;
-
-    width: 620px;
-    height: 620px;
-
-    background:
-        radial-gradient(circle,
-            rgba(56, 189, 248, 0.045),
-            transparent 68%);
-}
 
 /* === ATALHOS === */
 .desktop-shortcuts {
     position: absolute;
 
-    top: 24px;
-    left: 22px;
+    top: 20px;
+    left: 18px;
+    bottom: 96px;
 
     z-index: 1;
 
-    display: flex;
-    flex-direction: column;
+    display: grid;
 
-    gap: 10px;
+    grid-auto-flow: column;
+    grid-template-rows:
+        repeat(auto-fill,
+            86px);
+    grid-auto-columns: 86px;
+
+    align-content: start;
+
+    gap:
+        4px 8px;
 }
+
 
 /* === ATALHO === */
 .shortcut {
-    width: 88px;
-    min-height: 88px;
+    position: relative;
+
+    width: 82px;
+    height: 82px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    gap: 7px;
+    gap: 6px;
 
     padding:
-        7px 5px;
+        6px 4px;
 
     border:
         1px solid transparent;
 
-    border-radius: 12px;
-
-    background:
-        transparent;
+    border-radius:
+        var(--radius-medium);
 
     color:
         inherit;
 
-    outline:
-        none;
+    background:
+        transparent;
 
     transition:
-        background 160ms ease,
-        border-color 160ms ease,
-        transform 140ms ease,
-        box-shadow 160ms ease;
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
 }
 
+
+/* ----- HOVER ----- */
 .shortcut:hover {
-    transform:
-        translateY(-2px);
+    background:
+        var(--hover-background);
 
     border-color:
-        var(--border-secondary,
-            rgba(244, 248, 252, 0.08));
-
-    background:
-        var(--hover-background,
-            rgba(31, 140, 255, 0.08));
+        var(--border-subtle);
 }
 
+
+/* ----- CLIQUE ----- */
 .shortcut:active {
     transform:
-        scale(0.96);
+        scale(0.97);
 }
 
-.shortcut:focus-visible {
+
+/* ----- SELECIONADO ----- */
+.shortcut-selected {
+    background:
+        var(--active-background);
+
     border-color:
-        var(--accent-primary,
-            #1F8CFF);
-
-    box-shadow:
-        0 0 0 2px rgba(31, 140, 255, 0.18);
+        var(--border-default);
 }
+
+
+/* ----- ATIVO ----- */
+.shortcut-active {
+    background:
+        var(--hover-background);
+}
+
 
 /* === ÍCONE === */
 .shortcut-icon {
-    width: 48px;
-    height: 48px;
+    position: relative;
+
+    width: 46px;
+    height: 46px;
 
     display: flex;
     align-items: center;
@@ -166,56 +190,112 @@
     flex-shrink: 0;
 
     border:
-        1px solid var(--glass-border,
-            rgba(244, 248, 252, 0.08));
+        1px solid var(--glass-border);
 
-    border-radius: 14px;
-
-    background:
-        var(--glass-background,
-            rgba(13, 27, 42, 0.68));
+    border-radius:
+        13px;
 
     color:
-        var(--text-primary,
-            #F4F8FC);
+        var(--text-primary);
+
+    background:
+        var(--glass-background);
 
     backdrop-filter:
-        blur(10px) saturate(125%);
+        blur(14px) saturate(120%);
 
     -webkit-backdrop-filter:
-        blur(10px) saturate(125%);
+        blur(14px) saturate(120%);
 
     box-shadow:
-        0 6px 18px var(--shadow-soft,
-            rgba(0, 0, 0, 0.18));
+        var(--shadow-small);
 
     transition:
-        color 160ms ease,
-        background 160ms ease,
-        border-color 160ms ease,
-        transform 160ms ease,
-        box-shadow 160ms ease;
+        color var(--transition-fast),
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        transform var(--transition-fast);
 }
 
+
+/* ----- HOVER ----- */
 .shortcut:hover .shortcut-icon {
     transform:
         translateY(-1px);
 
-    color:
-        var(--accent-primary,
-            #1F8CFF);
+    background:
+        var(--glass-background-strong);
 
     border-color:
-        rgba(31, 140, 255, 0.22);
-
-    background:
-        var(--glass-background-strong,
-            rgba(18, 34, 53, 0.88));
+        var(--border-default);
 
     box-shadow:
-        0 8px 22px var(--shadow-medium,
-            rgba(0, 0, 0, 0.32));
+        var(--shadow-medium);
 }
+
+
+/* ----- ATIVO ----- */
+.shortcut-active .shortcut-icon {
+    color:
+        var(--accent-primary);
+
+    border-color:
+        color-mix(in srgb,
+            var(--accent-primary) 28%,
+            transparent);
+}
+
+
+/* === ESTADO DO APP === */
+.shortcut-state {
+    position: absolute;
+
+    right: -2px;
+    bottom: -2px;
+
+    width: 7px;
+    height: 7px;
+
+    border:
+        2px solid var(--surface-primary);
+
+    border-radius:
+        var(--radius-full);
+
+    background:
+        transparent;
+
+    opacity: 0;
+
+    transform:
+        scale(0.7);
+
+    transition:
+        opacity var(--transition-fast),
+        transform var(--transition-fast),
+        background var(--transition-fast);
+}
+
+
+/* ----- ABERTO ----- */
+.shortcut-open .shortcut-state {
+    opacity: 1;
+
+    transform:
+        scale(1);
+
+    background:
+        var(--text-muted);
+}
+
+
+/* ----- ATIVO ----- */
+.shortcut-active .shortcut-state {
+    background:
+        var(--accent-primary);
+}
+
 
 /* === NOME DO ATALHO === */
 .shortcut-name {
@@ -224,10 +304,9 @@
     overflow: hidden;
 
     color:
-        var(--text-primary,
-            #F4F8FC);
+        var(--text-primary);
 
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 450;
 
     line-height: 1.2;
@@ -239,29 +318,69 @@
     white-space: nowrap;
 
     text-shadow:
-        0 1px 3px rgba(0, 0, 0, 0.18);
+        0 1px 4px rgba(0, 0, 0, 0.16);
 }
 
-/* === REDUÇÃO DE MOVIMENTO === */
+
+/* === RESPONSIVIDADE === */
+/* ----- TELAS BAIXAS ----- */
+@media (max-height: 760px) {
+    .desktop-shortcuts {
+        top: 14px;
+        left: 14px;
+        bottom: 88px;
+
+        grid-template-rows:
+            repeat(auto-fill,
+                80px);
+
+        grid-auto-columns:
+            80px;
+    }
+
+    .shortcut {
+        width: 76px;
+        height: 76px;
+    }
+
+    .shortcut-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .shortcut-name {
+        font-size: 10px;
+    }
+}
+
+
+/* ----- TELAS ESTREITAS ----- */
+@media (max-width: 700px) {
+    .desktop-shortcuts {
+        right: 14px;
+
+        grid-auto-flow: row;
+        grid-template-columns:
+            repeat(auto-fill,
+                minmax(72px, 1fr));
+        grid-template-rows:
+            none;
+
+        height: auto;
+
+        overflow-y: auto;
+    }
+}
+
+
+/* === ACESSIBILIDADE === */
+/* ----- MOVIMENTO REDUZIDO ----- */
 @media (prefers-reduced-motion: reduce) {
 
     .desktop,
     .shortcut,
-    .shortcut-icon {
+    .shortcut-icon,
+    .shortcut-state {
         transition: none;
-    }
-}
-
-/* === AJUSTE PARA TELAS BAIXAS === */
-@media (max-height: 760px) {
-    .desktop-shortcuts {
-        flex-wrap: wrap;
-        align-content: flex-start;
-
-        max-height:
-            calc(100vh - 115px);
-
-        column-gap: 10px;
-        row-gap: 10px;
     }
 }

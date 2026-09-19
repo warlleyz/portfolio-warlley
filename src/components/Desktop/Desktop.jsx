@@ -1,15 +1,7 @@
-import { useRef, useState } from 'react'
-
 import {
-    UserRound,
-    Folder,
-    Cpu,
-    Mail,
-    FileText,
-    TerminalSquare,
-    Code2,
-    Gamepad2,
-} from 'lucide-react'
+    useRef,
+    useState,
+} from 'react'
 
 import About from '../../apps/About/About'
 import Projects from '../../apps/Projects/Projects'
@@ -21,6 +13,7 @@ import Stats from '../../apps/Stats/Stats'
 import Game from '../../apps/Game/Game'
 import ProjectDemo from '../../apps/Projects/ProjectDemo'
 
+import appsData from '../../data/appsData'
 import projectsData from '../../data/projectsData'
 
 import Taskbar from '../Taskbar/Taskbar'
@@ -28,89 +21,83 @@ import Window from '../Window/Window'
 
 import './Desktop.css'
 
-const apps = [
-    {
-        id: 'about',
-        name: 'Sobre mim',
-        icon: <UserRound size={30} strokeWidth={1.8} />,
-    },
-    {
-        id: 'projects',
-        name: 'Projetos',
-        icon: <Folder size={30} strokeWidth={1.8} />,
-    },
-    {
-        id: 'technologies',
-        name: 'Tecnologias',
-        icon: <Cpu size={30} strokeWidth={1.8} />,
-    },
-    {
-        id: 'contact',
-        name: 'Contato',
-        icon: <Mail size={30} strokeWidth={1.8} />,
-    },
-    {
-        id: 'resume',
-        name: 'Currículo',
-        icon: <FileText size={30} strokeWidth={1.8} />,
-    },
-    {
-        id: 'terminal',
-        name: 'Terminal',
-        icon: <TerminalSquare size={30} strokeWidth={1.8} />,
-    },
-    {
-        id: 'stats',
-        name: 'Estatísticas',
-        icon: (
-            <Code2 size={30} strokeWidth={1.8} />
-        ),
-    },
-    {
-        id: 'game',
-        name: 'Snake',
-        icon: <Gamepad2 size={26} strokeWidth={1.7} />,
-    },
-]
 
-const projectApps = projectsData.map((project) => {
-    const Icon = project.icon
+/* === APLICATIVOS === */
 
-    return {
-        id: `project-${project.id}`,
-        projectId: project.id,
-        name: project.title,
-        icon: <Icon size={30} strokeWidth={1.8} />,
-    }
-})
+/* ----- APPS PRINCIPAIS ----- */
+const apps = appsData
 
+
+/* ----- PROJETOS ----- */
+const projectApps =
+    projectsData.map((project) => {
+        const Icon =
+            project.icon
+
+        return {
+            id:
+                `project-${project.id}`,
+
+            projectId:
+                project.id,
+
+            name:
+                project.title,
+
+            icon: Icon,
+        }
+    })
+
+
+/* ----- TODOS OS APPS ----- */
 const allApps = [
     ...apps,
     ...projectApps,
 ]
 
-function Desktop({ theme, toggleTheme }) {
-    const [windows, setWindows] = useState({})
-    const topZIndex = useRef(10)
 
+function Desktop({
+    theme,
+    toggleTheme,
+}) {
+    const [
+        windows,
+        setWindows,
+    ] = useState({})
+
+    const topZIndex =
+        useRef(10)
+
+
+    /* === JANELAS === */
+
+    /* ----- Z-INDEX ----- */
     const getNextZIndex = () => {
         topZIndex.current += 1
 
         return topZIndex.current
     }
 
+
+    /* ----- FOCO ----- */
     const focusApp = (appId) => {
-        const nextZIndex = getNextZIndex()
+        const nextZIndex =
+            getNextZIndex()
 
         setWindows((previous) => ({
             ...previous,
+
             [appId]: {
                 ...previous[appId],
-                zIndex: nextZIndex,
+
+                zIndex:
+                    nextZIndex,
             },
         }))
     }
 
+
+    /* ----- ABRIR ----- */
     const openApp = (appId) => {
         const nextZIndex =
             getNextZIndex()
@@ -119,28 +106,33 @@ function Desktop({ theme, toggleTheme }) {
             const currentWindow =
                 previous[appId]
 
-            const isGame =
-                appId === 'game'
+            const app =
+                appsData.find(
+                    (item) =>
+                        item.id === appId,
+                )
 
             let initialSize =
-                currentWindow?.size ?? null
+                currentWindow?.size ??
+                null
 
             let initialPosition =
-                currentWindow?.position ?? null
+                currentWindow?.position ??
+                null
 
             if (
-                isGame &&
+                app?.window &&
                 !currentWindow?.size
             ) {
                 const width =
                     Math.min(
-                        920,
+                        app.window.width,
                         window.innerWidth - 80,
                     )
 
                 const height =
                     Math.min(
-                        680,
+                        app.window.height,
                         window.innerHeight - 110,
                     )
 
@@ -149,20 +141,28 @@ function Desktop({ theme, toggleTheme }) {
                     height,
                 }
 
-                initialPosition = {
-                    x: Math.max(
-                        (window.innerWidth -
-                            width) /
-                        2,
-                        0,
-                    ),
+                if (
+                    app.window.centered
+                ) {
+                    initialPosition = {
+                        x:
+                            Math.max(
+                                (
+                                    window.innerWidth -
+                                    width
+                                ) / 2,
+                                0,
+                            ),
 
-                    y: Math.max(
-                        (window.innerHeight -
-                            height) /
-                        2,
-                        0,
-                    ),
+                        y:
+                            Math.max(
+                                (
+                                    window.innerHeight -
+                                    height
+                                ) / 2,
+                                0,
+                            ),
+                    }
                 }
             }
 
@@ -195,35 +195,59 @@ function Desktop({ theme, toggleTheme }) {
         })
     }
 
-    const openProject = (project) => {
-        openApp(`project-${project.id}`)
+
+    /* ----- PROJETOS ----- */
+    const openProject = (
+        project,
+    ) => {
+        openApp(
+            `project-${project.id}`,
+        )
     }
 
-    const moveApp = (appId, position) => {
+
+    /* ----- MOVIMENTO ----- */
+    const moveApp = (
+        appId,
+        position,
+    ) => {
         setWindows((previous) => ({
             ...previous,
+
             [appId]: {
                 ...previous[appId],
+
                 position,
             },
         }))
     }
 
-    const resizeApp = (appId, size) => {
+
+    /* ----- REDIMENSIONAMENTO ----- */
+    const resizeApp = (
+        appId,
+        size,
+    ) => {
         setWindows((previous) => ({
             ...previous,
+
             [appId]: {
                 ...previous[appId],
+
                 size,
             },
         }))
     }
 
+
+    /* ----- MINIMIZAR ----- */
     const minimizeApp = (appId) => {
         setWindows((previous) => ({
             ...previous,
+
             [appId]: {
                 ...previous[appId],
+
                 minimizing: true,
             },
         }))
@@ -231,8 +255,10 @@ function Desktop({ theme, toggleTheme }) {
         setTimeout(() => {
             setWindows((previous) => ({
                 ...previous,
+
                 [appId]: {
                     ...previous[appId],
+
                     minimized: true,
                     minimizing: false,
                 },
@@ -240,20 +266,31 @@ function Desktop({ theme, toggleTheme }) {
         }, 200)
     }
 
+
+    /* ----- RESTAURAR ----- */
     const restoreApp = (appId) => {
-        const nextZIndex = getNextZIndex()
+        const nextZIndex =
+            getNextZIndex()
 
         setWindows((previous) => ({
             ...previous,
+
             [appId]: {
                 ...previous[appId],
+
                 minimized: false,
-                zIndex: nextZIndex,
+
+                zIndex:
+                    nextZIndex,
             },
         }))
     }
 
-    const toggleTaskbarApp = (appId) => {
+
+    /* ----- TASKBAR ----- */
+    const toggleTaskbarApp = (
+        appId,
+    ) => {
         const currentWindow =
             windows[appId]
 
@@ -261,14 +298,18 @@ function Desktop({ theme, toggleTheme }) {
             return
         }
 
-        if (currentWindow.minimized) {
+        if (
+            currentWindow.minimized
+        ) {
             restoreApp(appId)
+
             return
         }
 
         const activeZIndex =
             Math.max(
-                ...Object.values(windows)
+                ...Object
+                    .values(windows)
                     .filter(
                         (item) =>
                             item?.open &&
@@ -276,7 +317,8 @@ function Desktop({ theme, toggleTheme }) {
                     )
                     .map(
                         (item) =>
-                            item.zIndex ?? 0,
+                            item.zIndex ??
+                            0,
                     ),
                 0,
             )
@@ -287,28 +329,40 @@ function Desktop({ theme, toggleTheme }) {
 
         if (isActive) {
             minimizeApp(appId)
+
             return
         }
 
         focusApp(appId)
     }
 
-    const toggleMaximizeApp = (appId) => {
+
+    /* ----- MAXIMIZAR ----- */
+    const toggleMaximizeApp = (
+        appId,
+    ) => {
         setWindows((previous) => ({
             ...previous,
+
             [appId]: {
                 ...previous[appId],
+
                 maximized:
-                    !previous[appId]?.maximized,
+                    !previous[appId]
+                        ?.maximized,
             },
         }))
     }
 
+
+    /* ----- FECHAR ----- */
     const closeApp = (appId) => {
         setWindows((previous) => ({
             ...previous,
+
             [appId]: {
                 ...previous[appId],
+
                 closing: true,
             },
         }))
@@ -316,8 +370,10 @@ function Desktop({ theme, toggleTheme }) {
         setTimeout(() => {
             setWindows((previous) => ({
                 ...previous,
+
                 [appId]: {
                     ...previous[appId],
+
                     open: false,
                     minimized: false,
                     maximized: false,
@@ -328,7 +384,11 @@ function Desktop({ theme, toggleTheme }) {
         }, 200)
     }
 
-    const renderAppContent = (appId) => {
+
+    /* === CONTEÚDO DOS APPS === */
+    const renderAppContent = (
+        appId,
+    ) => {
         switch (appId) {
             case 'about':
                 return <About />
@@ -336,12 +396,16 @@ function Desktop({ theme, toggleTheme }) {
             case 'projects':
                 return (
                     <Projects
-                        onOpenProject={openProject}
+                        onOpenProject={
+                            openProject
+                        }
                     />
                 )
 
             case 'technologies':
-                return <Technologies />
+                return (
+                    <Technologies />
+                )
 
             case 'contact':
                 return <Contact />
@@ -352,7 +416,9 @@ function Desktop({ theme, toggleTheme }) {
             case 'terminal':
                 return (
                     <Terminal
-                        onOpenApp={openApp}
+                        onOpenApp={
+                            openApp
+                        }
                     />
                 )
 
@@ -360,7 +426,11 @@ function Desktop({ theme, toggleTheme }) {
                 return <Stats />
 
             default:
-                if (appId.startsWith('project-')) {
+                if (
+                    appId.startsWith(
+                        'project-',
+                    )
+                ) {
                     const projectId =
                         appId.replace(
                             'project-',
@@ -370,59 +440,93 @@ function Desktop({ theme, toggleTheme }) {
                     const project =
                         projectsData.find(
                             (item) =>
-                                item.id === projectId,
+                                item.id ===
+                                projectId,
                         )
 
                     return (
                         <ProjectDemo
-                            project={project}
+                            project={
+                                project
+                            }
                         />
                     )
                 }
 
                 return (
                     <p>
-                        Aplicativo em desenvolvimento.
+                        Aplicativo em
+                        desenvolvimento.
                     </p>
                 )
         }
     }
 
+
+    /* === RENDERIZAÇÃO === */
     return (
         <main className="desktop">
             <section className="desktop-shortcuts">
-                {apps.map((app) => (
-                    <button
-                        key={app.id}
-                        className="shortcut"
-                        type="button"
-                        data-app-id={app.id}
-                        onClick={() => openApp(app.id)}
-                        aria-label={`Abrir ${app.name}`}
-                        title={app.name}
-                    >
-                        <span className="shortcut-icon">
-                            {app.icon}
-                        </span>
+                {apps
+                    .filter(
+                        (app) =>
+                            app.desktop,
+                    )
+                    .map((app) => {
+                        const Icon =
+                            app.icon
 
-                        <span className="shortcut-name">
-                            {app.name}
-                        </span>
-                    </button>
-                ))}
+                        return (
+                            <button
+                                key={app.id}
+                                className="shortcut"
+                                type="button"
+                                data-app-id={
+                                    app.id
+                                }
+                                onClick={() =>
+                                    openApp(
+                                        app.id,
+                                    )
+                                }
+                                aria-label={
+                                    `Abrir ${app.name}`
+                                }
+                                title={
+                                    app.name
+                                }
+                            >
+                                <span className="shortcut-icon">
+                                    <Icon
+                                        size={30}
+                                        strokeWidth={1.8}
+                                    />
+                                </span>
+
+                                <span className="shortcut-name">
+                                    {
+                                        app.name
+                                    }
+                                </span>
+                            </button>
+                        )
+                    })}
             </section>
 
             {allApps.map((app) => {
                 const windowState =
                     windows[app.id]
 
-                if (!windowState?.open) {
+                if (
+                    !windowState?.open
+                ) {
                     return null
                 }
 
                 const activeZIndex =
                     Math.max(
-                        ...Object.values(windows)
+                        ...Object
+                            .values(windows)
                             .filter(
                                 (item) =>
                                     item?.open &&
@@ -430,7 +534,8 @@ function Desktop({ theme, toggleTheme }) {
                             )
                             .map(
                                 (item) =>
-                                    item.zIndex ?? 0,
+                                    item.zIndex ??
+                                    0,
                             ),
                         0,
                     )
@@ -442,52 +547,99 @@ function Desktop({ theme, toggleTheme }) {
 
                 return (
                     <Window
-                        hidden={windowState.minimized}
                         key={app.id}
-                        title={app.name}
-                        active={isActive}
-                        maximized={windowState.maximized}
-                        minimizing={windowState.minimizing}
-                        closing={windowState.closing}
-                        position={windowState.position}
-                        size={windowState.size}
-                        zIndex={windowState.zIndex}
+                        hidden={
+                            windowState.minimized
+                        }
+                        title={
+                            app.name
+                        }
+                        active={
+                            isActive
+                        }
+                        maximized={
+                            windowState.maximized
+                        }
+                        minimizing={
+                            windowState.minimizing
+                        }
+                        closing={
+                            windowState.closing
+                        }
+                        position={
+                            windowState.position
+                        }
+                        size={
+                            windowState.size
+                        }
+                        zIndex={
+                            windowState.zIndex
+                        }
                         onFocus={() =>
-                            focusApp(app.id)
+                            focusApp(
+                                app.id,
+                            )
                         }
-                        onPositionChange={(position) =>
-                            moveApp(app.id, position)
+                        onPositionChange={(
+                            position,
+                        ) =>
+                            moveApp(
+                                app.id,
+                                position,
+                            )
                         }
-                        onSizeChange={(size) =>
-                            resizeApp(app.id, size)
+                        onSizeChange={(
+                            size,
+                        ) =>
+                            resizeApp(
+                                app.id,
+                                size,
+                            )
                         }
                         onClose={() =>
-                            closeApp(app.id)
+                            closeApp(
+                                app.id,
+                            )
                         }
                         onMinimize={() =>
-                            minimizeApp(app.id)
+                            minimizeApp(
+                                app.id,
+                            )
                         }
                         onMaximize={() =>
-                            toggleMaximizeApp(app.id)
+                            toggleMaximizeApp(
+                                app.id,
+                            )
                         }
                     >
-                        {app.id === 'game'
-                            ? (
-                                <Game
-                                    isActive={isActive}
-                                />
-                            )
-                            : renderAppContent(app.id)}
+                        {
+                            app.id ===
+                                'game'
+                                ? (
+                                    <Game
+                                        isActive={
+                                            isActive
+                                        }
+                                    />
+                                )
+                                : renderAppContent(
+                                    app.id,
+                                )
+                        }
                     </Window>
                 )
             })}
 
             <Taskbar
                 theme={theme}
-                toggleTheme={toggleTheme}
+                toggleTheme={
+                    toggleTheme
+                }
                 apps={allApps}
                 windows={windows}
-                toggleTaskbarApp={toggleTaskbarApp}
+                toggleTaskbarApp={
+                    toggleTaskbarApp
+                }
             />
         </main>
     )

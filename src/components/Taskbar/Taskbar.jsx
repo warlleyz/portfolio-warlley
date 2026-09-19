@@ -26,6 +26,8 @@ function Taskbar({
         new Date(),
     )
 
+
+    /* === RELÓGIO === */
     useEffect(() => {
         const interval =
             setInterval(() => {
@@ -41,6 +43,8 @@ function Taskbar({
         }
     }, [])
 
+
+    /* === DATA E HORA === */
     const time =
         dateTime.toLocaleTimeString(
             'pt-BR',
@@ -60,9 +64,12 @@ function Taskbar({
             },
         )
 
+
+    /* === APP ATIVO === */
     const activeZIndex =
         Math.max(
-            ...Object.values(windows)
+            ...Object
+                .values(windows)
                 .filter(
                     (item) =>
                         item?.open &&
@@ -70,18 +77,23 @@ function Taskbar({
                 )
                 .map(
                     (item) =>
-                        item.zIndex ?? 0,
+                        item.zIndex ??
+                        0,
                 ),
             0,
         )
 
+
+    /* === RENDERIZAÇÃO === */
     return (
         <footer className="taskbar">
             <div className="taskbar-left">
                 <button
                     className="theme-button"
                     type="button"
-                    onClick={toggleTheme}
+                    onClick={
+                        toggleTheme
+                    }
                     aria-label={
                         theme === 'dark'
                             ? 'Ativar tema claro'
@@ -93,17 +105,21 @@ function Taskbar({
                             : 'Tema escuro'
                     }
                 >
-                    {theme === 'dark' ? (
-                        <Sun
-                            size={19}
-                            strokeWidth={1.8}
-                        />
-                    ) : (
-                        <Moon
-                            size={19}
-                            strokeWidth={1.8}
-                        />
-                    )}
+                    {
+                        theme === 'dark'
+                            ? (
+                                <Sun
+                                    size={19}
+                                    strokeWidth={1.8}
+                                />
+                            )
+                            : (
+                                <Moon
+                                    size={19}
+                                    strokeWidth={1.8}
+                                />
+                            )
+                    }
                 </button>
             </div>
 
@@ -112,7 +128,9 @@ function Taskbar({
                     const windowState =
                         windows[app.id]
 
-                    if (!windowState?.open) {
+                    if (
+                        !windowState?.open
+                    ) {
                         return null
                     }
 
@@ -135,20 +153,32 @@ function Taskbar({
                         .filter(Boolean)
                         .join(' ')
 
+                    const Icon =
+                        app.icon
+
                     return (
                         <button
                             key={app.id}
                             type="button"
-                            className={className}
+                            className={
+                                className
+                            }
                             onClick={() =>
                                 toggleTaskbarApp(
                                     app.id,
                                 )
                             }
-                            aria-label={app.name}
-                            title={app.name}
+                            aria-label={
+                                app.name
+                            }
+                            title={
+                                app.name
+                            }
                         >
-                            {app.icon}
+                            <Icon
+                                size={22}
+                                strokeWidth={1.8}
+                            />
                         </button>
                     )
                 })}
