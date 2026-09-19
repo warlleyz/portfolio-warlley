@@ -2,147 +2,139 @@
 .window {
     position: absolute;
 
-    top: 50%;
-    left: 50%;
-
-    width: 720px;
-    height: 480px;
-
-    translate:
-        -50% -50%;
-
-    transform:
-        scale(1);
-
-    opacity: 1;
-
     display: flex;
     flex-direction: column;
+
+    min-width: 360px;
+    min-height: 260px;
 
     overflow: hidden;
 
     border:
-        1px solid var(--glass-border,
-            rgba(244, 248, 252, 0.08));
+        1px solid var(--glass-border);
 
-    border-radius: 18px;
+    border-radius:
+        var(--radius-large,
+            16px);
 
     background:
-        var(--glass-background,
-            rgba(13, 27, 42, 0.68));
+        color-mix(in srgb,
+            var(--glass-background-strong) 88%,
+            transparent);
 
     color:
-        var(--text-primary,
-            #F4F8FC);
+        var(--text-primary);
 
     backdrop-filter:
-        blur(22px) saturate(130%);
+        blur(24px) saturate(135%);
 
     -webkit-backdrop-filter:
-        blur(22px) saturate(130%);
+        blur(24px) saturate(135%);
 
     box-shadow:
-        0 20px 50px var(--shadow-medium,
-            rgba(0, 0, 0, 0.32));
+        var(--shadow-window);
+
+    transform-origin:
+        center;
 
     animation:
-        window-open 220ms ease;
+        window-open 180ms ease-out;
 
     transition:
-        top 250ms ease,
-        left 250ms ease,
-        width 250ms ease,
-        height 250ms ease,
-        translate 250ms ease,
-        transform 250ms ease,
-        opacity 200ms ease,
-        border-radius 250ms ease,
-        border-color 180ms ease,
-        box-shadow 180ms ease,
-        filter 200ms ease;
-
-    will-change:
-        translate,
-        transform,
-        width,
-        height;
+        border-color var(--transition-default),
+        box-shadow var(--transition-default),
+        opacity var(--transition-default),
+        transform var(--transition-default);
 }
 
-/* === JANELA ATIVA === */
+
+/* === ESTADOS === */
+
+/* ----- ATIVA ----- */
 .window-active {
     border-color:
-        var(--border-primary,
-            #29415D);
+        var(--border-strong);
 
     box-shadow:
-        0 24px 60px var(--shadow-medium,
-            rgba(0, 0, 0, 0.32));
+        var(--shadow-window);
 }
 
-/* === JANELA INATIVA === */
+
+/* ----- INATIVA ----- */
 .window-inactive {
     border-color:
-        var(--glass-border,
-            rgba(244, 248, 252, 0.08));
+        var(--border-subtle);
 
     box-shadow:
-        0 14px 36px var(--shadow-soft,
-            rgba(0, 0, 0, 0.18));
+        var(--shadow-medium);
 }
 
-/* === MAXIMIZADA === */
+
+/* ----- MAXIMIZADA ----- */
 .window-maximized {
-    top: 12px;
-    left: 12px;
+    top: 8px !important;
+    right: 8px !important;
+    bottom: 82px !important;
+    left: 8px !important;
 
-    width:
-        calc(100% - 24px);
+    width: auto !important;
+    height: auto !important;
 
-    height:
-        calc(100% - 24px);
+    border-radius:
+        14px;
 
-    translate:
-        0 0;
-
-    border-radius: 16px;
-}
-
-/* === ARRASTANDO === */
-.window-dragging {
     animation:
-        none !important;
+        window-maximize 180ms ease-out;
+}
 
-    transform:
-        scale(0.985);
 
+/* ----- ARRASTANDO ----- */
+.window-dragging {
     transition:
-        transform 140ms ease;
+        none;
 
-    user-select: none;
+    user-select:
+        none;
 }
 
-/* === MINIMIZANDO === */
+
+/* ----- REDIMENSIONANDO ----- */
+.window-resizing {
+    transition:
+        none;
+
+    user-select:
+        none;
+}
+
+
+/* ----- MINIMIZANDO ----- */
 .window-minimizing {
-    opacity: 0;
+    pointer-events:
+        none;
 
-    transform:
-        translateY(70px) scale(0.82);
+    animation:
+        window-minimize 200ms ease-in forwards;
 }
 
-/* === FECHANDO === */
+
+/* ----- FECHANDO ----- */
 .window-closing {
-    opacity: 0;
+    pointer-events:
+        none;
 
-    transform:
-        scale(0.96);
-
-    filter:
-        blur(2px);
+    animation:
+        window-close 200ms ease-in forwards;
 }
+
 
 /* === CABEÇALHO === */
 .window-header {
-    height: 48px;
+    position: relative;
+
+    z-index: 2;
+
+    min-height: 48px;
 
     display: flex;
     align-items: center;
@@ -154,62 +146,109 @@
         0 8px 0 16px;
 
     border-bottom:
-        1px solid var(--glass-border,
-            rgba(244, 248, 252, 0.08));
+        1px solid var(--border-subtle);
 
     background:
-        rgba(255, 255, 255, 0.015);
+        rgba(255,
+            255,
+            255,
+            0.025);
 
-    cursor:
-        grab;
-
-    user-select: none;
-
-    touch-action: none;
+    user-select:
+        none;
 }
 
-.window-header:active {
-    cursor:
-        grabbing;
+
+/* ----- JANELA ATIVA ----- */
+.window-active .window-header {
+    background:
+        rgba(255,
+            255,
+            255,
+            0.035);
 }
+
 
 /* === TÍTULO === */
 .window-title {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    pointer-events:
+        none;
+}
+
+
+/* ----- INDICADOR ----- */
+.window-title-dot {
+    width: 7px;
+    height: 7px;
+
+    flex-shrink: 0;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--text-muted);
+
+    transition:
+        background var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.window-active .window-title-dot {
+    background:
+        var(--accent-primary);
+
+    box-shadow:
+        0 0 10px var(--accent-soft);
+}
+
+
+/* ----- TEXTO ----- */
+.window-title-text {
     overflow: hidden;
 
     color:
-        var(--text-primary,
-            #F4F8FC);
+        var(--text-secondary);
 
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 550;
 
-    line-height: 1;
+    text-overflow:
+        ellipsis;
 
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-
-    pointer-events: none;
+    white-space:
+        nowrap;
 
     transition:
-        opacity 160ms ease;
+        color var(--transition-fast);
 }
 
-.window-inactive .window-title {
-    opacity: 0.72;
+.window-active .window-title-text {
+    color:
+        var(--text-primary);
 }
+
 
 /* === CONTROLES === */
 .window-controls {
     display: flex;
     align-items: center;
 
-    gap: 3px;
+    gap: 2px;
 
-    flex-shrink: 0;
+    margin-left:
+        16px;
 }
 
+
+/* ----- BOTÃO ----- */
 .window-control {
     width: 34px;
     height: 34px;
@@ -218,201 +257,196 @@
     align-items: center;
     justify-content: center;
 
-    border: none;
-    border-radius: 9px;
+    flex-shrink: 0;
+
+    border-radius:
+        8px;
+
+    color:
+        var(--text-secondary);
 
     background:
         transparent;
 
-    color:
-        var(--text-primary,
-            #F4F8FC);
-
-    outline: none;
-
     transition:
-        background 150ms ease,
-        color 150ms ease,
-        transform 120ms ease;
+        color var(--transition-fast),
+        background var(--transition-fast),
+        transform var(--transition-fast);
 }
 
 .window-control:hover {
+    color:
+        var(--text-primary);
+
     background:
-        var(--hover-background,
-            rgba(31, 140, 255, 0.08));
+        var(--hover-background);
 }
 
 .window-control:active {
     transform:
-        scale(0.9);
+        scale(0.93);
 }
 
-.window-control:focus-visible {
-    box-shadow:
-        0 0 0 2px var(--accent-primary,
-            #1F8CFF);
-}
 
-/* === FECHAR === */
+/* ----- FECHAR ----- */
 .window-control-close:hover {
-    background:
-        var(--error,
-            #EF4444);
-
     color:
-        #FFFFFF;
+        #ffffff;
+
+    background:
+        #dc2626;
 }
+
 
 /* === CONTEÚDO === */
 .window-content {
+    position: relative;
+
+    z-index: 1;
+
     flex: 1;
 
     min-width: 0;
     min-height: 0;
 
-    padding: 20px;
+    overflow:
+        auto;
 
-    overflow: auto;
-
-    scrollbar-width: none;
-
-    -ms-overflow-style: none;
+    background:
+        rgba(255,
+            255,
+            255,
+            0.008);
 }
 
-.window-content::-webkit-scrollbar {
-    display: none;
-}
 
 /* === REDIMENSIONAMENTO === */
-.resize-handle {
+.window-resize {
     position: absolute;
 
-    z-index: 20;
+    z-index: 10;
 }
 
-.resize-top {
+
+/* ----- LATERAIS ----- */
+.window-resize-top {
     top: 0;
+    right: 8px;
     left: 8px;
 
-    width:
-        calc(100% - 16px);
-
-    height: 6px;
+    height: 5px;
 
     cursor:
         ns-resize;
 }
 
-.resize-bottom {
+.window-resize-bottom {
+    right: 8px;
     bottom: 0;
     left: 8px;
 
-    width:
-        calc(100% - 16px);
-
-    height: 6px;
+    height: 5px;
 
     cursor:
         ns-resize;
 }
 
-.resize-left {
+.window-resize-left {
     top: 8px;
+    bottom: 8px;
     left: 0;
 
-    width: 6px;
-
-    height:
-        calc(100% - 16px);
+    width: 5px;
 
     cursor:
         ew-resize;
 }
 
-.resize-right {
+.window-resize-right {
     top: 8px;
     right: 0;
+    bottom: 8px;
 
-    width: 6px;
-
-    height:
-        calc(100% - 16px);
+    width: 5px;
 
     cursor:
         ew-resize;
 }
 
-/* === CANTOS === */
-.resize-top-left,
-.resize-top-right,
-.resize-bottom-left,
-.resize-bottom-right {
-    width: 12px;
-    height: 12px;
-}
 
-.resize-top-left {
+/* ----- CANTOS ----- */
+.window-resize-top-left {
     top: 0;
     left: 0;
+
+    width: 10px;
+    height: 10px;
 
     cursor:
         nwse-resize;
 }
 
-.resize-top-right {
+.window-resize-top-right {
     top: 0;
     right: 0;
 
+    width: 10px;
+    height: 10px;
+
     cursor:
         nesw-resize;
 }
 
-.resize-bottom-left {
+.window-resize-bottom-left {
     bottom: 0;
     left: 0;
 
+    width: 10px;
+    height: 10px;
+
     cursor:
         nesw-resize;
 }
 
-.resize-bottom-right {
+.window-resize-bottom-right {
     right: 0;
     bottom: 0;
+
+    width: 10px;
+    height: 10px;
 
     cursor:
         nwse-resize;
 }
 
-/* === MAXIMIZADA SEM RESIZE === */
-.window-maximized .resize-handle {
-    display: none;
-}
-
-/* === REDIMENSIONANDO === */
-.window-resizing {
-    transition:
-        none !important;
-
-    backdrop-filter:
-        none;
-
-    -webkit-backdrop-filter:
-        none;
-
-    box-shadow:
-        0 8px 20px var(--shadow-soft,
-            rgba(0, 0, 0, 0.18));
-
-    user-select: none;
-}
 
 /* === ANIMAÇÕES === */
+
+/* ----- ABRIR ----- */
 @keyframes window-open {
     from {
         opacity: 0;
 
         transform:
-            scale(0.97);
+            scale(0.97) translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scale(1) translateY(0);
+    }
+}
+
+
+/* ----- MAXIMIZAR ----- */
+@keyframes window-maximize {
+    from {
+        opacity: 0.94;
+
+        transform:
+            scale(0.985);
     }
 
     to {
@@ -423,14 +457,138 @@
     }
 }
 
-/* === REDUÇÃO DE MOVIMENTO === */
+
+/* ----- MINIMIZAR ----- */
+@keyframes window-minimize {
+    from {
+        opacity: 1;
+
+        transform:
+            scale(1) translateY(0);
+    }
+
+    to {
+        opacity: 0;
+
+        transform:
+            scale(0.82) translateY(40px);
+    }
+}
+
+
+/* ----- FECHAR ----- */
+@keyframes window-close {
+    from {
+        opacity: 1;
+
+        transform:
+            scale(1);
+    }
+
+    to {
+        opacity: 0;
+
+        transform:
+            scale(0.96);
+    }
+}
+
+
+/* === SCROLLBAR === */
+.window-content {
+    scrollbar-width:
+        thin;
+
+    scrollbar-color:
+        var(--border-default) transparent;
+}
+
+.window-content::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.window-content::-webkit-scrollbar-track {
+    background:
+        transparent;
+}
+
+.window-content::-webkit-scrollbar-thumb {
+    border:
+        none;
+
+    border-radius:
+        var(--radius-full,
+            9999px);
+
+    background:
+        var(--border-default);
+}
+
+.window-content::-webkit-scrollbar-thumb:hover {
+    background:
+        var(--text-muted);
+}
+
+
+/* === RESPONSIVIDADE === */
+
+/* ----- TELAS ESTREITAS ----- */
+@media (max-width: 700px) {
+    .window {
+        min-width: 0;
+        min-height: 0;
+    }
+
+    .window:not(.window-maximized) {
+        max-width:
+            calc(100vw - 16px);
+    }
+
+    .window-maximized {
+        top: 6px !important;
+        right: 6px !important;
+        bottom: 78px !important;
+        left: 6px !important;
+
+        border-radius:
+            12px;
+    }
+
+    .window-header {
+        min-height:
+            46px;
+
+        padding-left:
+            13px;
+    }
+
+    .window-control {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+
+/* === ACESSIBILIDADE === */
+
+/* ----- MOVIMENTO REDUZIDO ----- */
 @media (prefers-reduced-motion: reduce) {
 
     .window,
-    .window-title,
-    .window-control {
-        animation: none;
+    .window-control,
+    .window-title-dot,
+    .window-title-text {
+        transition:
+            none;
 
-        transition: none;
+        animation:
+            none;
+    }
+
+    .window-minimizing,
+    .window-closing {
+        opacity:
+            0;
     }
 }

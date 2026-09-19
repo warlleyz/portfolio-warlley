@@ -1,57 +1,270 @@
 import {
     useEffect,
     useRef,
+    useState,
 } from 'react'
 
 import {
+    Maximize2,
+    Minimize2,
     Minus,
-    Square,
     X,
 } from 'lucide-react'
 
 import './Window.css'
 
+
+/* === CONFIGURAÇÃO === */
+const DEFAULT_WIDTH = 720
+const DEFAULT_HEIGHT = 500
+
+const MIN_WIDTH = 360
+const MIN_HEIGHT = 260
+
+const DESKTOP_PADDING = 12
+const TASKBAR_SPACE = 88
+
+
 function Window({
     title,
     children,
-    onClose,
-    onMinimize,
-    onMaximize,
+
+    active = false,
+    hidden = false,
     maximized = false,
     minimizing = false,
     closing = false,
-    position,
-    onPositionChange,
-    size,
-    onSizeChange,
+
+    position = null,
+    size = null,
     zIndex = 10,
+
     onFocus,
-    hidden = false,
-    active = false,
+    onClose,
+    onMinimize,
+    onMaximize,
+    onPositionChange,
+    onSizeChange,
 }) {
-    const windowRef = useRef(null)
+    const windowRef =
+        useRef(null)
 
-    useEffect(() => {
-        if (!maximized) {
+    const dragState =
+        useRef(null)
+
+    const resizeState =
+        useRef(null)
+
+    const [
+        dragging,
+        setDragging,
+    ] = useState(false)
+
+    const [
+        resizing,
+        setResizing,
+    ] = useState(false)
+
+
+    /* === DIMENSÕES === */
+
+    /* ----- TAMANHO ----- */
+    const currentSize = {
+        width:
+            size?.width ??
+            Math.min(
+                DEFAULT_WIDTH,
+                window.innerWidth - 80,
+            ),
+
+        height:
+            size?.height ??
+            Math.min(
+                DEFAULT_HEIGHT,
+                window.innerHeight -
+                TASKBAR_SPACE -
+                40,
+            ),
+    }
+
+
+    /* ----- POSIÇÃO ----- */
+    const defaultPosition = {
+        x:
+            Math.max(
+                (
+                    window.innerWidth -
+                    currentSize.width
+                ) / 2,
+                DESKTOP_PADDING,
+            ),
+
+        y:
+            Math.max(
+                (
+                    window.innerHeight -
+                    TASKBAR_SPACE -
+                    currentSize.height
+                ) / 2,
+                DESKTOP_PADDING,
+            ),
+    }
+
+    const currentPosition =
+        position ??
+        defaultPosition
+
+
+    /* === LIMITES === */
+
+    /* ----- POSIÇÃO ----- */
+    const constrainPosition = (
+        x,
+        y,
+        width =
+            currentSize.width,
+        height =
+            currentSize.height,
+    ) => {
+        const maxX =
+            Math.max(
+                window.innerWidth -
+                width -
+                DESKTOP_PADDING,
+                DESKTOP_PADDING,
+            )
+
+        const maxY =
+            Math.max(
+                window.innerHeight -
+                TASKBAR_SPACE -
+                height -
+                DESKTOP_PADDING,
+                DESKTOP_PADDING,
+            )
+
+        return {
+            x:
+                Math.min(
+                    Math.max(
+                        x,
+                        DESKTOP_PADDING,
+                    ),
+                    maxX,
+                ),
+
+            y:
+                Math.min(
+                    Math.max(
+                        y,
+                        DESKTOP_PADDING,
+                    ),
+                    maxY,
+                ),
+        }
+    }
+
+
+    /* ----- TAMANHO ----- */
+    const constrainSize = (
+        width,
+        height,
+        x =
+            currentPosition.x,
+        y =
+            currentPosition.y,
+    ) => {
+        const maxWidth =
+            Math.max(
+                MIN_WIDTH,
+                window.innerWidth -
+                x -
+                DESKTOP_PADDING,
+            )
+
+        const maxHeight =
+            Math.max(
+                MIN_HEIGHT,
+                window.innerHeight -
+                TASKBAR_SPACE -
+                y -
+                DESKTOP_PADDING,
+            )
+
+        return {
+            width:
+                Math.min(
+                    Math.max(
+                        width,
+                        MIN_WIDTH,
+                    ),
+                    maxWidth,
+                ),
+
+            height:
+                Math.min(
+                    Math.max(
+                        height,
+                        MIN_HEIGHT,
+                    ),
+                    maxHeight,
+                ),
+        }
+    }
+
+
+    /* === FOCO === */
+    const handleFocus = () => {
+        onFocus?.()
+    }
+
+
+    /* === ARRASTAR === */
+
+    /* ----- INICIAR ----- */
+    const handleDragStart = (
+        event,
+    ) => {
+        if (
+            maximized ||
+            event.button !== 0
+        ) {
             return
         }
 
-        const windowElement =
-            windowRef.current
-
-        if (!windowElement) {
+        if (
+            event.target.closest(
+                '.window-controls',
+            )
+        ) {
             return
         }
 
-        windowElement.style.left = ''
-        windowElement.style.top = ''
-        windowElement.style.width = ''
-        windowElement.style.height = ''
-        windowElement.style.translate = ''
-        windowElement.style.transition = ''
-        windowElement.style.animation = ''
-    }, [maximized])
+        event.preventDefault()
 
+        handleFocus()
+
+        dragState.current = {
+            mouseX:
+                event.clientX,
+
+            mouseY:
+                event.clientY,
+
+            startX:
+                currentPosition.x,
+
+            startY:
+                currentPosition.y,
+        }
+
+        setDragging(true)
+    }
+
+
+    /* === REDIMENSIONAR === */
+
+    /* ----- INICIAR ----- */
     const handleResizeStart = (
         event,
         direction,
@@ -66,553 +279,334 @@ function Window({
         event.preventDefault()
         event.stopPropagation()
 
-        const windowElement =
-            windowRef.current
+        handleFocus()
 
-        if (!windowElement) {
-            return
+        resizeState.current = {
+            direction,
+
+            mouseX:
+                event.clientX,
+
+            mouseY:
+                event.clientY,
+
+            startX:
+                currentPosition.x,
+
+            startY:
+                currentPosition.y,
+
+            startWidth:
+                currentSize.width,
+
+            startHeight:
+                currentSize.height,
         }
 
-        onFocus?.()
+        setResizing(true)
+    }
 
-        const rect =
-            windowElement.getBoundingClientRect()
 
-        const startX =
-            event.clientX
-
-        const startY =
-            event.clientY
-
-        const startLeft =
-            rect.left
-
-        const startTop =
-            rect.top
-
-        const startRight =
-            rect.right
-
-        const startBottom =
-            rect.bottom
-
-        const startWidth =
-            rect.width
-
-        const startHeight =
-            rect.height
-
-        const minWidth = 420
-        const minHeight = 280
-
-        let currentX =
-            startLeft
-
-        let currentY =
-            startTop
-
-        let currentWidth =
-            startWidth
-
-        let currentHeight =
-            startHeight
-
-        let animationFrame = null
-
-        windowElement.classList.add(
-            'window-resizing',
-        )
-
+    /* === MOVIMENTO GLOBAL === */
+    useEffect(() => {
         const handlePointerMove = (
-            moveEvent,
+            event,
         ) => {
-            const deltaX =
-                moveEvent.clientX -
-                startX
-
-            const deltaY =
-                moveEvent.clientY -
-                startY
-
+            /* ----- DRAG ----- */
             if (
-                direction.includes(
-                    'right',
-                )
+                dragging &&
+                dragState.current
             ) {
-                currentWidth =
-                    Math.min(
-                        Math.max(
-                            startWidth +
-                            deltaX,
-                            minWidth,
-                        ),
-                        window.innerWidth -
-                        startLeft,
-                    )
-            }
+                const deltaX =
+                    event.clientX -
+                    dragState.current
+                        .mouseX
 
-            if (
-                direction.includes(
-                    'left',
-                )
-            ) {
-                currentWidth =
-                    Math.min(
-                        Math.max(
-                            startWidth -
-                            deltaX,
-                            minWidth,
-                        ),
-                        startRight,
+                const deltaY =
+                    event.clientY -
+                    dragState.current
+                        .mouseY
+
+                const nextPosition =
+                    constrainPosition(
+                        dragState.current
+                            .startX +
+                        deltaX,
+
+                        dragState.current
+                            .startY +
+                        deltaY,
                     )
 
-                currentX =
-                    startRight -
-                    currentWidth
+                onPositionChange?.(
+                    nextPosition,
+                )
+
+                return
             }
 
+
+            /* ----- RESIZE ----- */
             if (
-                direction.includes(
-                    'bottom',
-                )
+                resizing &&
+                resizeState.current
             ) {
-                currentHeight =
-                    Math.min(
-                        Math.max(
-                            startHeight +
-                            deltaY,
-                            minHeight,
-                        ),
-                        window.innerHeight -
-                        startTop,
+                const state =
+                    resizeState.current
+
+                const deltaX =
+                    event.clientX -
+                    state.mouseX
+
+                const deltaY =
+                    event.clientY -
+                    state.mouseY
+
+                let nextX =
+                    state.startX
+
+                let nextY =
+                    state.startY
+
+                let nextWidth =
+                    state.startWidth
+
+                let nextHeight =
+                    state.startHeight
+
+
+                /* ----- DIREITA ----- */
+                if (
+                    state.direction.includes(
+                        'right',
                     )
-            }
+                ) {
+                    nextWidth =
+                        state.startWidth +
+                        deltaX
+                }
 
-            if (
-                direction.includes(
-                    'top',
-                )
-            ) {
-                currentHeight =
-                    Math.min(
-                        Math.max(
-                            startHeight -
-                            deltaY,
-                            minHeight,
-                        ),
-                        startBottom,
+
+                /* ----- ESQUERDA ----- */
+                if (
+                    state.direction.includes(
+                        'left',
+                    )
+                ) {
+                    nextWidth =
+                        state.startWidth -
+                        deltaX
+
+                    nextX =
+                        state.startX +
+                        deltaX
+
+                    if (
+                        nextWidth <
+                        MIN_WIDTH
+                    ) {
+                        nextX =
+                            state.startX +
+                            (
+                                state.startWidth -
+                                MIN_WIDTH
+                            )
+
+                        nextWidth =
+                            MIN_WIDTH
+                    }
+
+                    if (
+                        nextX <
+                        DESKTOP_PADDING
+                    ) {
+                        nextWidth +=
+                            nextX -
+                            DESKTOP_PADDING
+
+                        nextX =
+                            DESKTOP_PADDING
+                    }
+                }
+
+
+                /* ----- INFERIOR ----- */
+                if (
+                    state.direction.includes(
+                        'bottom',
+                    )
+                ) {
+                    nextHeight =
+                        state.startHeight +
+                        deltaY
+                }
+
+
+                /* ----- SUPERIOR ----- */
+                if (
+                    state.direction.includes(
+                        'top',
+                    )
+                ) {
+                    nextHeight =
+                        state.startHeight -
+                        deltaY
+
+                    nextY =
+                        state.startY +
+                        deltaY
+
+                    if (
+                        nextHeight <
+                        MIN_HEIGHT
+                    ) {
+                        nextY =
+                            state.startY +
+                            (
+                                state.startHeight -
+                                MIN_HEIGHT
+                            )
+
+                        nextHeight =
+                            MIN_HEIGHT
+                    }
+
+                    if (
+                        nextY <
+                        DESKTOP_PADDING
+                    ) {
+                        nextHeight +=
+                            nextY -
+                            DESKTOP_PADDING
+
+                        nextY =
+                            DESKTOP_PADDING
+                    }
+                }
+
+
+                const nextSize =
+                    constrainSize(
+                        nextWidth,
+                        nextHeight,
+                        nextX,
+                        nextY,
                     )
 
-                currentY =
-                    startBottom -
-                    currentHeight
-            }
+                const nextPosition =
+                    constrainPosition(
+                        nextX,
+                        nextY,
+                        nextSize.width,
+                        nextSize.height,
+                    )
 
-            if (animationFrame) {
-                cancelAnimationFrame(
-                    animationFrame,
+                onPositionChange?.(
+                    nextPosition,
+                )
+
+                onSizeChange?.(
+                    nextSize,
                 )
             }
-
-            animationFrame =
-                requestAnimationFrame(
-                    () => {
-                        windowElement.style.left =
-                            '0px'
-
-                        windowElement.style.top =
-                            '0px'
-
-                        windowElement.style.translate =
-                            `${currentX}px ${currentY}px`
-
-                        windowElement.style.width =
-                            `${currentWidth}px`
-
-                        windowElement.style.height =
-                            `${currentHeight}px`
-                    },
-                )
         }
 
-        const finishResize = () => {
-            if (animationFrame) {
-                cancelAnimationFrame(
-                    animationFrame,
-                )
+
+        const handlePointerUp =
+            () => {
+                dragState.current =
+                    null
+
+                resizeState.current =
+                    null
+
+                setDragging(false)
+                setResizing(false)
             }
 
-            windowElement.classList.remove(
-                'window-resizing',
-            )
-
-            onSizeChange?.({
-                width:
-                    currentWidth,
-
-                height:
-                    currentHeight,
-            })
-
-            onPositionChange?.({
-                x:
-                    currentX,
-
-                y:
-                    currentY,
-            })
-
-            window.removeEventListener(
-                'pointermove',
-                handlePointerMove,
-            )
-
-            window.removeEventListener(
-                'pointerup',
-                finishResize,
-            )
-
-            window.removeEventListener(
-                'pointercancel',
-                finishResize,
-            )
-        }
 
         window.addEventListener(
-            'pointermove',
+            'mousemove',
             handlePointerMove,
         )
 
         window.addEventListener(
-            'pointerup',
-            finishResize,
+            'mouseup',
+            handlePointerUp,
         )
 
-        window.addEventListener(
-            'pointercancel',
-            finishResize,
-        )
-    }
 
-    const handleDragStart = (
-        event,
-    ) => {
-        if (event.button !== 0) {
-            return
-        }
-
-        const windowElement =
-            windowRef.current
-
-        if (!windowElement) {
-            return
-        }
-
-        event.preventDefault()
-
-        onFocus?.()
-
-        const startPointerX =
-            event.clientX
-
-        const startPointerY =
-            event.clientY
-
-        const initialRect =
-            windowElement.getBoundingClientRect()
-
-        const pointerRatioX =
-            Math.min(
-                Math.max(
-                    (
-                        startPointerX -
-                        initialRect.left
-                    ) /
-                    initialRect.width,
-                    0,
-                ),
-                1,
+        return () => {
+            window.removeEventListener(
+                'mousemove',
+                handlePointerMove,
             )
 
-        let currentX =
-            initialRect.left
-
-        let currentY =
-            initialRect.top
-
-        let currentWidth =
-            initialRect.width
-
-        let currentHeight =
-            initialRect.height
-
-        let offsetX =
-            startPointerX -
-            initialRect.left
-
-        let offsetY =
-            Math.min(
-                startPointerY -
-                initialRect.top,
-                40,
+            window.removeEventListener(
+                'mouseup',
+                handlePointerUp,
             )
+        }
+    }, [
+        dragging,
+        resizing,
+        maximized,
+        currentPosition.x,
+        currentPosition.y,
+        currentSize.width,
+        currentSize.height,
+        onPositionChange,
+        onSizeChange,
+    ])
 
-        let dragging = false
 
-        let restoredFromMaximized =
-            false
-
-        const handlePointerMove = (
-            moveEvent,
-        ) => {
-            const movedX =
-                Math.abs(
-                    moveEvent.clientX -
-                    startPointerX,
-                )
-
-            const movedY =
-                Math.abs(
-                    moveEvent.clientY -
-                    startPointerY,
-                )
-
-            if (
-                !dragging &&
-                movedX < 3 &&
-                movedY < 3
-            ) {
-                return
-            }
-
-            if (!dragging) {
-                dragging = true
-
+    /* === AJUSTE DE VIEWPORT === */
+    useEffect(() => {
+        const handleResize =
+            () => {
                 if (maximized) {
-                    restoredFromMaximized =
-                        true
-
-                    const restoredWidth =
-                        size?.width ??
-                        720
-
-                    const restoredHeight =
-                        size?.height ??
-                        480
-
-                    currentWidth =
-                        Math.min(
-                            restoredWidth,
-                            window.innerWidth,
-                        )
-
-                    currentHeight =
-                        Math.min(
-                            restoredHeight,
-                            window.innerHeight,
-                        )
-
-                    onMaximize?.()
-
-                    requestAnimationFrame(
-                        () => {
-                            const restoredElement =
-                                windowRef.current
-
-                            if (
-                                !restoredElement
-                            ) {
-                                return
-                            }
-
-                            restoredElement.style.transition =
-                                'none'
-
-                            restoredElement.style.animation =
-                                'none'
-
-                            restoredElement.style.width =
-                                `${currentWidth}px`
-
-                            restoredElement.style.height =
-                                `${currentHeight}px`
-
-                            currentX =
-                                Math.min(
-                                    Math.max(
-                                        moveEvent.clientX -
-                                        currentWidth *
-                                        pointerRatioX,
-                                        0,
-                                    ),
-                                    Math.max(
-                                        window.innerWidth -
-                                        currentWidth,
-                                        0,
-                                    ),
-                                )
-
-                            currentY =
-                                Math.max(
-                                    moveEvent.clientY -
-                                    20,
-                                    0,
-                                )
-
-                            restoredElement.style.left =
-                                '0px'
-
-                            restoredElement.style.top =
-                                '0px'
-
-                            restoredElement.style.translate =
-                                `${currentX}px ${currentY}px`
-
-                            offsetX =
-                                moveEvent.clientX -
-                                currentX
-
-                            offsetY =
-                                moveEvent.clientY -
-                                currentY
-
-                            restoredElement.classList.add(
-                                'window-dragging',
-                            )
-                        },
-                    )
-
                     return
                 }
 
-                windowElement.classList.add(
-                    'window-dragging',
+                const nextSize =
+                    constrainSize(
+                        currentSize.width,
+                        currentSize.height,
+                    )
+
+                const nextPosition =
+                    constrainPosition(
+                        currentPosition.x,
+                        currentPosition.y,
+                        nextSize.width,
+                        nextSize.height,
+                    )
+
+                onSizeChange?.(
+                    nextSize,
+                )
+
+                onPositionChange?.(
+                    nextPosition,
                 )
             }
 
-            const activeWindow =
-                windowRef.current
+        window.addEventListener(
+            'resize',
+            handleResize,
+        )
 
-            if (!activeWindow) {
-                return
-            }
-
-            const maxX =
-                Math.max(
-                    window.innerWidth -
-                    currentWidth,
-                    0,
-                )
-
-            const maxY =
-                Math.max(
-                    window.innerHeight -
-                    currentHeight,
-                    0,
-                )
-
-            currentX =
-                Math.min(
-                    Math.max(
-                        moveEvent.clientX -
-                        offsetX,
-                        0,
-                    ),
-                    maxX,
-                )
-
-            currentY =
-                Math.min(
-                    Math.max(
-                        moveEvent.clientY -
-                        offsetY,
-                        0,
-                    ),
-                    maxY,
-                )
-
-            activeWindow.style.left =
-                '0px'
-
-            activeWindow.style.top =
-                '0px'
-
-            activeWindow.style.translate =
-                `${currentX}px ${currentY}px`
-        }
-
-        const finishDrag = () => {
-            const activeWindow =
-                windowRef.current
-
-            if (activeWindow) {
-                activeWindow.classList.remove(
-                    'window-dragging',
-                )
-
-                if (
-                    restoredFromMaximized
-                ) {
-                    activeWindow.style.transition =
-                        ''
-
-                    activeWindow.style.animation =
-                        ''
-                }
-            }
-
-            if (dragging) {
-                onPositionChange?.({
-                    x:
-                        currentX,
-
-                    y:
-                        currentY,
-                })
-            }
-
+        return () => {
             window.removeEventListener(
-                'pointermove',
-                handlePointerMove,
-            )
-
-            window.removeEventListener(
-                'pointerup',
-                finishDrag,
-            )
-
-            window.removeEventListener(
-                'pointercancel',
-                finishDrag,
+                'resize',
+                handleResize,
             )
         }
+    })
 
-        window.addEventListener(
-            'pointermove',
-            handlePointerMove,
-        )
 
-        window.addEventListener(
-            'pointerup',
-            finishDrag,
-        )
-
-        window.addEventListener(
-            'pointercancel',
-            finishDrag,
-        )
-    }
-
-    const handleHeaderDoubleClick = (
-        event,
-    ) => {
-        event.preventDefault()
-
-        onFocus?.()
-        onMaximize?.()
-    }
-
-    const windowClassName = [
+    /* === CLASSES === */
+    const className = [
         'window',
 
         active
@@ -621,6 +615,14 @@ function Window({
 
         maximized
             ? 'window-maximized'
+            : '',
+
+        dragging
+            ? 'window-dragging'
+            : '',
+
+        resizing
+            ? 'window-resizing'
             : '',
 
         minimizing
@@ -634,96 +636,104 @@ function Window({
         .filter(Boolean)
         .join(' ')
 
-    return (
-        <div
-            ref={windowRef}
-            className={windowClassName}
-            style={{
-                display:
-                    hidden
-                        ? 'none'
-                        : undefined,
 
+    /* === ESTILO === */
+    const style =
+        maximized
+            ? {
+                zIndex,
+            }
+            : {
                 zIndex,
 
-                ...(
-                    !maximized &&
-                        position
-                        ? {
-                            left:
-                                '0px',
+                left:
+                    currentPosition.x,
 
-                            top:
-                                '0px',
+                top:
+                    currentPosition.y,
 
-                            translate:
-                                `${position.x}px ${position.y}px`,
-                        }
-                        : {}
-                ),
+                width:
+                    currentSize.width,
 
-                ...(
-                    !maximized &&
-                        size
-                        ? {
-                            width:
-                                `${size.width}px`,
+                height:
+                    currentSize.height,
+            }
 
-                            height:
-                                `${size.height}px`,
-                        }
-                        : {}
-                ),
-            }}
-            onMouseDown={onFocus}
+
+    /* === RENDERIZAÇÃO === */
+    if (
+        hidden &&
+        !minimizing
+    ) {
+        return null
+    }
+
+
+    return (
+        <section
+            ref={windowRef}
+            className={
+                className
+            }
+            style={
+                style
+            }
+            onMouseDown={
+                handleFocus
+            }
+            role="dialog"
+            aria-label={
+                title
+            }
         >
-            <div
+            <header
                 className="window-header"
-                onPointerDown={
+                onMouseDown={
                     handleDragStart
                 }
                 onDoubleClick={
-                    handleHeaderDoubleClick
+                    onMaximize
                 }
             >
-                <span className="window-title">
-                    {title}
-                </span>
+                <div className="window-title">
+                    <span className="window-title-dot" />
+
+                    <span className="window-title-text">
+                        {title}
+                    </span>
+                </div>
 
                 <div
                     className="window-controls"
-                    onPointerDown={(
-                        event,
-                    ) =>
-                        event.stopPropagation()
-                    }
-                    onDoubleClick={(
-                        event,
-                    ) =>
-                        event.stopPropagation()
-                    }
+                    aria-label="Controles da janela"
                 >
                     <button
-                        className="window-control"
+                        className="window-control window-control-minimize"
                         type="button"
-                        onClick={onMinimize}
-                        aria-label="Minimizar"
+                        onClick={
+                            onMinimize
+                        }
+                        aria-label={
+                            `Minimizar ${title}`
+                        }
                         title="Minimizar"
                     >
                         <Minus
-                            size={18}
+                            size={16}
                             strokeWidth={1.8}
                         />
                     </button>
 
                     <button
-                        className="window-control"
+                        className="window-control window-control-maximize"
                         type="button"
-                        onClick={onMaximize}
+                        onClick={
+                            onMaximize
+                        }
                         aria-label={
                             maximized
-                                ? 'Restaurar'
-                                : 'Maximizar'
+                                ? `Restaurar ${title}`
+                                : `Maximizar ${title}`
                         }
                         title={
                             maximized
@@ -731,127 +741,146 @@ function Window({
                                 : 'Maximizar'
                         }
                     >
-                        <Square
-                            size={16}
-                            strokeWidth={1.8}
-                        />
+                        {
+                            maximized
+                                ? (
+                                    <Minimize2
+                                        size={14}
+                                        strokeWidth={1.8}
+                                    />
+                                )
+                                : (
+                                    <Maximize2
+                                        size={14}
+                                        strokeWidth={1.8}
+                                    />
+                                )
+                        }
                     </button>
 
                     <button
                         className="window-control window-control-close"
                         type="button"
-                        onClick={onClose}
-                        aria-label="Fechar"
+                        onClick={
+                            onClose
+                        }
+                        aria-label={
+                            `Fechar ${title}`
+                        }
                         title="Fechar"
                     >
                         <X
-                            size={18}
+                            size={17}
                             strokeWidth={1.8}
                         />
                     </button>
                 </div>
-            </div>
+            </header>
 
             <div className="window-content">
                 {children}
             </div>
 
-            <div
-                className="resize-handle resize-top"
-                onPointerDown={(
-                    event,
-                ) =>
-                    handleResizeStart(
-                        event,
-                        'top',
-                    )
-                }
-            />
+            {!maximized && (
+                <>
+                    <div
+                        className="window-resize window-resize-top"
+                        onMouseDown={(
+                            event,
+                        ) =>
+                            handleResizeStart(
+                                event,
+                                'top',
+                            )
+                        }
+                    />
 
-            <div
-                className="resize-handle resize-bottom"
-                onPointerDown={(
-                    event,
-                ) =>
-                    handleResizeStart(
-                        event,
-                        'bottom',
-                    )
-                }
-            />
+                    <div
+                        className="window-resize window-resize-right"
+                        onMouseDown={(
+                            event,
+                        ) =>
+                            handleResizeStart(
+                                event,
+                                'right',
+                            )
+                        }
+                    />
 
-            <div
-                className="resize-handle resize-left"
-                onPointerDown={(
-                    event,
-                ) =>
-                    handleResizeStart(
-                        event,
-                        'left',
-                    )
-                }
-            />
+                    <div
+                        className="window-resize window-resize-bottom"
+                        onMouseDown={(
+                            event,
+                        ) =>
+                            handleResizeStart(
+                                event,
+                                'bottom',
+                            )
+                        }
+                    />
 
-            <div
-                className="resize-handle resize-right"
-                onPointerDown={(
-                    event,
-                ) =>
-                    handleResizeStart(
-                        event,
-                        'right',
-                    )
-                }
-            />
+                    <div
+                        className="window-resize window-resize-left"
+                        onMouseDown={(
+                            event,
+                        ) =>
+                            handleResizeStart(
+                                event,
+                                'left',
+                            )
+                        }
+                    />
 
-            <div
-                className="resize-handle resize-top-left"
-                onPointerDown={(
-                    event,
-                ) =>
-                    handleResizeStart(
-                        event,
-                        'top-left',
-                    )
-                }
-            />
+                    <div
+                        className="window-resize window-resize-top-left"
+                        onMouseDown={(
+                            event,
+                        ) =>
+                            handleResizeStart(
+                                event,
+                                'top-left',
+                            )
+                        }
+                    />
 
-            <div
-                className="resize-handle resize-top-right"
-                onPointerDown={(
-                    event,
-                ) =>
-                    handleResizeStart(
-                        event,
-                        'top-right',
-                    )
-                }
-            />
+                    <div
+                        className="window-resize window-resize-top-right"
+                        onMouseDown={(
+                            event,
+                        ) =>
+                            handleResizeStart(
+                                event,
+                                'top-right',
+                            )
+                        }
+                    />
 
-            <div
-                className="resize-handle resize-bottom-left"
-                onPointerDown={(
-                    event,
-                ) =>
-                    handleResizeStart(
-                        event,
-                        'bottom-left',
-                    )
-                }
-            />
+                    <div
+                        className="window-resize window-resize-bottom-left"
+                        onMouseDown={(
+                            event,
+                        ) =>
+                            handleResizeStart(
+                                event,
+                                'bottom-left',
+                            )
+                        }
+                    />
 
-            <div
-                className="resize-handle resize-bottom-right"
-                onPointerDown={(
-                    event,
-                ) =>
-                    handleResizeStart(
-                        event,
-                        'bottom-right',
-                    )
-                }
-            />
-        </div>
+                    <div
+                        className="window-resize window-resize-bottom-right"
+                        onMouseDown={(
+                            event,
+                        ) =>
+                            handleResizeStart(
+                                event,
+                                'bottom-right',
+                            )
+                        }
+                    />
+                </>
+            )}
+        </section>
     )
 }
 
