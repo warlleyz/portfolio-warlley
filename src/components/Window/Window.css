@@ -18,9 +18,9 @@
             16px);
 
     background:
-        color-mix(in srgb,
-            var(--glass-background-strong) 88%,
-            transparent);
+            color-mix(in srgb,
+                var(--glass-background-strong) var(--runtime-glass-opacity, 78%),
+                transparent);
 
     color:
         var(--text-primary);
@@ -98,9 +98,9 @@
 /* ----- ARRASTANDO ----- */
 .window-dragging {
     background:
-        color-mix(in srgb,
-            var(--glass-background-strong) 62%,
-            transparent);
+            color-mix(in srgb,
+                var(--glass-background-strong) 62%,
+                transparent);
 
     box-shadow:
         var(--shadow-medium);
@@ -117,9 +117,9 @@
 /* ----- REDIMENSIONANDO ----- */
 .window-resizing {
     background:
-        color-mix(in srgb,
-            var(--glass-background-strong) 62%,
-            transparent);
+            color-mix(in srgb,
+                var(--glass-background-strong) 62%,
+                transparent);
 
     box-shadow:
         var(--shadow-medium);

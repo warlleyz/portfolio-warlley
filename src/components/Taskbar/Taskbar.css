@@ -38,9 +38,9 @@
         16px;
 
     background:
-        color-mix(in srgb,
-            var(--glass-background-strong) 84%,
-            transparent);
+            color-mix(in srgb,
+                var(--glass-background-strong) var(--runtime-glass-opacity, 78%),
+                transparent);
 
     backdrop-filter:
         blur(24px) saturate(135%);
@@ -129,6 +129,14 @@
         scale(0.94);
 }
 
+/* ----- BOTÃO ATIVO ----- */
+.taskbar-button-active {
+    color:
+        var(--accent-primary);
+
+    background:
+        var(--active-background);
+}
 
 /* === WS MENU === */
 .taskbar-menu-button {

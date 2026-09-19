@@ -27,9 +27,9 @@
         18px;
 
     background:
-        color-mix(in srgb,
-            var(--glass-background-strong) 78%,
-            transparent);
+            color-mix(in srgb,
+                var(--glass-background-strong) var(--runtime-glass-opacity, 78%),
+                transparent);
 
     color:
         var(--text-primary);

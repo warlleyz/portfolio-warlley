@@ -21,8 +21,12 @@ function Taskbar({
     apps,
     windows,
     toggleTaskbarApp,
+
     menuOpen,
     onToggleMenu,
+
+    quickControlsOpen,
+    onToggleQuickControls,
 }) {
     const [
         dateTime,
@@ -88,7 +92,6 @@ function Taskbar({
         )
 
 
-    /* === RENDERIZAÇÃO === */
     return (
         <footer
             className="taskbar"
@@ -216,9 +219,28 @@ function Taskbar({
 
                 <div className="taskbar-system">
                     <button
-                        className="taskbar-button"
+                        className={[
+                            'taskbar-button',
+                            'taskbar-quick-controls-button',
+
+                            quickControlsOpen
+                                ? 'taskbar-button-active'
+                                : '',
+                        ]
+                            .filter(Boolean)
+                            .join(' ')}
                         type="button"
-                        aria-label="Abrir controles rápidos"
+                        onClick={
+                            onToggleQuickControls
+                        }
+                        aria-label={
+                            quickControlsOpen
+                                ? 'Fechar controles rápidos'
+                                : 'Abrir controles rápidos'
+                        }
+                        aria-expanded={
+                            quickControlsOpen
+                        }
                         title="Controles rápidos"
                     >
                         <SlidersHorizontal
@@ -226,6 +248,7 @@ function Taskbar({
                             strokeWidth={1.8}
                         />
                     </button>
+
 
                     <button
                         className="taskbar-button"
@@ -238,6 +261,7 @@ function Taskbar({
                             strokeWidth={1.8}
                         />
                     </button>
+
 
                     <button
                         className="taskbar-button"

@@ -19,6 +19,7 @@ import projectsData from '../../data/projectsData'
 import Taskbar from '../Taskbar/Taskbar'
 import Window from '../Window/Window'
 import WSMenu from '../WSMenu/WSMenu'
+import QuickControls from '../QuickControls/QuickControls'
 
 import './Desktop.css'
 
@@ -66,6 +67,21 @@ function Desktop({
         menuOpen,
         setMenuOpen,
     ] = useState(false)
+
+    const [
+        quickControlsOpen,
+        setQuickControlsOpen,
+    ] = useState(false)
+
+    const [
+        brightness,
+        setBrightness,
+    ] = useState(100)
+
+    const [
+        glassOpacity,
+        setGlassOpacity,
+    ] = useState(78)
 
     const [
         selectedShortcut,
@@ -421,6 +437,8 @@ function Desktop({
             (previous) =>
                 !previous,
         )
+
+        setQuickControlsOpen(false)
     }
 
 
@@ -458,6 +476,23 @@ function Desktop({
         setMenuOpen(false)
     }
 
+    /* === CONTROLES RÁPIDOS === */
+
+    /* ----- ALTERNAR ----- */
+    const toggleQuickControls = () => {
+        setQuickControlsOpen(
+            (previous) =>
+                !previous,
+        )
+
+        setMenuOpen(false)
+    }
+
+
+    /* ----- FECHAR ----- */
+    const closeQuickControls = () => {
+        setQuickControlsOpen(false)
+    }
 
     /* === TASKBAR === */
 
@@ -585,6 +620,13 @@ function Desktop({
             onClick={
                 handleDesktopClick
             }
+            style={{
+                filter:
+                    `brightness(${brightness}%)`,
+
+                '--runtime-glass-opacity':
+                    `${glassOpacity}%`,
+            }}
         >
             <section
                 className="desktop-shortcuts"
@@ -803,6 +845,32 @@ function Desktop({
                 />
             )}
 
+            {/* === CONTROLES RÁPIDOS === */}
+            {quickControlsOpen && (
+                <QuickControls
+                    theme={
+                        theme
+                    }
+                    toggleTheme={
+                        toggleTheme
+                    }
+                    brightness={
+                        brightness
+                    }
+                    setBrightness={
+                        setBrightness
+                    }
+                    glassOpacity={
+                        glassOpacity
+                    }
+                    setGlassOpacity={
+                        setGlassOpacity
+                    }
+                    onClose={
+                        closeQuickControls
+                    }
+                />
+            )}
 
             {/* === TASKBAR === */}
             <Taskbar
@@ -826,6 +894,12 @@ function Desktop({
                 }
                 onToggleMenu={
                     toggleMenu
+                }
+                quickControlsOpen={
+                    quickControlsOpen
+                }
+                onToggleQuickControls={
+                    toggleQuickControls
                 }
             />
         </main>
