@@ -1,65 +1,108 @@
 import {
     Download,
+    ExternalLink,
     FileText,
 } from 'lucide-react'
 
 import './Resume.css'
 
+
 function Resume() {
     const resumeUrl =
         `${import.meta.env.BASE_URL}files/curriculo-warlley.pdf`
 
+
     return (
         <div className="resume">
-            <div className="resume-header">
-                <span className="resume-label">
-                    Currículo
-                </span>
 
-                <h1>
-                    Currículo profissional
-                </h1>
-
-                <p>
-                    Visualize meu currículo diretamente abaixo.
-                </p>
-            </div>
-
-            <div className="resume-viewer">
-                <div className="resume-placeholder">
-                    <div className="resume-icon">
+            {/* === BARRA DO DOCUMENTO === */}
+            <header className="resume-toolbar">
+                <div className="resume-file-info">
+                    <span className="resume-file-icon">
                         <FileText
-                            size={34}
+                            size={16}
                             strokeWidth={1.8}
                         />
+                    </span>
+
+                    <div>
+                        <strong>
+                            Currículo
+                        </strong>
+
+                        <span>
+                            curriculo-warlley.pdf
+                        </span>
                     </div>
-
-                    <strong>
-                        Currículo ainda não disponível
-                    </strong>
-
-                    <p>
-                        O arquivo PDF será adicionado em breve.
-                    </p>
                 </div>
-            </div>
 
-            <a
-                className="resume-button"
-                href={resumeUrl}
-                download
-                aria-disabled="true"
-                onClick={(event) =>
-                    event.preventDefault()
-                }
-            >
-                <Download
-                    size={17}
-                    strokeWidth={1.8}
-                />
 
-                Baixar currículo
-            </a>
+                <div className="resume-actions">
+                    <a
+                        className="resume-action"
+                        href={
+                            resumeUrl
+                        }
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <ExternalLink
+                            size={15}
+                            strokeWidth={1.8}
+                        />
+
+                        Abrir
+                    </a>
+
+                    <a
+                        className="resume-action resume-action-primary"
+                        href={
+                            resumeUrl
+                        }
+                        download="curriculo-warlley.pdf"
+                    >
+                        <Download
+                            size={15}
+                            strokeWidth={1.8}
+                        />
+
+                        Baixar
+                    </a>
+                </div>
+            </header>
+
+
+            {/* === VISUALIZADOR === */}
+            <section className="resume-viewer">
+                <object
+                    className="resume-pdf"
+                    data={
+                        resumeUrl
+                    }
+                    type="application/pdf"
+                >
+                    <div className="resume-fallback">
+                        <FileText
+                            size={28}
+                            strokeWidth={1.7}
+                        />
+
+                        <strong>
+                            Não foi possível exibir o PDF.
+                        </strong>
+
+                        <a
+                            href={
+                                resumeUrl
+                            }
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            Abrir arquivo
+                        </a>
+                    </div>
+                </object>
+            </section>
         </div>
     )
 }
