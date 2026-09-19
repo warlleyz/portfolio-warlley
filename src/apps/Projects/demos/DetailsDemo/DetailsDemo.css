@@ -1,169 +1,730 @@
 /* === DETALHES DO PROJETO === */
 .details-demo {
-    width: 100%;
-    height: 100%;
+    width:
+        100%;
 
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    height:
+        100%;
+
+    min-height:
+        0;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        10px;
+
+    padding:
+        0;
+
+    overflow:
+        auto;
+
+    color:
+        var(--text-primary);
 }
+
 
 /* === CABEÇALHO === */
 .details-demo-header {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        14px;
+
+    padding:
+        12px 14px;
+
+    flex-shrink:
+        0;
+
+    border:
+        1px solid var(--glass-border);
+
+    border-radius:
+        13px;
+
+    background:
+        color-mix(in srgb,
+            var(--surface-secondary) 13%,
+            transparent);
 }
 
+
+/* === IDENTIFICAÇÃO === */
+.details-demo-title {
+    min-width:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        11px;
+}
+
+
+.details-demo-title>div {
+    min-width:
+        0;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        2px;
+}
+
+
+/* ----- ÍCONE ----- */
+.details-demo-icon {
+    width:
+        38px;
+
+    height:
+        38px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
+    border-radius:
+        10px;
+
+    color:
+        var(--accent-primary);
+
+    background:
+        var(--accent-soft);
+}
+
+
+/* ----- LABEL ----- */
 .details-demo-label {
-    font-size: 11px;
-    font-weight: 500;
+    color:
+        var(--text-muted);
 
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
+    font-size:
+        9px;
 
-    color: #3b82f6;
+    font-weight:
+        650;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.7px;
 }
 
+
+/* ----- TÍTULO ----- */
 .details-demo-header h2 {
-    margin: 0;
+    margin:
+        0;
 
-    font-size: 24px;
-    font-weight: 650;
+    overflow:
+        hidden;
+
+    color:
+        var(--text-primary);
+
+    font-size:
+        14px;
+
+    font-weight:
+        650;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
 }
 
-.details-demo-header p {
-    max-width: 650px;
 
-    margin: 0;
+/* === AÇÕES DO CABEÇALHO === */
+.details-demo-header-actions {
+    display:
+        flex;
 
-    font-size: 13px;
-    line-height: 1.7;
+    align-items:
+        center;
 
-    color: var(--text-secondary);
+    justify-content:
+        flex-end;
+
+    gap:
+        8px;
+
+    flex-shrink:
+        0;
 }
+
+
+/* === LINGUAGEM === */
+.details-demo-language {
+    padding:
+        5px 8px;
+
+    flex-shrink:
+        0;
+
+    border:
+        1px solid color-mix(in srgb,
+            var(--accent-primary) 20%,
+            var(--border-subtle));
+
+    border-radius:
+        8px;
+
+    color:
+        var(--accent-primary);
+
+    background:
+        color-mix(in srgb,
+            var(--accent-soft) 25%,
+            transparent);
+
+    font-size:
+        9px;
+
+    font-weight:
+        650;
+}
+
+
+/* === BOTÃO GITHUB === */
+.details-demo-github {
+    min-height:
+        30px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        6px;
+
+    padding:
+        5px 9px;
+
+    flex-shrink:
+        0;
+
+    border:
+        1px solid var(--border-subtle);
+
+    border-radius:
+        8px;
+
+    color:
+        var(--text-secondary);
+
+    background:
+        color-mix(in srgb,
+            var(--surface-secondary) 16%,
+            transparent);
+
+    font-size:
+        9.5px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        color var(--transition-fast),
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+
+.details-demo-github:hover {
+    color:
+        var(--accent-primary);
+
+    border-color:
+        color-mix(in srgb,
+            var(--accent-primary) 25%,
+            var(--border-subtle));
+
+    background:
+        var(--accent-soft);
+}
+
+
+.details-demo-github:active {
+    transform:
+        scale(0.97);
+}
+
+
+/* === LABEL DAS SEÇÕES === */
+.details-demo-section-label {
+    display:
+        block;
+
+    margin-bottom:
+        8px;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        9px;
+
+    font-weight:
+        650;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.6px;
+}
+
+
+/* === DESCRIÇÃO === */
+.details-demo-description {
+    padding:
+        12px 14px;
+
+    flex-shrink:
+        0;
+
+    border:
+        1px solid var(--glass-border);
+
+    border-radius:
+        12px;
+
+    background:
+        color-mix(in srgb,
+            var(--surface-secondary) 9%,
+            transparent);
+}
+
+
+.details-demo-description p {
+    margin:
+        0;
+
+    color:
+        var(--text-secondary);
+
+    font-size:
+        11px;
+
+    line-height:
+        1.6;
+}
+
+
+/* === METADADOS === */
+.details-demo-metadata {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3,
+            minmax(0,
+                1fr));
+
+    gap:
+        8px;
+
+    flex-shrink:
+        0;
+}
+
+
+/* ----- ITEM ----- */
+.details-demo-meta-item {
+    min-width:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    padding:
+        10px 11px;
+
+    border:
+        1px solid var(--glass-border);
+
+    border-radius:
+        11px;
+
+    color:
+        var(--accent-primary);
+
+    background:
+        color-mix(in srgb,
+            var(--surface-secondary) 9%,
+            transparent);
+}
+
+
+.details-demo-meta-item>div {
+    min-width:
+        0;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        1px;
+}
+
+
+.details-demo-meta-item strong {
+    overflow:
+        hidden;
+
+    color:
+        var(--text-primary);
+
+    font-size:
+        11px;
+
+    font-weight:
+        650;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+.details-demo-meta-item span {
+    overflow:
+        hidden;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        8.5px;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+/* === BLOCO === */
+.details-demo-block {
+    padding:
+        12px 14px;
+
+    flex-shrink:
+        0;
+
+    border:
+        1px solid var(--glass-border);
+
+    border-radius:
+        12px;
+
+    background:
+        color-mix(in srgb,
+            var(--surface-secondary) 9%,
+            transparent);
+}
+
 
 /* === TECNOLOGIAS === */
 .details-demo-technologies {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        6px;
 }
+
 
 .details-demo-technologies span {
-    padding: 6px 10px;
+    padding:
+        5px 8px;
 
-    border-radius: 9px;
+    border:
+        1px solid var(--border-subtle);
 
-    background: rgba(59, 130, 246, 0.08);
+    border-radius:
+        7px;
 
-    font-size: 11px;
-    font-weight: 500;
+    color:
+        var(--text-secondary);
 
-    color: var(--text-primary);
+    background:
+        color-mix(in srgb,
+            var(--surface-secondary) 16%,
+            transparent);
+
+    font-size:
+        9px;
+
+    font-weight:
+        550;
 }
 
-/* === FUNCIONALIDADES === */
-.details-demo-section {
-    padding: 18px;
 
-    border: 1px solid var(--glass-border);
-    border-radius: 14px;
+/* === INFORMAÇÕES === */
+.details-demo-features {
+    display:
+        flex;
 
-    background: rgba(255, 255, 255, 0.02);
+    flex-direction:
+        column;
+
+    gap:
+        6px;
+
+    margin:
+        0;
+
+    padding-left:
+        17px;
 }
 
-.details-demo-section h3 {
-    margin: 0 0 12px;
 
-    font-size: 15px;
-    font-weight: 600;
+.details-demo-features li {
+    color:
+        var(--text-secondary);
+
+    font-size:
+        10px;
+
+    line-height:
+        1.5;
 }
 
-.details-demo-section ul {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
 
-    margin: 0;
-    padding-left: 18px;
+.details-demo-features li::marker {
+    color:
+        var(--accent-primary);
 }
 
-.details-demo-section li {
-    font-size: 12px;
-    line-height: 1.5;
-
-    color: var(--text-secondary);
-}
 
 /* === AÇÕES === */
 .details-demo-actions {
-    display: flex;
-    gap: 10px;
+    display:
+        flex;
 
-    margin-top: auto;
+    align-items:
+        center;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        8px;
+
+    padding-top:
+        2px;
+
+    flex-shrink:
+        0;
 }
 
+
+/* === BOTÕES === */
 .details-demo-button {
-    min-width: 110px;
-    height: 38px;
+    min-height:
+        34px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
+    display:
+        inline-flex;
 
-    padding: 0 14px;
+    align-items:
+        center;
 
-    border: 1px solid var(--glass-border);
-    border-radius: 9px;
+    justify-content:
+        center;
 
-    background: rgba(255, 255, 255, 0.025);
+    gap:
+        6px;
 
-    color: var(--text-primary);
+    padding:
+        6px 11px;
 
-    font-size: 12px;
-    font-weight: 500;
+    border:
+        1px solid var(--border-subtle);
 
-    cursor: pointer;
+    border-radius:
+        8px;
+
+    color:
+        var(--text-secondary);
+
+    background:
+        color-mix(in srgb,
+            var(--surface-secondary) 16%,
+            transparent);
+
+    font-size:
+        10px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
 
     transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.15s ease;
+        color var(--transition-fast),
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
 }
+
 
 .details-demo-button:hover {
-    border-color: rgba(255, 255, 255, 0.14);
+    color:
+        var(--text-primary);
 
-    background: var(--hover-background);
+    border-color:
+        color-mix(in srgb,
+            var(--accent-primary) 25%,
+            var(--border-subtle));
+
+    background:
+        var(--hover-background);
 }
+
 
 .details-demo-button:active {
-    transform: scale(0.97);
+    transform:
+        scale(0.97);
 }
 
+
+/* ----- BOTÃO PRINCIPAL ----- */
 .details-demo-button-primary {
-    border-color: rgba(59, 130, 246, 0.22);
+    color:
+        var(--accent-primary);
 
-    background: rgba(59, 130, 246, 0.1);
+    border-color:
+        color-mix(in srgb,
+            var(--accent-primary) 25%,
+            var(--border-subtle));
 
-    color: #3b82f6;
+    background:
+        color-mix(in srgb,
+            var(--accent-soft) 30%,
+            transparent);
 }
+
 
 .details-demo-button-primary:hover {
-    border-color: rgba(59, 130, 246, 0.32);
+    color:
+        var(--accent-primary);
 
-    background: rgba(59, 130, 246, 0.16);
+    border-color:
+        color-mix(in srgb,
+            var(--accent-primary) 38%,
+            var(--border-subtle));
+
+    background:
+        var(--accent-soft);
 }
 
-/* === RESPONSIVO === */
+
+/* === RESPONSIVIDADE === */
 @media (max-width: 650px) {
-    .details-demo-actions {
-        flex-direction: column;
+    .details-demo-metadata {
+        grid-template-columns:
+            1fr;
     }
 
+
+    .details-demo-actions {
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+    }
+
+
     .details-demo-button {
-        width: 100%;
+        width:
+            100%;
+    }
+}
+
+
+@media (max-width: 500px) {
+    .details-demo-header {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+
+    .details-demo-header-actions {
+        width:
+            100%;
+
+        justify-content:
+            flex-start;
+
+        flex-wrap:
+            wrap;
     }
 }

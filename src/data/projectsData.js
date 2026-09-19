@@ -5,12 +5,17 @@ import {
     ShoppingCart,
 } from 'lucide-react'
 
+
 const projectsData = [
     {
-        id: 'api-clima',
-        title: 'API Clima',
-        description:
-            'API desenvolvida com Spring Boot consumindo dados meteorológicos da Open-Meteo.',
+        repository:
+            'API-Clima',
+
+        id:
+            'api-clima',
+
+        title:
+            'API Clima',
 
         technologies: [
             'Java',
@@ -18,62 +23,79 @@ const projectsData = [
             'API REST',
         ],
 
-        demoType: 'terminal',
+        demoType:
+            'terminal',
 
         demo: {
-            mode: 'simple',
+            mode:
+                'simple',
 
-            command: 'curl GET /clima',
+            command:
+                'curl GET /clima',
 
-            output: `HTTP/1.1 200 OK
+            output:
+                `HTTP/1.1 200 OK
 
-            {
-                "cidade": "Belo Horizonte",
-                "temperatura": 27.4,
-                "umidade": 51,
-                "vento": 12.3,
-                "direcaoVento": 135,
-                "temperaturaMaxima": 29.1,
-                "temperaturaMinima": 18.7
-            }`,
+{
+    "cidade": "Belo Horizonte",
+    "temperatura": 27.4,
+    "umidade": 51,
+    "vento": 12.3,
+    "direcaoVento": 135,
+    "temperaturaMaxima": 29.1,
+    "temperaturaMinima": 18.7
+}`,
         },
 
-        github:
-            'https://github.com/warlleyz',
+        icon:
+            CloudSun,
 
-        icon: CloudSun,
+        featured:
+            true,
     },
 
     {
-        id: 'carrinho-compras',
-        title: 'Carrinho de Compras',
-        description:
-            'Projeto em Java focado em orientação a objetos e gerenciamento de produtos.',
+        repository:
+            'Carrinho-Compras-POO',
+
+        id:
+            'carrinho-compras',
+
+        title:
+            'Carrinho de Compras',
 
         technologies: [
             'Java',
             'POO',
         ],
 
-        demoType: 'terminal',
+        demoType:
+            'terminal',
 
         demo: {
-            mode: 'cart',
+            mode:
+                'cart',
 
-            command: 'java Main',
+            command:
+                'java Main',
         },
 
-        github:
-            'https://github.com/warlleyz',
+        icon:
+            ShoppingCart,
 
-        icon: ShoppingCart,
+        featured:
+            true,
     },
 
     {
-        id: 'login-puc',
-        title: 'Login PUC',
-        description:
-            'Aplicação web com páginas de login e cadastro utilizando Spring Boot.',
+        repository:
+            'Login-PUC',
+
+        id:
+            'login-puc',
+
+        title:
+            'Login PUC',
 
         technologies: [
             'Java',
@@ -82,24 +104,30 @@ const projectsData = [
             'CSS',
         ],
 
-        demoType: 'web',
+        demoType:
+            'web',
 
         demo: {
             url:
                 `${import.meta.env.BASE_URL}projects/web/login-puc/index.html`,
         },
 
-        github:
-            'https://github.com/warlleyz',
+        icon:
+            LogIn,
 
-        icon: LogIn,
+        featured:
+            true,
     },
 
     {
-        id: 'snakepy',
-        title: 'SnakePy',
-        description:
-            'Jogo inspirado no clássico Snake, desenvolvido em Python com Pygame.',
+        repository:
+            'SnakePy',
+
+        id:
+            'snakepy',
+
+        title:
+            'SnakePy',
 
         technologies: [
             'Python',
@@ -107,7 +135,8 @@ const projectsData = [
             'Pytest',
         ],
 
-        demoType: 'media',
+        demoType:
+            'media',
 
         demo: {
             video:
@@ -119,11 +148,22 @@ const projectsData = [
             ],
         },
 
-        github:
-            'https://github.com/warlleyz/SnakePy',
+        icon:
+            Gamepad2,
 
-        icon: Gamepad2,
+        featured:
+            true,
     },
 ]
+
+/* === REPOSITÓRIOS OCULTOS === */
+const hiddenGithubRepositories = [
+    'warlleyz',
+    'Ambiente-de-Teste',
+]
+
+export {
+    hiddenGithubRepositories,
+}
 
 export default projectsData

@@ -1,4 +1,5 @@
 import {
+    useMemo,
     useRef,
     useState,
 } from 'react'
@@ -33,36 +34,8 @@ import './Desktop.css'
 
 
 /* === APLICATIVOS === */
-
-/* ----- APPS PRINCIPAIS ----- */
 const apps =
     appsData
-
-
-/* ----- PROJETOS ----- */
-const projectApps =
-    projectsData.map(
-        (project) => ({
-            id:
-                `project-${project.id}`,
-
-            projectId:
-                project.id,
-
-            name:
-                project.title,
-
-            icon:
-                project.icon,
-        }),
-    )
-
-
-/* ----- TODOS OS APPS ----- */
-const allApps = [
-    ...apps,
-    ...projectApps,
-]
 
 
 function Desktop({
@@ -74,6 +47,13 @@ function Desktop({
         windows,
         setWindows,
     ] = useState({})
+
+
+    /* === PROJETOS DINÂMICOS === */
+    const [
+        runtimeProjects,
+        setRuntimeProjects,
+    ] = useState([])
 
 
     /* === PAINÉIS === */
@@ -145,6 +125,80 @@ function Desktop({
         useRef(10)
 
 
+    /* === TODOS OS PROJETOS === */
+    const allProjects =
+        useMemo(
+            () => {
+                const staticIds =
+                    new Set(
+                        projectsData.map(
+                            (
+                                project,
+                            ) =>
+                                project.id,
+                        ),
+                    )
+
+
+                return [
+                    ...projectsData,
+
+                    ...runtimeProjects.filter(
+                        (
+                            project,
+                        ) =>
+                            !staticIds.has(
+                                project.id,
+                            ),
+                    ),
+                ]
+            },
+            [
+                runtimeProjects,
+            ],
+        )
+
+
+    /* === APPS DOS PROJETOS === */
+    const projectApps =
+        useMemo(
+            () =>
+                allProjects.map(
+                    (
+                        project,
+                    ) => ({
+                        id:
+                            `project-${project.id}`,
+
+                        projectId:
+                            project.id,
+
+                        name:
+                            project.title,
+
+                        icon:
+                            project.icon,
+                    }),
+                ),
+            [
+                allProjects,
+            ],
+        )
+
+
+    /* === TODOS OS APPS === */
+    const allApps =
+        useMemo(
+            () => [
+                ...apps,
+                ...projectApps,
+            ],
+            [
+                projectApps,
+            ],
+        )
+
+
     /* === GERENCIAMENTO DE NOTIFICAÇÕES === */
 
     /* ----- ADICIONAR ----- */
@@ -156,17 +210,24 @@ function Desktop({
         appId = null,
     }) => {
         setNotifications(
-            (previous) => {
+            (
+                previous,
+            ) => {
                 const alreadyExists =
                     previous.some(
-                        (notification) =>
+                        (
+                            notification,
+                        ) =>
                             notification.id ===
                             id,
                     )
 
-                if (alreadyExists) {
+                if (
+                    alreadyExists
+                ) {
                     return previous
                 }
+
 
                 const currentTime =
                     new Date()
@@ -180,6 +241,7 @@ function Desktop({
                                     '2-digit',
                             },
                         )
+
 
                 return [
                     {
@@ -206,14 +268,18 @@ function Desktop({
     /* ----- LIMPAR ----- */
     const clearNotifications =
         () => {
-            setNotifications([])
+            setNotifications(
+                [],
+            )
         }
 
 
     /* ----- NÃO LIDAS ----- */
     const unreadNotifications =
         notifications.filter(
-            (notification) =>
+            (
+                notification,
+            ) =>
                 !notification.read,
         ).length
 
@@ -239,8 +305,11 @@ function Desktop({
         const nextZIndex =
             getNextZIndex()
 
+
         setWindows(
-            (previous) => ({
+            (
+                previous,
+            ) => ({
                 ...previous,
 
                 [appId]: {
@@ -263,8 +332,11 @@ function Desktop({
         const nextZIndex =
             getNextZIndex()
 
+
         setWindows(
-            (previous) => {
+            (
+                previous,
+            ) => {
                 const currentWindow =
                     previous[
                     appId
@@ -272,10 +344,13 @@ function Desktop({
 
                 const app =
                     appsData.find(
-                        (item) =>
+                        (
+                            item,
+                        ) =>
                             item.id ===
                             appId,
                     )
+
 
                 let initialSize =
                     currentWindow
@@ -313,6 +388,7 @@ function Desktop({
                                 .innerHeight -
                             80,
                         )
+
 
                     initialSize = {
                         width,
@@ -442,12 +518,58 @@ function Desktop({
     const openProject = (
         project,
     ) => {
+        const isStaticProject =
+            projectsData.some(
+                (
+                    item,
+                ) =>
+                    item.id ===
+                    project.id,
+            )
+
+
+        /* ----- REGISTRAR PROJETO DINÂMICO ----- */
+        if (
+            !isStaticProject
+        ) {
+            setRuntimeProjects(
+                (
+                    previous,
+                ) => {
+                    const alreadyExists =
+                        previous.some(
+                            (
+                                item,
+                            ) =>
+                                item.id ===
+                                project.id,
+                        )
+
+
+                    if (
+                        alreadyExists
+                    ) {
+                        return previous
+                    }
+
+
+                    return [
+                        ...previous,
+                        project,
+                    ]
+                },
+            )
+        }
+
+
         const appId =
             `project-${project.id}`
+
 
         openApp(
             appId,
         )
+
 
         addNotification({
             id:
@@ -473,7 +595,9 @@ function Desktop({
         position,
     ) => {
         setWindows(
-            (previous) => ({
+            (
+                previous,
+            ) => ({
                 ...previous,
 
                 [appId]: {
@@ -494,7 +618,9 @@ function Desktop({
         size,
     ) => {
         setWindows(
-            (previous) => ({
+            (
+                previous,
+            ) => ({
                 ...previous,
 
                 [appId]: {
@@ -514,7 +640,9 @@ function Desktop({
         appId,
     ) => {
         setWindows(
-            (previous) => ({
+            (
+                previous,
+            ) => ({
                 ...previous,
 
                 [appId]: {
@@ -528,10 +656,13 @@ function Desktop({
             }),
         )
 
+
         setTimeout(
             () => {
                 setWindows(
-                    (previous) => ({
+                    (
+                        previous,
+                    ) => ({
                         ...previous,
 
                         [appId]: {
@@ -560,8 +691,11 @@ function Desktop({
         const nextZIndex =
             getNextZIndex()
 
+
         setWindows(
-            (previous) => ({
+            (
+                previous,
+            ) => ({
                 ...previous,
 
                 [appId]: {
@@ -587,8 +721,11 @@ function Desktop({
         const nextZIndex =
             getNextZIndex()
 
+
         setWindows(
-            (previous) => ({
+            (
+                previous,
+            ) => ({
                 ...previous,
 
                 [appId]: {
@@ -614,7 +751,9 @@ function Desktop({
         appId,
     ) => {
         setWindows(
-            (previous) => ({
+            (
+                previous,
+            ) => ({
                 ...previous,
 
                 [appId]: {
@@ -628,10 +767,13 @@ function Desktop({
             }),
         )
 
+
         setTimeout(
             () => {
                 setWindows(
-                    (previous) => ({
+                    (
+                        previous,
+                    ) => ({
                         ...previous,
 
                         [appId]: {
@@ -672,13 +814,17 @@ function Desktop({
                     windows,
                 )
                 .filter(
-                    (item) =>
+                    (
+                        item,
+                    ) =>
                         item?.open &&
                         !item
                             ?.minimized,
                 )
                 .map(
-                    (item) =>
+                    (
+                        item,
+                    ) =>
                         item.zIndex ??
                         0,
                 ),
@@ -736,6 +882,7 @@ function Desktop({
             return
         }
 
+
         setSelectedShortcut(
             null,
         )
@@ -748,7 +895,9 @@ function Desktop({
     const toggleMenu =
         () => {
             setMenuOpen(
-                (previous) =>
+                (
+                    previous,
+                ) =>
                     !previous,
             )
 
@@ -780,6 +929,7 @@ function Desktop({
             appId
             ]
 
+
         if (
             currentWindow?.open
         ) {
@@ -801,6 +951,7 @@ function Desktop({
             )
         }
 
+
         setSelectedShortcut(
             appId,
         )
@@ -817,7 +968,9 @@ function Desktop({
     const toggleQuickControls =
         () => {
             setQuickControlsOpen(
-                (previous) =>
+                (
+                    previous,
+                ) =>
                     !previous,
             )
 
@@ -846,13 +999,20 @@ function Desktop({
     const toggleNotifications =
         () => {
             setNotificationsOpen(
-                (previous) => {
+                (
+                    previous,
+                ) => {
                     const next =
                         !previous
 
-                    if (next) {
+
+                    if (
+                        next
+                    ) {
                         setNotifications(
-                            (current) =>
+                            (
+                                current,
+                            ) =>
                                 current.map(
                                     (
                                         notification,
@@ -865,6 +1025,7 @@ function Desktop({
                                 ),
                         )
                     }
+
 
                     return next
                 },
@@ -899,10 +1060,12 @@ function Desktop({
             return
         }
 
+
         const currentWindow =
             windows[
             notification.appId
             ]
+
 
         if (
             currentWindow?.open
@@ -925,6 +1088,7 @@ function Desktop({
             )
         }
 
+
         setSelectedShortcut(
             notification.appId,
         )
@@ -946,11 +1110,13 @@ function Desktop({
             appId
             ]
 
+
         if (
             !currentWindow
         ) {
             return
         }
+
 
         if (
             currentWindow
@@ -963,9 +1129,11 @@ function Desktop({
             return
         }
 
+
         const isActive =
             activeAppId ===
             appId
+
 
         if (
             isActive
@@ -976,6 +1144,7 @@ function Desktop({
 
             return
         }
+
 
         focusApp(
             appId,
@@ -1045,12 +1214,16 @@ function Desktop({
                             '',
                         )
 
+
                     const project =
-                        projectsData.find(
-                            (item) =>
+                        allProjects.find(
+                            (
+                                item,
+                            ) =>
                                 item.id ===
                                 projectId,
                         )
+
 
                     if (
                         !project
@@ -1062,6 +1235,7 @@ function Desktop({
                         )
                     }
 
+
                     return (
                         <ProjectDemo
                             project={
@@ -1070,6 +1244,7 @@ function Desktop({
                         />
                     )
                 }
+
 
                 return (
                     <p>
@@ -1102,11 +1277,15 @@ function Desktop({
             >
                 {apps
                     .filter(
-                        (app) =>
+                        (
+                            app,
+                        ) =>
                             app.desktop,
                     )
                     .map(
-                        (app) => {
+                        (
+                            app,
+                        ) => {
                             const Icon =
                                 app.icon
 
@@ -1128,6 +1307,7 @@ function Desktop({
                             const isSelected =
                                 selectedShortcut ===
                                 app.id
+
 
                             const shortcutClassName = [
                                 'shortcut',
@@ -1151,6 +1331,7 @@ function Desktop({
                                     ' ',
                                 )
 
+
                             return (
                                 <button
                                     key={
@@ -1163,10 +1344,11 @@ function Desktop({
                                     data-app-id={
                                         app.id
                                     }
-                                    onClick={() =>
-                                        handleShortcutClick(
-                                            app.id,
-                                        )
+                                    onClick={
+                                        () =>
+                                            handleShortcutClick(
+                                                app.id,
+                                            )
                                     }
                                     aria-label={
                                         `Abrir ${app.name}`
@@ -1204,11 +1386,14 @@ function Desktop({
 
             {/* === JANELAS === */}
             {allApps.map(
-                (app) => {
+                (
+                    app,
+                ) => {
                     const windowState =
                         windows[
                         app.id
                         ]
+
 
                     if (
                         !windowState
@@ -1217,12 +1402,14 @@ function Desktop({
                         return null
                     }
 
+
                     const isActive =
                         !windowState
                             .minimized &&
 
                         activeAppId ===
                         app.id
+
 
                     return (
                         <Window
@@ -1263,41 +1450,47 @@ function Desktop({
                                 windowState
                                     .zIndex
                             }
-                            onFocus={() =>
-                                focusApp(
-                                    app.id,
-                                )
+                            onFocus={
+                                () =>
+                                    focusApp(
+                                        app.id,
+                                    )
                             }
-                            onPositionChange={(
-                                position,
-                            ) =>
-                                moveApp(
-                                    app.id,
+                            onPositionChange={
+                                (
                                     position,
-                                )
+                                ) =>
+                                    moveApp(
+                                        app.id,
+                                        position,
+                                    )
                             }
-                            onSizeChange={(
-                                size,
-                            ) =>
-                                resizeApp(
-                                    app.id,
+                            onSizeChange={
+                                (
                                     size,
-                                )
+                                ) =>
+                                    resizeApp(
+                                        app.id,
+                                        size,
+                                    )
                             }
-                            onClose={() =>
-                                closeApp(
-                                    app.id,
-                                )
+                            onClose={
+                                () =>
+                                    closeApp(
+                                        app.id,
+                                    )
                             }
-                            onMinimize={() =>
-                                minimizeApp(
-                                    app.id,
-                                )
+                            onMinimize={
+                                () =>
+                                    minimizeApp(
+                                        app.id,
+                                    )
                             }
-                            onMaximize={() =>
-                                toggleMaximizeApp(
-                                    app.id,
-                                )
+                            onMaximize={
+                                () =>
+                                    toggleMaximizeApp(
+                                        app.id,
+                                    )
                             }
                         >
                             {
@@ -1325,7 +1518,9 @@ function Desktop({
                 <WSMenu
                     apps={
                         apps.filter(
-                            (app) =>
+                            (
+                                app,
+                            ) =>
                                 app.menu,
                         )
                     }
@@ -1434,5 +1629,6 @@ function Desktop({
         </main>
     )
 }
+
 
 export default Desktop

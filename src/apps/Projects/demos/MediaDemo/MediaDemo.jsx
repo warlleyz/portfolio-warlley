@@ -1,54 +1,222 @@
+import {
+    Image as ImageIcon,
+    Images,
+    Video,
+} from 'lucide-react'
+
 import './MediaDemo.css'
 
-function MediaDemo({ project }) {
-    const video = project.demo?.video
-    const images = project.demo?.images ?? []
+
+function MediaDemo({
+    project,
+}) {
+    const video =
+        project.demo?.video
+
+    const images =
+        project.demo?.images ??
+        []
+
 
     const hasMedia =
-        Boolean(video) ||
-        images.length > 0
+        Boolean(
+            video,
+        ) ||
+        images.length >
+        0
 
+
+    /* === ABRIR IMAGEM === */
+    const openImage =
+        (
+            image,
+        ) => {
+            window.open(
+                image,
+                '_blank',
+                'noopener,noreferrer',
+            )
+        }
+
+
+    /* === SEM DEMONSTRAÇÃO === */
     if (!hasMedia) {
         return (
             <div className="media-demo media-demo-empty">
-                <h2>{project.title}</h2>
+                <div className="media-demo-empty-icon">
+                    <Images
+                        size={22}
+                        strokeWidth={1.8}
+                    />
+                </div>
 
-                <p>
-                    Demonstração em mídia ainda não configurada.
-                </p>
+                <div>
+                    <h2>
+                        {
+                            project.title
+                        }
+                    </h2>
+
+                    <p>
+                        Demonstração em mídia ainda não configurada.
+                    </p>
+                </div>
             </div>
         )
     }
 
+
     return (
         <div className="media-demo">
-            {video && (
-                <video
-                    className="media-demo-video"
-                    controls
-                    preload="metadata"
-                >
-                    <source src={video} />
 
-                    Seu navegador não suporta reprodução de vídeo.
-                </video>
-            )}
-
-            {images.length > 0 && (
-                <div className="media-demo-gallery">
-                    {images.map((image, index) => (
-                        <img
-                            key={image}
-                            className="media-demo-image"
-                            src={image}
-                            alt={`${project.title} - imagem ${index + 1}`}
-                            loading="lazy"
+            {/* === CABEÇALHO === */}
+            <header className="media-demo-header">
+                <div className="media-demo-title">
+                    <span className="media-demo-icon">
+                        <Images
+                            size={17}
+                            strokeWidth={1.8}
                         />
-                    ))}
+                    </span>
+
+                    <div>
+                        <strong>
+                            {
+                                project.title
+                            }
+                        </strong>
+
+                        <span>
+                            Demonstração visual
+                        </span>
+                    </div>
                 </div>
-            )}
+
+
+                <div className="media-demo-status">
+                    {video && (
+                        <span>
+                            <Video
+                                size={12}
+                                strokeWidth={1.8}
+                            />
+
+                            Vídeo
+                        </span>
+                    )}
+
+                    {images.length >
+                        0 && (
+                            <span>
+                                <ImageIcon
+                                    size={12}
+                                    strokeWidth={1.8}
+                                />
+
+                                {
+                                    images.length
+                                }{' '}
+                                {images.length ===
+                                    1
+                                    ? 'imagem'
+                                    : 'imagens'}
+                            </span>
+                        )}
+                </div>
+            </header>
+
+
+            {/* === CONTEÚDO === */}
+            <div className="media-demo-content">
+
+                {/* ----- VÍDEO ----- */}
+                {video && (
+                    <section className="media-demo-section">
+                        <div className="media-demo-section-header">
+                            <Video
+                                size={14}
+                                strokeWidth={1.8}
+                            />
+
+                            <span>
+                                Demonstração
+                            </span>
+                        </div>
+
+
+                        <div className="media-demo-video-wrapper">
+                            <video
+                                className="media-demo-video"
+                                controls
+                                preload="metadata"
+                            >
+                                <source
+                                    src={
+                                        video
+                                    }
+                                />
+
+                                Seu navegador não suporta reprodução de vídeo.
+                            </video>
+                        </div>
+                    </section>
+                )}
+
+
+                {/* ----- GALERIA ----- */}
+                {images.length >
+                    0 && (
+                        <section className="media-demo-section">
+                            <div className="media-demo-section-header">
+                                <ImageIcon
+                                    size={14}
+                                    strokeWidth={1.8}
+                                />
+
+                                <span>
+                                    Capturas do projeto
+                                </span>
+                            </div>
+
+
+                            <div className="media-demo-gallery">
+                                {images.map(
+                                    (
+                                        image,
+                                        index,
+                                    ) => (
+                                        <button
+                                            key={
+                                                image
+                                            }
+                                            type="button"
+                                            className="media-demo-image-button"
+                                            onClick={
+                                                () =>
+                                                    openImage(
+                                                        image,
+                                                    )
+                                            }
+                                            aria-label={`Abrir imagem ${index + 1} de ${project.title}`}
+                                        >
+                                            <img
+                                                className="media-demo-image"
+                                                src={
+                                                    image
+                                                }
+                                                alt={`${project.title} - imagem ${index + 1}`}
+                                                loading="lazy"
+                                            />
+                                        </button>
+                                    ),
+                                )}
+                            </div>
+                        </section>
+                    )}
+            </div>
         </div>
     )
 }
+
 
 export default MediaDemo
