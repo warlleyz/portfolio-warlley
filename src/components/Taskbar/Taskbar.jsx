@@ -18,6 +18,7 @@ import './Taskbar.css'
 function Taskbar({
     theme,
     toggleTheme,
+
     apps,
     windows,
     toggleTaskbarApp,
@@ -27,6 +28,10 @@ function Taskbar({
 
     quickControlsOpen,
     onToggleQuickControls,
+
+    notificationsOpen,
+    onToggleNotifications,
+    notificationCount,
 }) {
     const [
         dateTime,
@@ -39,11 +44,14 @@ function Taskbar({
     /* === RELÓGIO === */
     useEffect(() => {
         const interval =
-            setInterval(() => {
-                setDateTime(
-                    new Date(),
-                )
-            }, 1000)
+            setInterval(
+                () => {
+                    setDateTime(
+                        new Date(),
+                    )
+                },
+                1000,
+            )
 
         return () => {
             clearInterval(
@@ -58,8 +66,11 @@ function Taskbar({
         dateTime.toLocaleTimeString(
             'pt-BR',
             {
-                hour: '2-digit',
-                minute: '2-digit',
+                hour:
+                    '2-digit',
+
+                minute:
+                    '2-digit',
             },
         )
 
@@ -67,9 +78,14 @@ function Taskbar({
         dateTime.toLocaleDateString(
             'pt-BR',
             {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
+                day:
+                    '2-digit',
+
+                month:
+                    '2-digit',
+
+                year:
+                    'numeric',
             },
         )
 
@@ -78,26 +94,34 @@ function Taskbar({
     const activeZIndex =
         Math.max(
             ...Object
-                .values(windows)
+                .values(
+                    windows,
+                )
                 .filter(
                     (item) =>
                         item?.open &&
-                        !item?.minimized,
+                        !item
+                            ?.minimized,
                 )
                 .map(
                     (item) =>
-                        item.zIndex ?? 0,
+                        item.zIndex ??
+                        0,
                 ),
+
             0,
         )
 
 
+    /* === RENDERIZAÇÃO === */
     return (
         <footer
             className="taskbar"
             aria-label="Barra de tarefas"
         >
             <div className="taskbar-main">
+
+                {/* === WS MENU === */}
                 <button
                     className={[
                         'taskbar-button',
@@ -107,8 +131,12 @@ function Taskbar({
                             ? 'taskbar-menu-button-active'
                             : '',
                     ]
-                        .filter(Boolean)
-                        .join(' ')}
+                        .filter(
+                            Boolean,
+                        )
+                        .join(
+                            ' ',
+                        )}
                     type="button"
                     onClick={
                         onToggleMenu
@@ -135,79 +163,96 @@ function Taskbar({
                 />
 
 
+                {/* === APPS ABERTOS === */}
                 <div
                     className="taskbar-apps"
                     aria-label="Aplicativos abertos"
                 >
-                    {apps.map((app) => {
-                        const windowState =
-                            windows[app.id]
+                    {apps.map(
+                        (app) => {
+                            const windowState =
+                                windows[
+                                app.id
+                                ]
 
-                        if (
-                            !windowState?.open
-                        ) {
-                            return null
-                        }
+                            if (
+                                !windowState
+                                    ?.open
+                            ) {
+                                return null
+                            }
 
-                        const isActive =
-                            !windowState.minimized &&
-                            windowState.zIndex ===
-                            activeZIndex
+                            const isActive =
+                                !windowState
+                                    .minimized &&
 
-                        const Icon =
-                            app.icon
+                                windowState
+                                    .zIndex ===
+                                activeZIndex
 
-                        const className = [
-                            'taskbar-app',
+                            const Icon =
+                                app.icon
 
-                            isActive
-                                ? 'taskbar-app-active'
-                                : '',
+                            const className = [
+                                'taskbar-app',
 
-                            windowState.minimized
-                                ? 'taskbar-app-minimized'
-                                : '',
-                        ]
-                            .filter(Boolean)
-                            .join(' ')
+                                isActive
+                                    ? 'taskbar-app-active'
+                                    : '',
 
-                        return (
-                            <button
-                                key={app.id}
-                                type="button"
-                                className={
-                                    className
-                                }
-                                onClick={() =>
-                                    toggleTaskbarApp(
-                                        app.id,
-                                    )
-                                }
-                                aria-label={
-                                    windowState.minimized
-                                        ? `Restaurar ${app.name}`
-                                        : isActive
-                                            ? `Minimizar ${app.name}`
-                                            : `Focar ${app.name}`
-                                }
-                                title={
-                                    app.name
-                                }
-                            >
-                                <span className="taskbar-app-icon">
-                                    <Icon
-                                        size={19}
-                                        strokeWidth={1.8}
+                                windowState
+                                    .minimized
+                                    ? 'taskbar-app-minimized'
+                                    : '',
+                            ]
+                                .filter(
+                                    Boolean,
+                                )
+                                .join(
+                                    ' ',
+                                )
+
+                            return (
+                                <button
+                                    key={
+                                        app.id
+                                    }
+                                    type="button"
+                                    className={
+                                        className
+                                    }
+                                    onClick={() =>
+                                        toggleTaskbarApp(
+                                            app.id,
+                                        )
+                                    }
+                                    aria-label={
+                                        windowState
+                                            .minimized
+                                            ? `Restaurar ${app.name}`
+                                            : isActive
+                                                ? `Minimizar ${app.name}`
+                                                : `Focar ${app.name}`
+                                    }
+                                    title={
+                                        app.name
+                                    }
+                                >
+                                    <span className="taskbar-app-icon">
+                                        <Icon
+                                            size={19}
+                                            strokeWidth={1.8}
+                                        />
+                                    </span>
+
+                                    <span
+                                        className="taskbar-app-state"
+                                        aria-hidden="true"
                                     />
-                                </span>
-
-                                <span
-                                    className="taskbar-app-state"
-                                    aria-hidden="true"
-                                />
-                            </button>
-                        )
-                    })}
+                                </button>
+                            )
+                        },
+                    )}
                 </div>
 
 
@@ -217,7 +262,10 @@ function Taskbar({
                 />
 
 
+                {/* === SISTEMA === */}
                 <div className="taskbar-system">
+
+                    {/* ----- CONTROLES RÁPIDOS ----- */}
                     <button
                         className={[
                             'taskbar-button',
@@ -227,8 +275,12 @@ function Taskbar({
                                 ? 'taskbar-button-active'
                                 : '',
                         ]
-                            .filter(Boolean)
-                            .join(' ')}
+                            .filter(
+                                Boolean,
+                            )
+                            .join(
+                                ' ',
+                            )}
                         type="button"
                         onClick={
                             onToggleQuickControls
@@ -250,19 +302,60 @@ function Taskbar({
                     </button>
 
 
+                    {/* ----- NOTIFICAÇÕES ----- */}
                     <button
-                        className="taskbar-button"
+                        className={[
+                            'taskbar-button',
+                            'taskbar-notifications-button',
+
+                            notificationsOpen
+                                ? 'taskbar-button-active'
+                                : '',
+                        ]
+                            .filter(
+                                Boolean,
+                            )
+                            .join(
+                                ' ',
+                            )}
                         type="button"
-                        aria-label="Abrir notificações"
+                        onClick={
+                            onToggleNotifications
+                        }
+                        aria-label={
+                            notificationsOpen
+                                ? 'Fechar notificações'
+                                : 'Abrir notificações'
+                        }
+                        aria-expanded={
+                            notificationsOpen
+                        }
                         title="Notificações"
                     >
                         <Bell
                             size={17}
                             strokeWidth={1.8}
                         />
+
+                        {notificationCount > 0 && (
+                            <span
+                                className="taskbar-notification-badge"
+                                aria-label={
+                                    `${notificationCount} notificações não lidas`
+                                }
+                            >
+                                {
+                                    notificationCount >
+                                        9
+                                        ? '9+'
+                                        : notificationCount
+                                }
+                            </span>
+                        )}
                     </button>
 
 
+                    {/* ----- TEMA ----- */}
                     <button
                         className="taskbar-button"
                         type="button"
@@ -270,18 +363,21 @@ function Taskbar({
                             toggleTheme
                         }
                         aria-label={
-                            theme === 'dark'
+                            theme ===
+                                'dark'
                                 ? 'Ativar tema claro'
                                 : 'Ativar tema escuro'
                         }
                         title={
-                            theme === 'dark'
+                            theme ===
+                                'dark'
                                 ? 'Tema claro'
                                 : 'Tema escuro'
                         }
                     >
                         {
-                            theme === 'dark'
+                            theme ===
+                                'dark'
                                 ? (
                                     <Sun
                                         size={17}
@@ -305,12 +401,15 @@ function Taskbar({
                 />
 
 
+                {/* === STATUS === */}
                 <div className="taskbar-status">
                     <WeatherWidget />
 
                     <div
                         className="taskbar-clock"
-                        title={`${time} • ${date}`}
+                        title={
+                            `${time} • ${date}`
+                        }
                     >
                         <span className="taskbar-time">
                             {time}

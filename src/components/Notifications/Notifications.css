@@ -1,0 +1,513 @@
+/* === NOTIFICAÇÕES === */
+.notifications-panel {
+    position: absolute;
+
+    bottom: 74px;
+    left: 50%;
+
+    z-index: 500;
+
+    width:
+        min(300px,
+            calc(100vw - 22px));
+
+    overflow: hidden;
+
+    border:
+        1px solid var(--glass-border);
+
+    border-radius:
+        15px;
+
+    background:
+        color-mix(in srgb,
+            var(--glass-background-strong) var(--runtime-glass-opacity, 78%),
+            transparent);
+
+    color:
+        var(--text-primary);
+
+    backdrop-filter:
+        blur(28px) saturate(138%);
+
+    -webkit-backdrop-filter:
+        blur(28px) saturate(138%);
+
+    box-shadow:
+        var(--shadow-medium);
+
+    transform:
+        translateX(-50%);
+
+    animation:
+        notifications-open 160ms cubic-bezier(0.22,
+            1,
+            0.36,
+            1);
+}
+
+
+/* === CABEÇALHO === */
+.notifications-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding:
+        11px 13px 9px;
+
+    border-bottom:
+        1px solid var(--border-subtle);
+}
+
+
+/* ----- IDENTIFICAÇÃO ----- */
+.notifications-label {
+    display: block;
+
+    margin-bottom:
+        2px;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        9px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        0.08em;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* ----- TÍTULO ----- */
+.notifications-title {
+    margin: 0;
+
+    color:
+        var(--text-primary);
+
+    font-size:
+        14px;
+
+    font-weight:
+        650;
+
+    line-height:
+        1.2;
+}
+
+
+/* === LIMPAR === */
+.notifications-clear {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border:
+        0;
+
+    border-radius:
+        8px;
+
+    color:
+        var(--text-muted);
+
+    background:
+        transparent;
+
+    cursor:
+        pointer;
+
+    transition:
+        color var(--transition-fast),
+        background var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.notifications-clear:hover {
+    color:
+        var(--text-primary);
+
+    background:
+        var(--hover-background);
+}
+
+.notifications-clear:active {
+    transform:
+        scale(0.94);
+}
+
+
+/* === CONTEÚDO === */
+.notifications-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    max-height:
+        310px;
+
+    padding:
+        8px;
+
+    overflow-y:
+        auto;
+}
+
+
+/* === NOTIFICAÇÃO === */
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+
+    width:
+            100%;
+    
+        text-align:
+            left;
+
+    gap: 9px;
+
+    padding:
+        9px;
+
+    border:
+            1px solid var(--border-subtle);
+
+    border-radius:
+        10px;
+
+    background:
+        color-mix(in srgb,
+            var(--surface-secondary) 17%,
+            transparent);
+
+    transition:
+            background var(--transition-fast),
+            border-color var(--transition-fast),
+            opacity var(--transition-fast),
+            transform var(--transition-fast);
+}
+
+.notification-item:hover {
+    border-color:
+        var(--border-default);
+
+    background:
+        var(--hover-background);
+}
+
+/* === NOTIFICAÇÃO INTERATIVA === */
+.notification-action {
+    cursor:
+        pointer;
+}
+
+.notification-action:hover {
+    transform:
+        translateY(-1px);
+}
+
+.notification-action:active {
+    transform:
+        translateY(0) scale(0.99);
+}
+
+.notification-item:disabled {
+    cursor:
+        default;
+}
+
+/* ----- NÃO LIDA ----- */
+.notification-unread {
+    border-color:
+        color-mix(in srgb,
+            var(--accent-primary) 22%,
+            var(--border-subtle));
+
+    background:
+        color-mix(in srgb,
+            var(--accent-soft) 24%,
+            transparent);
+}
+
+
+/* ----- LIDA ----- */
+.notification-read {
+    opacity:
+        0.76;
+}
+
+.notification-read:hover {
+    opacity:
+        1;
+}
+
+
+/* === ÍCONE === */
+.notification-icon {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius:
+        8px;
+
+    color:
+        var(--accent-primary);
+
+    background:
+        var(--accent-soft);
+}
+
+
+/* === TEXTO === */
+.notification-text {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ----- LINHA DO TÍTULO ----- */
+.notification-title-row {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+}
+
+.notification-title-row strong {
+    min-width: 0;
+
+    overflow: hidden;
+
+    color:
+        var(--text-primary);
+
+    font-size:
+        10.5px;
+
+    font-weight:
+        650;
+
+    line-height:
+        1.2;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+/* ----- INDICADOR NÃO LIDO ----- */
+.notification-unread-dot {
+    width: 5px;
+    height: 5px;
+
+    flex-shrink: 0;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--accent-primary);
+}
+
+
+/* ----- DESCRIÇÃO ----- */
+.notification-text>span {
+    margin-top:
+        3px;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        9px;
+
+    line-height:
+        1.35;
+}
+
+
+/* ----- HORÁRIO ----- */
+.notification-text small {
+    margin-top:
+        5px;
+
+    color:
+        var(--text-disabled);
+
+    font-size:
+        8px;
+
+    line-height:
+        1;
+}
+
+
+/* === SEM NOTIFICAÇÕES === */
+.notifications-empty {
+    min-height:
+        135px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        18px;
+
+    color:
+        var(--text-muted);
+
+    text-align:
+        center;
+}
+
+.notifications-empty-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom:
+        9px;
+
+    border-radius:
+        11px;
+
+    color:
+        var(--accent-primary);
+
+    background:
+        var(--accent-soft);
+}
+
+.notifications-empty strong {
+    color:
+        var(--text-secondary);
+
+    font-size:
+        11px;
+
+    font-weight:
+        650;
+}
+
+.notifications-empty>span:last-child {
+    margin-top:
+        4px;
+
+    font-size:
+        9px;
+
+    line-height:
+        1.3;
+}
+
+
+/* === SCROLL === */
+.notifications-content::-webkit-scrollbar {
+    width:
+        5px;
+}
+
+.notifications-content::-webkit-scrollbar-track {
+    background:
+        transparent;
+}
+
+.notifications-content::-webkit-scrollbar-thumb {
+    border-radius:
+        999px;
+
+    background:
+        var(--border-default);
+}
+
+.notifications-content::-webkit-scrollbar-thumb:hover {
+    background:
+        var(--text-disabled);
+}
+
+
+/* === ANIMAÇÃO === */
+@keyframes notifications-open {
+    from {
+        opacity:
+            0;
+
+        transform:
+            translateX(-50%) translateY(6px) scale(0.99);
+    }
+
+    to {
+        opacity:
+            1;
+
+        transform:
+            translateX(-50%) translateY(0) scale(1);
+    }
+}
+
+
+/* === RESPONSIVIDADE === */
+@media (max-width: 600px) {
+    .notifications-panel {
+        bottom:
+            68px;
+
+        width:
+            min(290px,
+                calc(100vw - 16px));
+    }
+
+    .notifications-content {
+        max-height:
+            270px;
+    }
+}
+
+
+/* === ACESSIBILIDADE === */
+@media (prefers-reduced-motion: reduce) {
+
+    .notifications-panel,
+    .notification-item,
+    .notifications-clear {
+        animation:
+            none;
+
+        transition:
+            none;
+    }
+}
