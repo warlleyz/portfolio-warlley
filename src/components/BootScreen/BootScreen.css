@@ -11,35 +11,44 @@
 
     overflow: hidden;
 
+    color: var(--text-primary);
+
     opacity: 1;
 
     transition:
         opacity 420ms ease;
 
     user-select: none;
+
+    pointer-events: all;
 }
+
 
 /* === TEMA ESCURO === */
 .boot-screen-dark {
     background:
-        radial-gradient(circle at 50% 45%,
-            rgba(31, 140, 255, 0.12),
-            transparent 36%),
-        #07111F;
-
-    color: #F4F8FC;
+        radial-gradient(circle at 50% 42%,
+            rgba(96, 165, 250, 0.08),
+            transparent 34%),
+        linear-gradient(145deg,
+            #07101d,
+            #0b1220 55%,
+            #101b2d);
 }
+
 
 /* === TEMA CLARO === */
 .boot-screen-light {
     background:
-        radial-gradient(circle at 50% 45%,
-            rgba(25, 118, 210, 0.08),
-            transparent 36%),
-        #F4F8FC;
-
-    color: #142033;
+        radial-gradient(circle at 50% 42%,
+            rgba(37, 99, 235, 0.08),
+            transparent 34%),
+        linear-gradient(145deg,
+            #f8fbff,
+            #eef4fc 55%,
+            #e3ecf8);
 }
+
 
 /* === CONTEÚDO === */
 .boot-content {
@@ -47,18 +56,20 @@
     flex-direction: column;
     align-items: center;
 
-    gap: 22px;
+    width: min(340px,
+            calc(100vw - 48px));
 
     animation:
-        boot-enter 650ms ease both;
+        boot-enter 600ms ease both;
 }
 
-/* === LOGO === */
-.boot-logo {
-    width: 150px;
-    height: 150px;
 
+/* ----- LOGO ----- */
+.boot-logo {
     display: block;
+
+    width: 156px;
+    height: 156px;
 
     object-fit: contain;
 
@@ -67,25 +78,6 @@
     -webkit-user-drag: none;
 }
 
-/* === TEXTO === */
-.boot-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    gap: 7px;
-}
-
-.boot-name {
-    margin: 0;
-
-    font-size: 13px;
-    font-weight: 400;
-
-    letter-spacing: 0.03em;
-
-    opacity: 0.68;
-}
 
 /* === CARREGAMENTO === */
 .boot-loading {
@@ -93,65 +85,91 @@
     flex-direction: column;
     align-items: center;
 
-    gap: 10px;
+    width: 100%;
 
-    margin-top: 8px;
+    gap: 14px;
+
+    margin-top: 22px;
 }
 
+
+/* ----- STATUS ----- */
 .boot-status {
-    font-size: 11px;
+    min-height: 17px;
+
+    font-size: 12px;
     font-weight: 400;
 
-    letter-spacing: 0.05em;
+    letter-spacing: 0.03em;
 
-    opacity: 0.45;
+    color: var(--text-secondary);
+
+    transition:
+        opacity var(--transition-default);
 }
 
-.boot-loader {
-    display: flex;
 
-    gap: 5px;
+/* ----- PROGRESSO ----- */
+.boot-progress {
+    position: relative;
+
+    width: 180px;
+    height: 3px;
+
+    overflow: hidden;
+
+    border-radius:
+        var(--radius-full);
+
+    background:
+        var(--border-default);
 }
 
-.boot-loader span {
-    width: 4px;
-    height: 4px;
+.boot-progress-bar {
+    position: absolute;
+    inset:
+        0 auto 0 0;
 
-    border-radius: 50%;
+    display: block;
 
-    background: currentColor;
+    height: 100%;
 
-    opacity: 0.25;
+    border-radius:
+        inherit;
 
-    animation:
-        boot-loading-dot 1.2s ease-in-out infinite;
+    background:
+        var(--accent-primary);
+
+    transition:
+        width 380ms ease;
 }
 
-.boot-loader span:nth-child(2) {
-    animation-delay: 150ms;
-}
 
-.boot-loader span:nth-child(3) {
-    animation-delay: 300ms;
-}
-
-/* === WS OS === */
-.boot-version {
+/* === RODAPÉ === */
+.boot-footer {
     position: absolute;
 
     bottom: 24px;
     left: 50%;
 
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
     transform:
         translateX(-50%);
 
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
 
-    letter-spacing: 0.18em;
+    letter-spacing: 0.12em;
 
-    opacity: 0.18;
+    color: var(--text-muted);
+
+    opacity: 0.55;
 }
+
 
 /* === SAÍDA === */
 .boot-screen-leaving {
@@ -160,13 +178,15 @@
     pointer-events: none;
 }
 
+
 /* === ANIMAÇÕES === */
+/* ----- ENTRADA ----- */
 @keyframes boot-enter {
     from {
         opacity: 0;
 
         transform:
-            translateY(6px) scale(0.97);
+            translateY(5px) scale(0.985);
     }
 
     to {
@@ -177,33 +197,40 @@
     }
 }
 
-@keyframes boot-loading-dot {
 
-    0%,
-    80%,
-    100% {
-        opacity: 0.2;
-
-        transform:
-            scale(0.8);
+/* === RESPONSIVIDADE === */
+@media (max-width: 600px) {
+    .boot-logo {
+        width: 132px;
+        height: 132px;
     }
 
-    40% {
-        opacity: 1;
+    .boot-loading {
+        margin-top: 18px;
+    }
 
-        transform:
-            scale(1);
+    .boot-progress {
+        width: 160px;
+    }
+
+    .boot-footer {
+        bottom: 18px;
     }
 }
 
+
 /* === ACESSIBILIDADE === */
+/* ----- MOVIMENTO REDUZIDO ----- */
 @media (prefers-reduced-motion: reduce) {
     .boot-screen {
         transition: none;
     }
 
-    .boot-content,
-    .boot-loader span {
+    .boot-content {
         animation: none;
+    }
+
+    .boot-progress-bar {
+        transition: none;
     }
 }

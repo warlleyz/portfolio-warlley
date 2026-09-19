@@ -1,9 +1,36 @@
+import {
+    useEffect,
+    useState,
+} from 'react'
+
 import './BootScreen.css'
+
+const BOOT_STEPS = [
+    {
+        status: 'Inicializando sistema',
+        progress: 28,
+    },
+    {
+        status: 'Carregando interface',
+        progress: 64,
+    },
+    {
+        status: 'Preparando ambiente',
+        progress: 92,
+    },
+]
+
+const STEP_INTERVAL = 380
 
 function BootScreen({
     theme,
     leaving = false,
 }) {
+    const [
+        currentStep,
+        setCurrentStep,
+    ] = useState(0)
+
     const logoSource =
         theme === 'dark'
             ? '/images/branding/ws-os-dark.png'
@@ -19,49 +46,96 @@ function BootScreen({
         .filter(Boolean)
         .join(' ')
 
+    const currentBootStep =
+        BOOT_STEPS[currentStep]
+
+    useEffect(() => {
+        const reducedMotion =
+            window.matchMedia(
+                '(prefers-reduced-motion: reduce)',
+            ).matches
+
+        if (reducedMotion) {
+            setCurrentStep(
+                BOOT_STEPS.length - 1,
+            )
+
+            return
+        }
+
+        const timers =
+            BOOT_STEPS
+                .slice(1)
+                .map((_, index) =>
+                    setTimeout(() => {
+                        setCurrentStep(
+                            index + 1,
+                        )
+                    }, STEP_INTERVAL * (index + 1)),
+                )
+
+        return () => {
+            timers.forEach(
+                clearTimeout,
+            )
+        }
+    }, [])
+
     return (
         <div
-            className={
-                screenClassName
-            }
+            className={screenClassName}
+            aria-live="polite"
+            aria-busy={!leaving}
         >
-            <div className="boot-content">
+            <main className="boot-content">
                 <img
                     src={logoSource}
-                    alt="WS"
+                    alt="WS OS"
                     className="boot-logo"
                     draggable="false"
                 />
 
-                <div className="boot-text">
-                    <p className="boot-name">
-                        Warlley Silva Baião Braga
-                    </p>
+                <div className="boot-loading">
+                    <span
+                        className="boot-status"
+                    >
+                        {
+                            currentBootStep.status
+                        }
+                    </span>
 
-                    <div className="boot-loading">
-                        <span className="boot-status">
-                            Inicializando sistema
-                        </span>
-
-                        <div
-                            className="boot-loader"
-                            role="status"
-                            aria-label="Inicializando WS OS"
-                        >
-                            <span />
-                            <span />
-                            <span />
-                        </div>
+                    <div
+                        className="boot-progress"
+                        role="progressbar"
+                        aria-label="Inicialização do WS OS"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        aria-valuenow={
+                            currentBootStep.progress
+                        }
+                    >
+                        <span
+                            className="boot-progress-bar"
+                            style={{
+                                width:
+                                    `${currentBootStep.progress}%`,
+                            }}
+                        />
                     </div>
                 </div>
-            </div>
+            </main>
 
-            <span
-                className="boot-version"
-                aria-hidden="true"
-            >
-                WS OS
-            </span>
+            <footer className="boot-footer">
+                <span>
+                    WS OS
+                </span>
+
+                <span
+                    aria-hidden="true"
+                >
+                    1.0
+                </span>
+            </footer>
         </div>
     )
 }
