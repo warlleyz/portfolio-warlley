@@ -7,10 +7,30 @@ import {
 
 import './Technologies.css'
 
+
+/* === TECNOLOGIAS PRINCIPAIS === */
+const featuredTechnologies = [
+    'Java',
+    'Spring Boot',
+    'JavaScript',
+    'Docker',
+    'Git',
+    'APIs REST',
+]
+
+
+/* === GRUPOS === */
 const technologyGroups = [
     {
-        title: 'Linguagens',
-        icon: Code2,
+        title:
+            'Linguagens',
+
+        description:
+            'Base de programação utilizada em estudos, projetos web e aplicações backend.',
+
+        icon:
+            Code2,
+
         items: [
             'Java',
             'JavaScript',
@@ -20,18 +40,34 @@ const technologyGroups = [
             'CSS',
         ],
     },
+
     {
-        title: 'Backend e APIs',
-        icon: ServerCog,
+        title:
+            'Backend e APIs',
+
+        description:
+            'Tecnologias utilizadas para estruturar aplicações, serviços e integrações.',
+
+        icon:
+            ServerCog,
+
         items: [
             'Spring Boot',
             'APIs REST',
             'Maven',
         ],
     },
+
     {
-        title: 'Ferramentas',
-        icon: Wrench,
+        title:
+            'Ferramentas',
+
+        description:
+            'Ferramentas presentes no meu fluxo de desenvolvimento e organização de projetos.',
+
+        icon:
+            Wrench,
+
         items: [
             'Git',
             'GitHub',
@@ -39,9 +75,17 @@ const technologyGroups = [
             'Postman',
         ],
     },
+
     {
-        title: 'Dados e Design',
-        icon: Database,
+        title:
+            'Dados e Design',
+
+        description:
+            'Recursos utilizados para trabalhar com informações, visualização e interfaces.',
+
+        icon:
+            Database,
+
         items: [
             'Banco de Dados',
             'Power BI',
@@ -50,57 +94,120 @@ const technologyGroups = [
     },
 ]
 
+
 function Technologies() {
     return (
         <div className="technologies">
-            <div className="technologies-header">
+
+            {/* === CABEÇALHO === */}
+            <header className="technologies-header">
                 <span className="technologies-label">
-                    Tecnologias
+                    Stack
                 </span>
 
                 <h1>
-                    Conhecimentos e ferramentas
+                    Tecnologias e ferramentas
                 </h1>
 
                 <p>
-                    Tecnologias que venho utilizando e estudando
-                    durante minha formação e desenvolvimento de projetos.
+                    Tecnologias que venho utilizando
+                    durante minha formação, estudos
+                    e desenvolvimento de projetos.
                 </p>
-            </div>
+            </header>
 
-            <div className="technologies-grid">
-                {technologyGroups.map((group) => {
-                    const Icon = group.icon
 
-                    return (
-                        <article
-                            key={group.title}
-                            className="technology-card"
-                        >
-                            <div className="technology-card-header">
-                                <div className="technology-icon">
-                                    <Icon
-                                        size={20}
-                                        strokeWidth={1.8}
-                                    />
+            {/* === DESTAQUES === */}
+            <section className="technologies-featured">
+                <div className="technologies-featured-header">
+                    <div>
+                        <span>
+                            Uso frequente
+                        </span>
+
+                        <h2>
+                            Principais tecnologias
+                        </h2>
+                    </div>
+                </div>
+
+
+                <div className="technologies-featured-list">
+                    {featuredTechnologies.map(
+                        (technology) => (
+                            <span
+                                key={
+                                    technology
+                                }
+                            >
+                                {
+                                    technology
+                                }
+                            </span>
+                        ),
+                    )}
+                </div>
+            </section>
+
+
+            {/* === CATEGORIAS === */}
+            <section className="technologies-grid">
+                {technologyGroups.map(
+                    (group) => {
+                        const Icon =
+                            group.icon
+
+                        return (
+                            <article
+                                key={
+                                    group.title
+                                }
+                                className="technology-card"
+                            >
+                                <div className="technology-card-header">
+                                    <span className="technology-icon">
+                                        <Icon
+                                            size={18}
+                                            strokeWidth={1.8}
+                                        />
+                                    </span>
+
+                                    <div>
+                                        <h2>
+                                            {
+                                                group.title
+                                            }
+                                        </h2>
+
+                                        <p>
+                                            {
+                                                group.description
+                                            }
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <h2>
-                                    {group.title}
-                                </h2>
-                            </div>
 
-                            <div className="technology-items">
-                                {group.items.map((item) => (
-                                    <span key={item}>
-                                        {item}
-                                    </span>
-                                ))}
-                            </div>
-                        </article>
-                    )
-                })}
-            </div>
+                                <div className="technology-items">
+                                    {group.items.map(
+                                        (item) => (
+                                            <span
+                                                key={
+                                                    item
+                                                }
+                                            >
+                                                {
+                                                    item
+                                                }
+                                            </span>
+                                        ),
+                                    )}
+                                </div>
+                            </article>
+                        )
+                    },
+                )}
+            </section>
         </div>
     )
 }
