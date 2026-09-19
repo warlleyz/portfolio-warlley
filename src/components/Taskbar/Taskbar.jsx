@@ -21,6 +21,8 @@ function Taskbar({
     apps,
     windows,
     toggleTaskbarApp,
+    menuOpen,
+    onToggleMenu,
 }) {
     const [
         dateTime,
@@ -94,9 +96,28 @@ function Taskbar({
         >
             <div className="taskbar-main">
                 <button
-                    className="taskbar-button taskbar-menu-button"
+                    className={[
+                        'taskbar-button',
+                        'taskbar-menu-button',
+
+                        menuOpen
+                            ? 'taskbar-menu-button-active'
+                            : '',
+                    ]
+                        .filter(Boolean)
+                        .join(' ')}
                     type="button"
-                    aria-label="Abrir WS Menu"
+                    onClick={
+                        onToggleMenu
+                    }
+                    aria-label={
+                        menuOpen
+                            ? 'Fechar WS Menu'
+                            : 'Abrir WS Menu'
+                    }
+                    aria-expanded={
+                        menuOpen
+                    }
                     title="WS Menu"
                 >
                     <span className="taskbar-menu-logo">

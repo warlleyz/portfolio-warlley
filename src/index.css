@@ -70,7 +70,8 @@ select {
 }
 
 button {
-  border: none;
+  border:
+    none;
 
   background:
     none;
@@ -86,11 +87,13 @@ a {
 
 img,
 svg {
-  display: block;
+  display:
+    block;
 }
 
 img {
-  max-width: 100%;
+  max-width:
+    100%;
 }
 
 
@@ -98,10 +101,26 @@ img {
 :root {
 
   /* ----- TEXTO ----- */
-  --text-primary: #0f172a;
-  --text-secondary: rgba(15, 23, 42, 0.7);
-  --text-muted: rgba(15, 23, 42, 0.5);
-  --text-disabled: rgba(15, 23, 42, 0.35);
+  --text-primary:
+    #0f172a;
+
+  --text-secondary:
+    rgba(15,
+      23,
+      42,
+      0.7);
+
+  --text-muted:
+    rgba(15,
+      23,
+      42,
+      0.5);
+
+  --text-disabled:
+    rgba(15,
+      23,
+      42,
+      0.35);
 
 
   /* ----- WALLPAPER ----- */
@@ -113,80 +132,144 @@ img {
 
 
   /* ----- DESTAQUE ----- */
-  --accent-primary: #2563eb;
-  --accent-hover: #1d4ed8;
-  --accent-soft: rgba(37, 99, 235, 0.12);
+  --accent-primary:
+    #2563eb;
+
+  --accent-hover:
+    #1d4ed8;
+
+  --accent-soft:
+    rgba(37,
+      99,
+      235,
+      0.12);
 
 
   /* ----- SUPERFÍCIES ----- */
-  --surface-primary: #ffffff;
-  --surface-secondary: #f8fafc;
-  --surface-tertiary: #f1f5f9;
+  --surface-primary:
+    #ffffff;
+
+  --surface-secondary:
+    #f8fafc;
+
+  --surface-tertiary:
+    #f1f5f9;
 
 
   /* ----- GLASS ----- */
   --glass-background:
-    rgba(255, 255, 255, 0.48);
+    rgba(255,
+      255,
+      255,
+      0.48);
 
   --glass-background-strong:
-    rgba(255, 255, 255, 0.72);
+    rgba(255,
+      255,
+      255,
+      0.72);
 
   --glass-border:
-    rgba(255, 255, 255, 0.65);
+    rgba(255,
+      255,
+      255,
+      0.65);
 
 
   /* ----- INTERAÇÃO ----- */
   --hover-background:
-    rgba(255, 255, 255, 0.45);
+    rgba(255,
+      255,
+      255,
+      0.45);
 
   --active-background:
-    rgba(37, 99, 235, 0.12);
+    rgba(37,
+      99,
+      235,
+      0.12);
 
 
   /* ----- BORDAS ----- */
   --border-subtle:
-    rgba(15, 23, 42, 0.08);
+    rgba(15,
+      23,
+      42,
+      0.08);
 
   --border-default:
-    rgba(15, 23, 42, 0.12);
+    rgba(15,
+      23,
+      42,
+      0.12);
 
   --border-strong:
-    rgba(15, 23, 42, 0.2);
+    rgba(15,
+      23,
+      42,
+      0.2);
 
 
   /* ----- SOMBRAS ----- */
   --shadow-small:
-    0 2px 8px rgba(15, 23, 42, 0.08);
+    0 2px 8px rgba(15,
+      23,
+      42,
+      0.08);
 
   --shadow-medium:
-    0 10px 30px rgba(15, 23, 42, 0.12);
+    0 10px 30px rgba(15,
+      23,
+      42,
+      0.12);
 
   --shadow-large:
-    0 24px 60px rgba(15, 23, 42, 0.18);
+    0 24px 60px rgba(15,
+      23,
+      42,
+      0.18);
 
   --shadow-window:
-    0 24px 70px rgba(15, 23, 42, 0.22);
+    0 24px 70px rgba(15,
+      23,
+      42,
+      0.22);
 
 
   /* ----- FOCO ----- */
   --focus-ring:
-    0 0 0 3px rgba(37, 99, 235, 0.28);
+    0 0 0 3px rgba(37,
+      99,
+      235,
+      0.28);
 
 
   /* ----- SELEÇÃO ----- */
   --selection-background:
-    rgba(37, 99, 235, 0.2);
+    rgba(37,
+      99,
+      235,
+      0.2);
 
   --selection-text:
     #0f172a;
 
 
   /* ----- BORDAS ARREDONDADAS ----- */
-  --radius-small: 6px;
-  --radius-medium: 10px;
-  --radius-large: 16px;
-  --radius-extra-large: 22px;
-  --radius-full: 9999px;
+  --radius-small:
+    6px;
+
+  --radius-medium:
+    10px;
+
+  --radius-large:
+    16px;
+
+  --radius-extra-large:
+    22px;
+
+  --radius-full:
+    9999px;
 
 
   /* ----- TRANSIÇÕES ----- */
@@ -205,10 +288,26 @@ img {
 [data-theme='dark'] {
 
   /* ----- TEXTO ----- */
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.75);
-  --text-muted: rgba(255, 255, 255, 0.5);
-  --text-disabled: rgba(255, 255, 255, 0.3);
+  --text-primary:
+    #ffffff;
+
+  --text-secondary:
+    rgba(255,
+      255,
+      255,
+      0.75);
+
+  --text-muted:
+    rgba(255,
+      255,
+      255,
+      0.5);
+
+  --text-disabled:
+    rgba(255,
+      255,
+      255,
+      0.3);
 
 
   /* ----- WALLPAPER ----- */
@@ -220,69 +319,124 @@ img {
 
 
   /* ----- DESTAQUE ----- */
-  --accent-primary: #60a5fa;
-  --accent-hover: #93c5fd;
-  --accent-soft: rgba(96, 165, 250, 0.14);
+  --accent-primary:
+    #60a5fa;
+
+  --accent-hover:
+    #93c5fd;
+
+  --accent-soft:
+    rgba(96,
+      165,
+      250,
+      0.14);
 
 
   /* ----- SUPERFÍCIES ----- */
-  --surface-primary: #111827;
-  --surface-secondary: #0f172a;
-  --surface-tertiary: #1e293b;
+  --surface-primary:
+    #111827;
+
+  --surface-secondary:
+    #0f172a;
+
+  --surface-tertiary:
+    #1e293b;
 
 
   /* ----- GLASS ----- */
   --glass-background:
-    rgba(15, 23, 42, 0.58);
+    rgba(15,
+      23,
+      42,
+      0.58);
 
   --glass-background-strong:
-    rgba(15, 23, 42, 0.78);
+    rgba(15,
+      23,
+      42,
+      0.78);
 
   --glass-border:
-    rgba(255, 255, 255, 0.08);
+    rgba(255,
+      255,
+      255,
+      0.08);
 
 
   /* ----- INTERAÇÃO ----- */
   --hover-background:
-    rgba(255, 255, 255, 0.07);
+    rgba(255,
+      255,
+      255,
+      0.07);
 
   --active-background:
-    rgba(96, 165, 250, 0.14);
+    rgba(96,
+      165,
+      250,
+      0.14);
 
 
   /* ----- BORDAS ----- */
   --border-subtle:
-    rgba(255, 255, 255, 0.06);
+    rgba(255,
+      255,
+      255,
+      0.06);
 
   --border-default:
-    rgba(255, 255, 255, 0.1);
+    rgba(255,
+      255,
+      255,
+      0.1);
 
   --border-strong:
-    rgba(255, 255, 255, 0.16);
+    rgba(255,
+      255,
+      255,
+      0.16);
 
 
   /* ----- SOMBRAS ----- */
   --shadow-small:
-    0 2px 8px rgba(0, 0, 0, 0.18);
+    0 2px 8px rgba(0,
+      0,
+      0,
+      0.18);
 
   --shadow-medium:
-    0 10px 30px rgba(0, 0, 0, 0.25);
+    0 10px 30px rgba(0,
+      0,
+      0,
+      0.25);
 
   --shadow-large:
-    0 24px 60px rgba(0, 0, 0, 0.35);
+    0 24px 60px rgba(0,
+      0,
+      0,
+      0.35);
 
   --shadow-window:
-    0 24px 80px rgba(0, 0, 0, 0.42);
+    0 24px 80px rgba(0,
+      0,
+      0,
+      0.42);
 
 
   /* ----- FOCO ----- */
   --focus-ring:
-    0 0 0 3px rgba(96, 165, 250, 0.3);
+    0 0 0 3px rgba(96,
+      165,
+      250,
+      0.3);
 
 
   /* ----- SELEÇÃO ----- */
   --selection-background:
-    rgba(96, 165, 250, 0.3);
+    rgba(96,
+      165,
+      250,
+      0.3);
 
   --selection-text:
     #ffffff;
@@ -301,17 +455,53 @@ a,
     pointer;
 }
 
+
+/* === ACESSIBILIDADE === */
+
+/* ----- FOCO EM BOTÕES E LINKS ----- */
 button:focus-visible,
 a:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible,
 [role='button']:focus-visible {
   outline:
     none;
 
   box-shadow:
     var(--focus-ring);
+}
+
+
+/* ----- CAMPOS ----- */
+input,
+textarea,
+select {
+  color:
+    inherit;
+
+  font:
+    inherit;
+}
+
+
+/* ----- FOCO EM CAMPOS ----- */
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible {
+  outline:
+    none;
+
+  box-shadow:
+    none;
+}
+
+
+/* ----- PLACEHOLDER ----- */
+input::placeholder,
+textarea::placeholder {
+  color:
+    var(--text-muted);
 }
 
 
@@ -355,8 +545,7 @@ textarea {
 }
 
 
-/* === ACESSIBILIDADE === */
-/* ----- REDUÇÃO DE MOVIMENTO ----- */
+/* === MOVIMENTO REDUZIDO === */
 @media (prefers-reduced-motion: reduce) {
 
   *,
@@ -364,14 +553,5 @@ textarea {
   *::after {
     scroll-behavior:
       auto !important;
-
-    transition-duration:
-      0.01ms !important;
-
-    animation-duration:
-      0.01ms !important;
-
-    animation-iteration-count:
-      1 !important;
   }
 }

@@ -18,6 +18,7 @@ import projectsData from '../../data/projectsData'
 
 import Taskbar from '../Taskbar/Taskbar'
 import Window from '../Window/Window'
+import WSMenu from '../WSMenu/WSMenu'
 
 import './Desktop.css'
 
@@ -60,6 +61,11 @@ function Desktop({
         windows,
         setWindows,
     ] = useState({})
+
+    const [
+        menuOpen,
+        setMenuOpen,
+    ] = useState(false)
 
     const [
         selectedShortcut,
@@ -134,7 +140,7 @@ function Desktop({
                 const height =
                     Math.min(
                         app.window.height,
-                        window.innerHeight - 110,
+                        window.innerHeight - 80,
                     )
 
                 initialSize = {
@@ -152,7 +158,7 @@ function Desktop({
                                     window.innerWidth -
                                     width
                                 ) / 2,
-                                0,
+                                8,
                             ),
 
                         y:
@@ -161,7 +167,7 @@ function Desktop({
                                     window.innerHeight -
                                     height
                                 ) / 2,
-                                0,
+                                8,
                             ),
                     }
                 }
@@ -242,7 +248,9 @@ function Desktop({
 
 
     /* ----- MINIMIZAR ----- */
-    const minimizeApp = (appId) => {
+    const minimizeApp = (
+        appId,
+    ) => {
         setWindows((previous) => ({
             ...previous,
 
@@ -269,7 +277,9 @@ function Desktop({
 
 
     /* ----- RESTAURAR ----- */
-    const restoreApp = (appId) => {
+    const restoreApp = (
+        appId,
+    ) => {
         const nextZIndex =
             getNextZIndex()
 
@@ -292,6 +302,9 @@ function Desktop({
     const toggleMaximizeApp = (
         appId,
     ) => {
+        const nextZIndex =
+            getNextZIndex()
+
         setWindows((previous) => ({
             ...previous,
 
@@ -301,13 +314,18 @@ function Desktop({
                 maximized:
                     !previous[appId]
                         ?.maximized,
+
+                zIndex:
+                    nextZIndex,
             },
         }))
     }
 
 
     /* ----- FECHAR ----- */
-    const closeApp = (appId) => {
+    const closeApp = (
+        appId,
+    ) => {
         setWindows((previous) => ({
             ...previous,
 
@@ -350,8 +368,7 @@ function Desktop({
                 )
                 .map(
                     (item) =>
-                        item.zIndex ??
-                        0,
+                        item.zIndex ?? 0,
                 ),
             0,
         )
@@ -386,13 +403,59 @@ function Desktop({
     ) => {
         if (
             event.target.closest(
-                '.shortcut, .window, .taskbar',
+                '.shortcut, .window, .taskbar, .ws-menu',
             )
         ) {
             return
         }
 
         setSelectedShortcut(null)
+    }
+
+
+    /* === WS MENU === */
+
+    /* ----- ALTERNAR ----- */
+    const toggleMenu = () => {
+        setMenuOpen(
+            (previous) =>
+                !previous,
+        )
+    }
+
+
+    /* ----- FECHAR ----- */
+    const closeMenu = () => {
+        setMenuOpen(false)
+    }
+
+
+    /* ----- ABRIR APP PELO MENU ----- */
+    const openAppFromMenu = (
+        appId,
+    ) => {
+        const currentWindow =
+            windows[appId]
+
+        if (
+            currentWindow?.open
+        ) {
+            if (
+                currentWindow.minimized
+            ) {
+                restoreApp(appId)
+            } else {
+                focusApp(appId)
+            }
+        } else {
+            openApp(appId)
+        }
+
+        setSelectedShortcut(
+            appId,
+        )
+
+        setMenuOpen(false)
     }
 
 
@@ -508,8 +571,7 @@ function Desktop({
 
                 return (
                     <p>
-                        Aplicativo em
-                        desenvolvimento.
+                        Aplicativo em desenvolvimento.
                     </p>
                 )
         }
@@ -573,16 +635,11 @@ function Desktop({
 
                         return (
                             <button
-                                key={
-                                    app.id
-                                }
+                                key={app.id}
                                 className={
                                     shortcutClassName
                                 }
                                 type="button"
-                                data-app-id={
-                                    app.id
-                                }
                                 onClick={() =>
                                     handleShortcutClick(
                                         app.id,
@@ -600,12 +657,8 @@ function Desktop({
                             >
                                 <span className="shortcut-icon">
                                     <Icon
-                                        size={
-                                            28
-                                        }
-                                        strokeWidth={
-                                            1.7
-                                        }
+                                        size={28}
+                                        strokeWidth={1.7}
                                     />
 
                                     <span
@@ -624,6 +677,7 @@ function Desktop({
                     })}
             </section>
 
+
             {allApps.map((app) => {
                 const windowState =
                     windows[app.id]
@@ -641,9 +695,7 @@ function Desktop({
 
                 return (
                     <Window
-                        key={
-                            app.id
-                        }
+                        key={app.id}
                         hidden={
                             windowState.minimized
                         }
@@ -726,6 +778,33 @@ function Desktop({
                 )
             })}
 
+
+            {/* === WS MENU === */}
+            {menuOpen && (
+                <WSMenu
+                    apps={
+                        apps.filter(
+                            (app) =>
+                                app.menu,
+                        )
+                    }
+                    windows={
+                        windows
+                    }
+                    activeAppId={
+                        activeAppId
+                    }
+                    onOpenApp={
+                        openAppFromMenu
+                    }
+                    onClose={
+                        closeMenu
+                    }
+                />
+            )}
+
+
+            {/* === TASKBAR === */}
             <Taskbar
                 theme={
                     theme
@@ -741,6 +820,12 @@ function Desktop({
                 }
                 toggleTaskbarApp={
                     toggleTaskbarApp
+                }
+                menuOpen={
+                    menuOpen
+                }
+                onToggleMenu={
+                    toggleMenu
                 }
             />
         </main>
