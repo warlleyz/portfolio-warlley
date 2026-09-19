@@ -19,7 +19,7 @@
         10px;
 
     padding:
-        10px;
+        0;
 }
 
 
@@ -359,12 +359,7 @@
 
 /* === RESPONSIVIDADE === */
 @media (max-width: 600px) {
-    .web-demo {
-        padding:
-            8px;
-    }
-
-
+    
     .web-demo-header {
         padding:
             9px 10px;

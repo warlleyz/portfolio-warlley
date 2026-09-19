@@ -19,7 +19,7 @@
         10px;
 
     padding:
-        10px;
+        0;
 }
 
 
@@ -506,11 +506,6 @@
 
 /* === RESPONSIVIDADE === */
 @media (max-width: 650px) {
-    .media-demo {
-        padding:
-            8px;
-    }
-
 
     .media-demo-header {
         align-items:

@@ -19,7 +19,7 @@
         10px;
 
     padding:
-        10px;
+        0;
 
     color:
         var(--text-primary);
@@ -458,11 +458,6 @@
 
 /* === RESPONSIVIDADE === */
 @media (max-width: 600px) {
-    .terminal-runner {
-        padding:
-            8px;
-    }
-
 
     .terminal-runner-header {
         padding:
