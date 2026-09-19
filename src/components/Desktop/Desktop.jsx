@@ -30,23 +30,19 @@ const apps = appsData
 
 /* ----- PROJETOS ----- */
 const projectApps =
-    projectsData.map((project) => {
-        const Icon =
-            project.icon
+    projectsData.map((project) => ({
+        id:
+            `project-${project.id}`,
 
-        return {
-            id:
-                `project-${project.id}`,
+        projectId:
+            project.id,
 
-            projectId:
-                project.id,
+        name:
+            project.title,
 
-            name:
-                project.title,
-
-            icon: Icon,
-        }
-    })
+        icon:
+            project.icon,
+    }))
 
 
 /* ----- TODOS OS APPS ----- */
@@ -64,6 +60,11 @@ function Desktop({
         windows,
         setWindows,
     ] = useState({})
+
+    const [
+        selectedShortcut,
+        setSelectedShortcut,
+    ] = useState(null)
 
     const topZIndex =
         useRef(10)
@@ -287,56 +288,6 @@ function Desktop({
     }
 
 
-    /* ----- TASKBAR ----- */
-    const toggleTaskbarApp = (
-        appId,
-    ) => {
-        const currentWindow =
-            windows[appId]
-
-        if (!currentWindow) {
-            return
-        }
-
-        if (
-            currentWindow.minimized
-        ) {
-            restoreApp(appId)
-
-            return
-        }
-
-        const activeZIndex =
-            Math.max(
-                ...Object
-                    .values(windows)
-                    .filter(
-                        (item) =>
-                            item?.open &&
-                            !item?.minimized,
-                    )
-                    .map(
-                        (item) =>
-                            item.zIndex ??
-                            0,
-                    ),
-                0,
-            )
-
-        const isActive =
-            currentWindow.zIndex ===
-            activeZIndex
-
-        if (isActive) {
-            minimizeApp(appId)
-
-            return
-        }
-
-        focusApp(appId)
-    }
-
-
     /* ----- MAXIMIZAR ----- */
     const toggleMaximizeApp = (
         appId,
@@ -382,6 +333,100 @@ function Desktop({
                 },
             }))
         }, 200)
+    }
+
+
+    /* === ESTADO DO DESKTOP === */
+
+    /* ----- APP ATIVO ----- */
+    const activeZIndex =
+        Math.max(
+            ...Object
+                .values(windows)
+                .filter(
+                    (item) =>
+                        item?.open &&
+                        !item?.minimized,
+                )
+                .map(
+                    (item) =>
+                        item.zIndex ??
+                        0,
+                ),
+            0,
+        )
+
+    const activeAppId =
+        Object
+            .entries(windows)
+            .find(
+                ([, windowState]) =>
+                    windowState?.open &&
+                    !windowState?.minimized &&
+                    windowState.zIndex ===
+                    activeZIndex,
+            )?.[0] ?? null
+
+
+    /* ----- SELEÇÃO ----- */
+    const handleShortcutClick = (
+        appId,
+    ) => {
+        setSelectedShortcut(
+            appId,
+        )
+
+        openApp(appId)
+    }
+
+
+    /* ----- CLIQUE NO FUNDO ----- */
+    const handleDesktopClick = (
+        event,
+    ) => {
+        if (
+            event.target.closest(
+                '.shortcut, .window, .taskbar',
+            )
+        ) {
+            return
+        }
+
+        setSelectedShortcut(null)
+    }
+
+
+    /* === TASKBAR === */
+
+    /* ----- ALTERNAR APP ----- */
+    const toggleTaskbarApp = (
+        appId,
+    ) => {
+        const currentWindow =
+            windows[appId]
+
+        if (!currentWindow) {
+            return
+        }
+
+        if (
+            currentWindow.minimized
+        ) {
+            restoreApp(appId)
+
+            return
+        }
+
+        const isActive =
+            activeAppId === appId
+
+        if (isActive) {
+            minimizeApp(appId)
+
+            return
+        }
+
+        focusApp(appId)
     }
 
 
@@ -444,6 +489,14 @@ function Desktop({
                                 projectId,
                         )
 
+                    if (!project) {
+                        return (
+                            <p>
+                                Projeto não encontrado.
+                            </p>
+                        )
+                    }
+
                     return (
                         <ProjectDemo
                             project={
@@ -465,8 +518,16 @@ function Desktop({
 
     /* === RENDERIZAÇÃO === */
     return (
-        <main className="desktop">
-            <section className="desktop-shortcuts">
+        <main
+            className="desktop"
+            onClick={
+                handleDesktopClick
+            }
+        >
+            <section
+                className="desktop-shortcuts"
+                aria-label="Aplicativos"
+            >
                 {apps
                     .filter(
                         (app) =>
@@ -476,21 +537,62 @@ function Desktop({
                         const Icon =
                             app.icon
 
+                        const windowState =
+                            windows[app.id]
+
+                        const isOpen =
+                            Boolean(
+                                windowState?.open,
+                            )
+
+                        const isActive =
+                            activeAppId ===
+                            app.id
+
+                        const isSelected =
+                            selectedShortcut ===
+                            app.id
+
+                        const shortcutClassName = [
+                            'shortcut',
+
+                            isOpen
+                                ? 'shortcut-open'
+                                : '',
+
+                            isActive
+                                ? 'shortcut-active'
+                                : '',
+
+                            isSelected
+                                ? 'shortcut-selected'
+                                : '',
+                        ]
+                            .filter(Boolean)
+                            .join(' ')
+
                         return (
                             <button
-                                key={app.id}
-                                className="shortcut"
+                                key={
+                                    app.id
+                                }
+                                className={
+                                    shortcutClassName
+                                }
                                 type="button"
                                 data-app-id={
                                     app.id
                                 }
                                 onClick={() =>
-                                    openApp(
+                                    handleShortcutClick(
                                         app.id,
                                     )
                                 }
                                 aria-label={
                                     `Abrir ${app.name}`
+                                }
+                                aria-pressed={
+                                    isSelected
                                 }
                                 title={
                                     app.name
@@ -498,8 +600,17 @@ function Desktop({
                             >
                                 <span className="shortcut-icon">
                                     <Icon
-                                        size={30}
-                                        strokeWidth={1.8}
+                                        size={
+                                            28
+                                        }
+                                        strokeWidth={
+                                            1.7
+                                        }
+                                    />
+
+                                    <span
+                                        className="shortcut-state"
+                                        aria-hidden="true"
                                     />
                                 </span>
 
@@ -523,31 +634,16 @@ function Desktop({
                     return null
                 }
 
-                const activeZIndex =
-                    Math.max(
-                        ...Object
-                            .values(windows)
-                            .filter(
-                                (item) =>
-                                    item?.open &&
-                                    !item?.minimized,
-                            )
-                            .map(
-                                (item) =>
-                                    item.zIndex ??
-                                    0,
-                            ),
-                        0,
-                    )
-
                 const isActive =
                     !windowState.minimized &&
-                    windowState.zIndex ===
-                    activeZIndex
+                    activeAppId ===
+                    app.id
 
                 return (
                     <Window
-                        key={app.id}
+                        key={
+                            app.id
+                        }
                         hidden={
                             windowState.minimized
                         }
@@ -631,12 +727,18 @@ function Desktop({
             })}
 
             <Taskbar
-                theme={theme}
+                theme={
+                    theme
+                }
                 toggleTheme={
                     toggleTheme
                 }
-                apps={allApps}
-                windows={windows}
+                apps={
+                    allApps
+                }
+                windows={
+                    windows
+                }
                 toggleTaskbarApp={
                     toggleTaskbarApp
                 }
