@@ -35,9 +35,38 @@
         5px;
 
     padding:
-        2px 2px 4px;
+        16px 18px;
+
+    border:
+        1px solid var(--glass-border);
+
+    border-radius:
+        15px;
+
+    background:
+        color-mix(in srgb,
+            var(--surface-secondary) 13%,
+            transparent);
+
+    transition:
+        background var(--transition-fast),
+        border-color var(--transition-fast);
 }
 
+.technologies-header:hover {
+    border-color:
+        color-mix(in srgb,
+            var(--accent-primary) 15%,
+            var(--glass-border));
+
+    background:
+        color-mix(in srgb,
+            var(--surface-secondary) 19%,
+            transparent);
+}
+
+
+/* ----- IDENTIFICAÇÃO ----- */
 .technologies-label {
     color:
         var(--accent-primary);
@@ -55,6 +84,8 @@
         uppercase;
 }
 
+
+/* ----- TÍTULO ----- */
 .technologies-header h1 {
     margin:
         0;
@@ -77,6 +108,8 @@
         -0.55px;
 }
 
+
+/* ----- DESCRIÇÃO ----- */
 .technologies-header p {
     max-width:
         760px;
@@ -126,6 +159,8 @@
             transparent);
 }
 
+
+/* ----- CABEÇALHO ----- */
 .technologies-featured-header span {
     color:
         var(--text-muted);
@@ -160,6 +195,8 @@
         1.2;
 }
 
+
+/* ----- LISTA ----- */
 .technologies-featured-list {
     display:
         flex;
@@ -281,6 +318,8 @@
         10px;
 }
 
+
+/* ----- ÍCONE ----- */
 .technology-icon {
     width:
         34px;
@@ -310,6 +349,8 @@
         var(--accent-soft);
 }
 
+
+/* ----- TÍTULO ----- */
 .technology-card-header h2 {
     margin:
         1px 0 0;
@@ -327,6 +368,8 @@
         1.2;
 }
 
+
+/* ----- DESCRIÇÃO ----- */
 .technology-card-header p {
     max-width:
         560px;
