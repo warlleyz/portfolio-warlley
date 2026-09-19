@@ -4,13 +4,16 @@ import {
 } from 'react'
 
 import {
+    Bell,
     Moon,
+    SlidersHorizontal,
     Sun,
 } from 'lucide-react'
 
 import WeatherWidget from './WeatherWidget'
 
 import './Taskbar.css'
+
 
 function Taskbar({
     theme,
@@ -77,8 +80,7 @@ function Taskbar({
                 )
                 .map(
                     (item) =>
-                        item.zIndex ??
-                        0,
+                        item.zIndex ?? 0,
                 ),
             0,
         )
@@ -86,118 +88,193 @@ function Taskbar({
 
     /* === RENDERIZAÇÃO === */
     return (
-        <footer className="taskbar">
-            <div className="taskbar-left">
+        <footer
+            className="taskbar"
+            aria-label="Barra de tarefas"
+        >
+            <div className="taskbar-main">
                 <button
-                    className="theme-button"
+                    className="taskbar-button taskbar-menu-button"
                     type="button"
-                    onClick={
-                        toggleTheme
-                    }
-                    aria-label={
-                        theme === 'dark'
-                            ? 'Ativar tema claro'
-                            : 'Ativar tema escuro'
-                    }
-                    title={
-                        theme === 'dark'
-                            ? 'Tema claro'
-                            : 'Tema escuro'
-                    }
+                    aria-label="Abrir WS Menu"
+                    title="WS Menu"
                 >
-                    {
-                        theme === 'dark'
-                            ? (
-                                <Sun
-                                    size={19}
-                                    strokeWidth={1.8}
-                                />
-                            )
-                            : (
-                                <Moon
-                                    size={19}
-                                    strokeWidth={1.8}
-                                />
-                            )
-                    }
+                    <span className="taskbar-menu-logo">
+                        WS
+                    </span>
                 </button>
-            </div>
 
-            <div className="taskbar-apps">
-                {apps.map((app) => {
-                    const windowState =
-                        windows[app.id]
 
-                    if (
-                        !windowState?.open
-                    ) {
-                        return null
-                    }
+                <span
+                    className="taskbar-divider"
+                    aria-hidden="true"
+                />
 
-                    const isActive =
-                        !windowState.minimized &&
-                        windowState.zIndex ===
-                        activeZIndex
-
-                    const className = [
-                        'taskbar-app',
-
-                        isActive
-                            ? 'taskbar-app-active'
-                            : '',
-
-                        windowState.minimized
-                            ? 'taskbar-app-minimized'
-                            : '',
-                    ]
-                        .filter(Boolean)
-                        .join(' ')
-
-                    const Icon =
-                        app.icon
-
-                    return (
-                        <button
-                            key={app.id}
-                            type="button"
-                            className={
-                                className
-                            }
-                            onClick={() =>
-                                toggleTaskbarApp(
-                                    app.id,
-                                )
-                            }
-                            aria-label={
-                                app.name
-                            }
-                            title={
-                                app.name
-                            }
-                        >
-                            <Icon
-                                size={22}
-                                strokeWidth={1.8}
-                            />
-                        </button>
-                    )
-                })}
-            </div>
-
-            <div className="taskbar-right">
-                <WeatherWidget />
 
                 <div
-                    className="taskbar-clock"
-                    title={`${time} • ${date}`}
+                    className="taskbar-apps"
+                    aria-label="Aplicativos abertos"
                 >
-                    <span className="taskbar-time">
-                        {time}
-                    </span>
+                    {apps.map((app) => {
+                        const windowState =
+                            windows[app.id]
 
-                    <span className="taskbar-date">
-                        {date}
-                    </span>
+                        if (
+                            !windowState?.open
+                        ) {
+                            return null
+                        }
+
+                        const isActive =
+                            !windowState.minimized &&
+                            windowState.zIndex ===
+                            activeZIndex
+
+                        const Icon =
+                            app.icon
+
+                        const className = [
+                            'taskbar-app',
+
+                            isActive
+                                ? 'taskbar-app-active'
+                                : '',
+
+                            windowState.minimized
+                                ? 'taskbar-app-minimized'
+                                : '',
+                        ]
+                            .filter(Boolean)
+                            .join(' ')
+
+                        return (
+                            <button
+                                key={app.id}
+                                type="button"
+                                className={
+                                    className
+                                }
+                                onClick={() =>
+                                    toggleTaskbarApp(
+                                        app.id,
+                                    )
+                                }
+                                aria-label={
+                                    windowState.minimized
+                                        ? `Restaurar ${app.name}`
+                                        : isActive
+                                            ? `Minimizar ${app.name}`
+                                            : `Focar ${app.name}`
+                                }
+                                title={
+                                    app.name
+                                }
+                            >
+                                <span className="taskbar-app-icon">
+                                    <Icon
+                                        size={19}
+                                        strokeWidth={1.8}
+                                    />
+                                </span>
+
+                                <span
+                                    className="taskbar-app-state"
+                                    aria-hidden="true"
+                                />
+                            </button>
+                        )
+                    })}
+                </div>
+
+
+                <span
+                    className="taskbar-divider"
+                    aria-hidden="true"
+                />
+
+
+                <div className="taskbar-system">
+                    <button
+                        className="taskbar-button"
+                        type="button"
+                        aria-label="Abrir controles rápidos"
+                        title="Controles rápidos"
+                    >
+                        <SlidersHorizontal
+                            size={17}
+                            strokeWidth={1.8}
+                        />
+                    </button>
+
+                    <button
+                        className="taskbar-button"
+                        type="button"
+                        aria-label="Abrir notificações"
+                        title="Notificações"
+                    >
+                        <Bell
+                            size={17}
+                            strokeWidth={1.8}
+                        />
+                    </button>
+
+                    <button
+                        className="taskbar-button"
+                        type="button"
+                        onClick={
+                            toggleTheme
+                        }
+                        aria-label={
+                            theme === 'dark'
+                                ? 'Ativar tema claro'
+                                : 'Ativar tema escuro'
+                        }
+                        title={
+                            theme === 'dark'
+                                ? 'Tema claro'
+                                : 'Tema escuro'
+                        }
+                    >
+                        {
+                            theme === 'dark'
+                                ? (
+                                    <Sun
+                                        size={17}
+                                        strokeWidth={1.8}
+                                    />
+                                )
+                                : (
+                                    <Moon
+                                        size={17}
+                                        strokeWidth={1.8}
+                                    />
+                                )
+                        }
+                    </button>
+                </div>
+
+
+                <span
+                    className="taskbar-system-divider"
+                    aria-hidden="true"
+                />
+
+
+                <div className="taskbar-status">
+                    <WeatherWidget />
+
+                    <div
+                        className="taskbar-clock"
+                        title={`${time} • ${date}`}
+                    >
+                        <span className="taskbar-time">
+                            {time}
+                        </span>
+
+                        <span className="taskbar-date">
+                            {date}
+                        </span>
+                    </div>
                 </div>
             </div>
         </footer>

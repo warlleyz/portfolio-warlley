@@ -21,8 +21,11 @@ const DEFAULT_HEIGHT = 500
 const MIN_WIDTH = 360
 const MIN_HEIGHT = 260
 
-const DESKTOP_PADDING = 12
-const TASKBAR_SPACE = 88
+const DESKTOP_PADDING = 8
+
+const MAXIMIZED_TOP = 8
+const MAXIMIZED_SIDE = 8
+const MAXIMIZED_BOTTOM = 8
 
 
 function Window({
@@ -46,9 +49,6 @@ function Window({
     onPositionChange,
     onSizeChange,
 }) {
-    const windowRef =
-        useRef(null)
-
     const dragState =
         useRef(null)
 
@@ -65,6 +65,17 @@ function Window({
         setResizing,
     ] = useState(false)
 
+    const [
+        viewport,
+        setViewport,
+    ] = useState({
+        width:
+            window.innerWidth,
+
+        height:
+            window.innerHeight,
+    })
+
 
     /* === DIMENSÕES === */
 
@@ -74,16 +85,16 @@ function Window({
             size?.width ??
             Math.min(
                 DEFAULT_WIDTH,
-                window.innerWidth - 80,
+                viewport.width -
+                DESKTOP_PADDING * 2,
             ),
 
         height:
             size?.height ??
             Math.min(
                 DEFAULT_HEIGHT,
-                window.innerHeight -
-                TASKBAR_SPACE -
-                40,
+                viewport.height -
+                DESKTOP_PADDING * 2,
             ),
     }
 
@@ -93,7 +104,7 @@ function Window({
         x:
             Math.max(
                 (
-                    window.innerWidth -
+                    viewport.width -
                     currentSize.width
                 ) / 2,
                 DESKTOP_PADDING,
@@ -102,8 +113,7 @@ function Window({
         y:
             Math.max(
                 (
-                    window.innerHeight -
-                    TASKBAR_SPACE -
+                    viewport.height -
                     currentSize.height
                 ) / 2,
                 DESKTOP_PADDING,
@@ -128,7 +138,7 @@ function Window({
     ) => {
         const maxX =
             Math.max(
-                window.innerWidth -
+                viewport.width -
                 width -
                 DESKTOP_PADDING,
                 DESKTOP_PADDING,
@@ -136,8 +146,7 @@ function Window({
 
         const maxY =
             Math.max(
-                window.innerHeight -
-                TASKBAR_SPACE -
+                viewport.height -
                 height -
                 DESKTOP_PADDING,
                 DESKTOP_PADDING,
@@ -174,22 +183,15 @@ function Window({
         y =
             currentPosition.y,
     ) => {
-        const maxWidth =
-            Math.max(
-                MIN_WIDTH,
-                window.innerWidth -
-                x -
-                DESKTOP_PADDING,
-            )
+        const availableWidth =
+            viewport.width -
+            x -
+            DESKTOP_PADDING
 
-        const maxHeight =
-            Math.max(
-                MIN_HEIGHT,
-                window.innerHeight -
-                TASKBAR_SPACE -
-                y -
-                DESKTOP_PADDING,
-            )
+        const availableHeight =
+            viewport.height -
+            y -
+            DESKTOP_PADDING
 
         return {
             width:
@@ -198,7 +200,10 @@ function Window({
                         width,
                         MIN_WIDTH,
                     ),
-                    maxWidth,
+                    Math.max(
+                        availableWidth,
+                        MIN_WIDTH,
+                    ),
                 ),
 
             height:
@@ -207,7 +212,10 @@ function Window({
                         height,
                         MIN_HEIGHT,
                     ),
-                    maxHeight,
+                    Math.max(
+                        availableHeight,
+                        MIN_HEIGHT,
+                    ),
                 ),
         }
     }
@@ -309,32 +317,31 @@ function Window({
 
     /* === MOVIMENTO GLOBAL === */
     useEffect(() => {
-        const handlePointerMove = (
+        const handleMouseMove = (
             event,
         ) => {
-            /* ----- DRAG ----- */
+            /* ----- ARRASTAR ----- */
             if (
                 dragging &&
                 dragState.current
             ) {
+                const state =
+                    dragState.current
+
                 const deltaX =
                     event.clientX -
-                    dragState.current
-                        .mouseX
+                    state.mouseX
 
                 const deltaY =
                     event.clientY -
-                    dragState.current
-                        .mouseY
+                    state.mouseY
 
                 const nextPosition =
                     constrainPosition(
-                        dragState.current
-                            .startX +
+                        state.startX +
                         deltaX,
 
-                        dragState.current
-                            .startY +
+                        state.startY +
                         deltaY,
                     )
 
@@ -346,7 +353,7 @@ function Window({
             }
 
 
-            /* ----- RESIZE ----- */
+            /* ----- REDIMENSIONAR ----- */
             if (
                 resizing &&
                 resizeState.current
@@ -405,14 +412,12 @@ function Window({
                         nextWidth <
                         MIN_WIDTH
                     ) {
+                        nextWidth =
+                            MIN_WIDTH
+
                         nextX =
                             state.startX +
-                            (
-                                state.startWidth -
-                                MIN_WIDTH
-                            )
-
-                        nextWidth =
+                            state.startWidth -
                             MIN_WIDTH
                     }
 
@@ -460,14 +465,12 @@ function Window({
                         nextHeight <
                         MIN_HEIGHT
                     ) {
+                        nextHeight =
+                            MIN_HEIGHT
+
                         nextY =
                             state.startY +
-                            (
-                                state.startHeight -
-                                MIN_HEIGHT
-                            )
-
-                        nextHeight =
+                            state.startHeight -
                             MIN_HEIGHT
                     }
 
@@ -512,75 +515,134 @@ function Window({
         }
 
 
-        const handlePointerUp =
-            () => {
-                dragState.current =
-                    null
+        const handleMouseUp = () => {
+            dragState.current =
+                null
 
-                resizeState.current =
-                    null
+            resizeState.current =
+                null
 
-                setDragging(false)
-                setResizing(false)
-            }
+            setDragging(false)
+            setResizing(false)
+        }
 
 
         window.addEventListener(
             'mousemove',
-            handlePointerMove,
+            handleMouseMove,
         )
 
         window.addEventListener(
             'mouseup',
-            handlePointerUp,
+            handleMouseUp,
         )
 
 
         return () => {
             window.removeEventListener(
                 'mousemove',
-                handlePointerMove,
+                handleMouseMove,
             )
 
             window.removeEventListener(
                 'mouseup',
-                handlePointerUp,
+                handleMouseUp,
             )
         }
-    }, [
-        dragging,
-        resizing,
-        maximized,
-        currentPosition.x,
-        currentPosition.y,
-        currentSize.width,
-        currentSize.height,
-        onPositionChange,
-        onSizeChange,
-    ])
+    })
 
 
-    /* === AJUSTE DE VIEWPORT === */
+    /* === VIEWPORT === */
     useEffect(() => {
-        const handleResize =
+        const handleViewportResize =
             () => {
+                const nextViewport = {
+                    width:
+                        window.innerWidth,
+
+                    height:
+                        window.innerHeight,
+                }
+
+                setViewport(
+                    nextViewport,
+                )
+
                 if (maximized) {
                     return
                 }
 
-                const nextSize =
-                    constrainSize(
+                const nextWidth =
+                    Math.min(
                         currentSize.width,
-                        currentSize.height,
+                        nextViewport.width -
+                        DESKTOP_PADDING * 2,
                     )
 
-                const nextPosition =
-                    constrainPosition(
-                        currentPosition.x,
-                        currentPosition.y,
-                        nextSize.width,
-                        nextSize.height,
+                const nextHeight =
+                    Math.min(
+                        currentSize.height,
+                        nextViewport.height -
+                        DESKTOP_PADDING * 2,
                     )
+
+                const nextSize = {
+                    width:
+                        Math.max(
+                            nextWidth,
+                            Math.min(
+                                MIN_WIDTH,
+                                nextViewport.width -
+                                DESKTOP_PADDING * 2,
+                            ),
+                        ),
+
+                    height:
+                        Math.max(
+                            nextHeight,
+                            Math.min(
+                                MIN_HEIGHT,
+                                nextViewport.height -
+                                DESKTOP_PADDING * 2,
+                            ),
+                        ),
+                }
+
+                const maxX =
+                    Math.max(
+                        nextViewport.width -
+                        nextSize.width -
+                        DESKTOP_PADDING,
+                        DESKTOP_PADDING,
+                    )
+
+                const maxY =
+                    Math.max(
+                        nextViewport.height -
+                        nextSize.height -
+                        DESKTOP_PADDING,
+                        DESKTOP_PADDING,
+                    )
+
+                const nextPosition = {
+                    x:
+                        Math.min(
+                            Math.max(
+                                currentPosition.x,
+                                DESKTOP_PADDING,
+                            ),
+                            maxX,
+                        ),
+
+                    y:
+                        Math.min(
+                            Math.max(
+                                currentPosition.y,
+                                DESKTOP_PADDING,
+                            ),
+                            maxY,
+                        ),
+                }
 
                 onSizeChange?.(
                     nextSize,
@@ -591,15 +653,17 @@ function Window({
                 )
             }
 
+
         window.addEventListener(
             'resize',
-            handleResize,
+            handleViewportResize,
         )
+
 
         return () => {
             window.removeEventListener(
                 'resize',
-                handleResize,
+                handleViewportResize,
             )
         }
     })
@@ -638,26 +702,58 @@ function Window({
 
 
     /* === ESTILO === */
+
+    /* ----- MAXIMIZADA ----- */
+    const maximizedStyle = {
+        left:
+            MAXIMIZED_SIDE,
+
+        top:
+            MAXIMIZED_TOP,
+
+        width:
+            Math.max(
+                viewport.width -
+                MAXIMIZED_SIDE * 2,
+                0,
+            ),
+
+        height:
+            Math.max(
+                viewport.height -
+                MAXIMIZED_TOP -
+                MAXIMIZED_BOTTOM,
+                0,
+            ),
+
+        zIndex:
+            zIndex + 100,
+    }
+
+
+    /* ----- NORMAL ----- */
+    const normalStyle = {
+        left:
+            currentPosition.x,
+
+        top:
+            currentPosition.y,
+
+        width:
+            currentSize.width,
+
+        height:
+            currentSize.height,
+
+        zIndex:
+            zIndex + 100,
+    }
+
+
     const style =
         maximized
-            ? {
-                zIndex,
-            }
-            : {
-                zIndex,
-
-                left:
-                    currentPosition.x,
-
-                top:
-                    currentPosition.y,
-
-                width:
-                    currentSize.width,
-
-                height:
-                    currentSize.height,
-            }
+            ? maximizedStyle
+            : normalStyle
 
 
     /* === RENDERIZAÇÃO === */
@@ -671,7 +767,6 @@ function Window({
 
     return (
         <section
-            ref={windowRef}
             className={
                 className
             }
@@ -696,7 +791,9 @@ function Window({
                 }
             >
                 <div className="window-title">
-                    <span className="window-title-dot" />
+                    <span
+                        className="window-title-dot"
+                    />
 
                     <span className="window-title-text">
                         {title}
