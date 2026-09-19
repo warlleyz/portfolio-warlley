@@ -3,13 +3,17 @@ import {
     Code2,
     Database,
     GitBranch,
+    GraduationCap,
     Layers3,
+    MapPin,
     Rocket,
     Wrench,
 } from 'lucide-react'
 
 import './About.css'
 
+
+/* === TECNOLOGIAS EM ESTUDO === */
 const studying = [
     'Java',
     'Spring Boot',
@@ -23,10 +27,16 @@ const studying = [
     'Figma',
 ]
 
+
+/* === GRUPOS DE CONHECIMENTO === */
 const knowledgeGroups = [
     {
-        title: 'Desenvolvimento',
-        icon: Code2,
+        title:
+            'Desenvolvimento',
+
+        icon:
+            Code2,
+
         items: [
             'Programação Orientada a Objetos',
             'Lógica de Programação',
@@ -34,9 +44,14 @@ const knowledgeGroups = [
             'Estruturação de aplicações backend',
         ],
     },
+
     {
-        title: 'Integração',
-        icon: Layers3,
+        title:
+            'Integração',
+
+        icon:
+            Layers3,
+
         items: [
             'Criação e consumo de APIs REST',
             'Spring Boot',
@@ -44,9 +59,14 @@ const knowledgeGroups = [
             'Integração entre aplicações',
         ],
     },
+
     {
-        title: 'Ferramentas',
-        icon: Wrench,
+        title:
+            'Ferramentas',
+
+        icon:
+            Wrench,
+
         items: [
             'Git',
             'GitHub',
@@ -54,9 +74,14 @@ const knowledgeGroups = [
             'Figma',
         ],
     },
+
     {
-        title: 'Dados',
-        icon: Database,
+        title:
+            'Dados',
+
+        icon:
+            Database,
+
         items: [
             'Modelagem de dados',
             'Manipulação de dados',
@@ -66,152 +91,278 @@ const knowledgeGroups = [
     },
 ]
 
+
 function About() {
-    const profileImage = `${import.meta.env.BASE_URL}images/profile.jpg`
+    const profileImage =
+        `${import.meta.env.BASE_URL}images/profile.jpg`
+
 
     return (
         <div className="about">
+
+            {/* === PERFIL === */}
             <section className="about-profile">
                 <div className="about-photo-wrapper">
                     <img
                         className="about-photo"
-                        src={profileImage}
+                        src={
+                            profileImage
+                        }
                         alt="Foto de Warlley Silva"
                     />
                 </div>
+
 
                 <div className="about-profile-content">
                     <span className="about-eyebrow">
                         Estudante de Engenharia de Software
                     </span>
 
-                    <h1>Warlley Silva</h1>
+                    <h1>
+                        Warlley Silva
+                    </h1>
 
                     <p>
-                        Estudante de Engenharia de Software na PUC Minas,
-                        interessado em desenvolvimento de sistemas, automação,
-                        gerenciamento de dados e inteligência artificial.
+                        Estudante de Engenharia de Software
+                        na PUC Minas, interessado em
+                        desenvolvimento de sistemas,
+                        automação, gerenciamento de dados
+                        e inteligência artificial.
                     </p>
 
-                    <p>
-                        Gosto de aprender na prática, desenvolvendo projetos que
-                        me ajudam a entender como diferentes tecnologias podem
-                        trabalhar juntas para criar soluções funcionais.
-                    </p>
-                </div>
-            </section>
 
-            <section className="about-section">
-                <div className="about-section-title">
-                    <BookOpen size={19} strokeWidth={1.8} />
+                    <div className="about-profile-meta">
+                        <span>
+                            <GraduationCap
+                                size={14}
+                                strokeWidth={1.8}
+                            />
 
-                    <div>
-                        <span>Apresentação</span>
-                        <h2>Quem sou</h2>
-                    </div>
-                </div>
-
-                <div className="about-text">
-                    <p>
-                        Atualmente estou no 2º período de Engenharia de Software
-                        na PUC Minas e venho construindo minha base em programação,
-                        desenvolvimento web, orientação a objetos, APIs e backend.
-                    </p>
-
-                    <p>
-                        Tenho interesse em entender não apenas como escrever código,
-                        mas também como estruturar sistemas, conectar diferentes
-                        serviços e transformar ideias em aplicações reais.
-                    </p>
-                </div>
-            </section>
-
-            <section className="about-section">
-                <div className="about-section-title">
-                    <Rocket size={19} strokeWidth={1.8} />
-
-                    <div>
-                        <span>Aprendizado</span>
-                        <h2>O que estou estudando</h2>
-                    </div>
-                </div>
-
-                <div className="about-tags">
-                    {studying.map((technology) => (
-                        <span key={technology}>
-                            {technology}
+                            PUC Minas
                         </span>
-                    ))}
+
+                        <span>
+                            <MapPin
+                                size={14}
+                                strokeWidth={1.8}
+                            />
+
+                            Minas Gerais
+                        </span>
+                    </div>
                 </div>
             </section>
 
-            <section className="about-section">
+
+            {/* === VISÃO GERAL === */}
+            <div className="about-overview-grid">
+
+                {/* ----- QUEM SOU ----- */}
+                <section className="about-section about-introduction">
+                    <div className="about-section-title">
+                        <BookOpen
+                            size={18}
+                            strokeWidth={1.8}
+                        />
+
+                        <div>
+                            <span>
+                                Apresentação
+                            </span>
+
+                            <h2>
+                                Quem sou
+                            </h2>
+                        </div>
+                    </div>
+
+
+                    <div className="about-text">
+                        <p>
+                            Atualmente estou no 2º período
+                            de Engenharia de Software na
+                            PUC Minas e venho construindo
+                            minha base em programação,
+                            desenvolvimento web, orientação
+                            a objetos, APIs e backend.
+                        </p>
+
+                        <p>
+                            Tenho interesse em entender não
+                            apenas como escrever código,
+                            mas também como estruturar sistemas,
+                            conectar diferentes serviços e
+                            transformar ideias em aplicações
+                            funcionais.
+                        </p>
+
+                        <p>
+                            Gosto de aprender na prática,
+                            desenvolvendo projetos que me
+                            ajudam a compreender como diferentes
+                            tecnologias podem trabalhar juntas
+                            na construção de soluções reais.
+                        </p>
+                    </div>
+                </section>
+
+
+                {/* ----- ESTUDANDO ----- */}
+                <section className="about-section about-learning">
+                    <div className="about-section-title">
+                        <Rocket
+                            size={18}
+                            strokeWidth={1.8}
+                        />
+
+                        <div>
+                            <span>
+                                Aprendizado
+                            </span>
+
+                            <h2>
+                                O que estou estudando
+                            </h2>
+                        </div>
+                    </div>
+
+
+                    <p className="about-learning-description">
+                        Tecnologias e conceitos que fazem
+                        parte dos meus estudos e projetos atuais.
+                    </p>
+
+
+                    <div className="about-tags">
+                        {studying.map(
+                            (technology) => (
+                                <span
+                                    key={
+                                        technology
+                                    }
+                                >
+                                    {
+                                        technology
+                                    }
+                                </span>
+                            ),
+                        )}
+                    </div>
+                </section>
+            </div>
+
+
+            {/* === CONHECIMENTOS === */}
+            <section className="about-section about-knowledge">
                 <div className="about-section-title">
-                    <GitBranch size={19} strokeWidth={1.8} />
+                    <GitBranch
+                        size={18}
+                        strokeWidth={1.8}
+                    />
 
                     <div>
-                        <span>Base atual</span>
-                        <h2>Conhecimentos</h2>
+                        <span>
+                            Base atual
+                        </span>
+
+                        <h2>
+                            Conhecimentos
+                        </h2>
                     </div>
                 </div>
+
 
                 <div className="about-knowledge-grid">
-                    {knowledgeGroups.map((group) => {
-                        const Icon = group.icon
+                    {knowledgeGroups.map(
+                        (group) => {
+                            const Icon =
+                                group.icon
 
-                        return (
-                            <article
-                                className="about-knowledge-card"
-                                key={group.title}
-                            >
-                                <div className="about-knowledge-header">
-                                    <div className="about-knowledge-icon">
-                                        <Icon size={18} strokeWidth={1.8} />
+                            return (
+                                <article
+                                    className="about-knowledge-card"
+                                    key={
+                                        group.title
+                                    }
+                                >
+                                    <div className="about-knowledge-header">
+                                        <span className="about-knowledge-icon">
+                                            <Icon
+                                                size={17}
+                                                strokeWidth={1.8}
+                                            />
+                                        </span>
+
+                                        <h3>
+                                            {
+                                                group.title
+                                            }
+                                        </h3>
                                     </div>
 
-                                    <h3>{group.title}</h3>
-                                </div>
-
-                                <ul>
-                                    {group.items.map((item) => (
-                                        <li key={item}>
-                                            {item}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </article>
-                        )
-                    })}
+                                    <ul>
+                                        {group.items.map(
+                                            (item) => (
+                                                <li
+                                                    key={
+                                                        item
+                                                    }
+                                                >
+                                                    {
+                                                        item
+                                                    }
+                                                </li>
+                                            ),
+                                        )}
+                                    </ul>
+                                </article>
+                            )
+                        },
+                    )}
                 </div>
             </section>
 
+
+            {/* === OBJETIVOS === */}
             <section className="about-section about-goals">
                 <div className="about-section-title">
-                    <Rocket size={19} strokeWidth={1.8} />
+                    <Rocket
+                        size={18}
+                        strokeWidth={1.8}
+                    />
 
                     <div>
-                        <span>Próximos passos</span>
-                        <h2>Objetivos</h2>
+                        <span>
+                            Próximos passos
+                        </span>
+
+                        <h2>
+                            Objetivos
+                        </h2>
                     </div>
                 </div>
 
-                <div className="about-text">
+
+                <div className="about-goals-grid">
                     <p>
-                        Meu objetivo é continuar evoluindo tecnicamente por meio
-                        de projetos acadêmicos e pessoais, adquirindo cada vez
-                        mais experiência prática no desenvolvimento de software.
+                        Continuar evoluindo tecnicamente
+                        por meio de projetos acadêmicos e
+                        pessoais, adquirindo experiência
+                        prática no desenvolvimento de software.
                     </p>
 
                     <p>
-                        Busco uma oportunidade de estágio onde eu possa aplicar
-                        o que venho estudando, aprender com profissionais da área
-                        e participar do desenvolvimento de soluções reais.
+                        Buscar uma oportunidade de estágio
+                        onde eu possa aplicar meus conhecimentos,
+                        aprender com profissionais da área
+                        e participar de soluções reais.
                     </p>
 
                     <p>
-                        No longo prazo, quero aprofundar meus conhecimentos em
-                        desenvolvimento de sistemas, automação, integração de
-                        aplicações e gerenciamento de dados.
+                        Aprofundar meus conhecimentos em
+                        desenvolvimento de sistemas, automação,
+                        integração de aplicações e gerenciamento
+                        de dados.
                     </p>
                 </div>
             </section>
