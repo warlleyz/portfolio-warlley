@@ -1,70 +1,333 @@
 import {
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from 'react'
 
+import {
+    RotateCcw,
+    Trash2,
+} from 'lucide-react'
+
 import './Terminal.css'
 
-const commands = {
-    help: `Comandos disponíveis:
 
-about               Exibe informações sobre mim
-projects            Exibe meus projetos
-technologies        Exibe tecnologias e ferramentas
-contact             Exibe informações de contato
-resume              Exibe informações sobre currículo
+/* === APLICATIVOS DO WS OS === */
 
-open about          Abre Sobre mim
-open projects       Abre Projetos
-open technologies   Abre Tecnologias
-open contact        Abre Contato
-open resume         Abre Currículo
+const apps = {
+    about: {
+        name:
+            'Sobre mim',
+    },
 
-clear               Limpa o terminal`,
+    projects: {
+        name:
+            'Projetos',
+    },
 
-    about: `Warlley Silva Baião Braga
+    technologies: {
+        name:
+            'Tecnologias',
+    },
+
+    contact: {
+        name:
+            'Contato',
+    },
+
+    resume: {
+        name:
+            'Currículo',
+    },
+
+    stats: {
+        name:
+            'Estatísticas',
+    },
+
+    game: {
+        name:
+            'Snake',
+    },
+}
+
+
+/* === PROJETOS === */
+
+const projects = {
+    'api-clima': {
+        id:
+            'api-clima',
+
+        name:
+            'API Clima',
+
+        repository:
+            'API-Clima',
+
+        technologies:
+            'Java, Spring Boot, API REST',
+
+        description:
+            'API desenvolvida em Spring Boot para consulta de informações climáticas.',
+
+        github:
+            'https://github.com/warlleyz/API-Clima',
+    },
+
+    'carrinho-compras': {
+        id:
+            'carrinho-compras',
+
+        name:
+            'Carrinho de Compras',
+
+        repository:
+            'Carrinho-Compras-POO',
+
+        technologies:
+            'Java, POO',
+
+        description:
+            'Projeto acadêmico aplicando conceitos de Programação Orientada a Objetos.',
+
+        github:
+            'https://github.com/warlleyz/Carrinho-Compras-POO',
+    },
+
+    'login-puc': {
+        id:
+            'login-puc',
+
+        name:
+            'Login PUC',
+
+        repository:
+            'Login-PUC',
+
+        technologies:
+            'Java, Spring Boot, HTML, CSS',
+
+        description:
+            'Sistema web de autenticação desenvolvido com Spring Boot.',
+
+        github:
+            'https://github.com/warlleyz/Login-PUC',
+    },
+
+    snakepy: {
+        id:
+            'snakepy',
+
+        name:
+            'SnakePy',
+
+        repository:
+            'SnakePy',
+
+        technologies:
+            'Python, Pygame, Pytest',
+
+        description:
+            'Jogo Snake desenvolvido em Python utilizando Pygame.',
+
+        github:
+            'https://github.com/warlleyz/SnakePy',
+    },
+}
+
+
+/* === LINKS === */
+
+const externalLinks = {
+    github:
+        'https://github.com/warlleyz',
+
+    linkedin:
+        'https://www.linkedin.com/in/warlleysilvab',
+
+    email:
+        'mailto:warlleysilvax@gmail.com',
+}
+
+
+/* === SISTEMA DE ARQUIVOS SIMULADO === */
+
+const fileSystem = {
+    '~': {
+        directories: [
+            'portfolio',
+        ],
+
+        files: [],
+    },
+
+    '~/portfolio': {
+        directories: [
+            'about',
+            'projects',
+            'technologies',
+            'contact',
+            'resume',
+            'stats',
+        ],
+
+        files: [
+            'README.md',
+        ],
+    },
+
+    '~/portfolio/about': {
+        directories:
+            [],
+
+        files: [
+            'profile.txt',
+        ],
+    },
+
+    '~/portfolio/projects': {
+        directories: [
+            'api-clima',
+            'carrinho-compras',
+            'login-puc',
+            'snakepy',
+        ],
+
+        files: [],
+    },
+
+    '~/portfolio/projects/api-clima': {
+        directories:
+            [],
+
+        files: [
+            'README.md',
+        ],
+    },
+
+    '~/portfolio/projects/carrinho-compras': {
+        directories:
+            [],
+
+        files: [
+            'README.md',
+        ],
+    },
+
+    '~/portfolio/projects/login-puc': {
+        directories:
+            [],
+
+        files: [
+            'README.md',
+        ],
+    },
+
+    '~/portfolio/projects/snakepy': {
+        directories:
+            [],
+
+        files: [
+            'README.md',
+        ],
+    },
+
+    '~/portfolio/technologies': {
+        directories:
+            [],
+
+        files: [
+            'stack.txt',
+        ],
+    },
+
+    '~/portfolio/contact': {
+        directories:
+            [],
+
+        files: [
+            'contact.txt',
+        ],
+    },
+
+    '~/portfolio/resume': {
+        directories:
+            [],
+
+        files: [
+            'curriculo-warlley.pdf',
+        ],
+    },
+
+    '~/portfolio/stats': {
+        directories:
+            [],
+
+        files: [
+            'github.txt',
+            'wakatime.txt',
+        ],
+    },
+}
+
+
+/* === CONTEÚDO DOS ARQUIVOS === */
+
+const fileContents = {
+    '~/portfolio/README.md':
+        `WS OS Portfolio
+
+Portfólio interativo desenvolvido para apresentar
+projetos, tecnologias, experiência e atividade
+de desenvolvimento de Warlley Silva Baião Braga.
+
+Digite:
+ls
+cd projects
+help`,
+
+    '~/portfolio/about/profile.txt':
+        `Warlley Silva Baião Braga
 
 Estudante de Engenharia de Software na PUC Minas.
 
-Interesses:
+Áreas de interesse:
 - Desenvolvimento de sistemas
-- Automação
+- Desenvolvimento web
 - APIs
+- Automação
 - Dados
 - Inteligência Artificial`,
 
-    projects: `Projetos:
-
-1. API Clima
-   Java + Spring Boot + Open-Meteo
-
-2. Carrinho de Compras
-   Java + Programação Orientada a Objetos
-
-3. Login PUC
-   Spring Boot + HTML + CSS
-
-4. SnakePy
-   Python + Pygame`,
-
-    technologies: `Tecnologias:
-
-Linguagens:
-Java, JavaScript, Python, PHP, HTML e CSS
+    '~/portfolio/technologies/stack.txt':
+        `Linguagens:
+Java
+JavaScript
+Python
+PHP
+HTML
+CSS
 
 Backend:
-Spring Boot, APIs REST e Maven
+Spring Boot
+APIs REST
+Maven
 
 Ferramentas:
-Git, GitHub, Docker e Postman
+Git
+GitHub
+Docker
+Postman
 
 Design e dados:
-Figma, Power BI e Banco de Dados`,
+Figma
+Power BI
+Banco de Dados`,
 
-    contact: `Contato:
-
-E-mail:
+    '~/portfolio/contact/contact.txt':
+        `E-mail:
 warlleysilvax@gmail.com
 
 GitHub:
@@ -73,213 +336,1845 @@ github.com/warlleyz
 LinkedIn:
 linkedin.com/in/warlleysilvab`,
 
-    resume: `Currículo profissional
+    '~/portfolio/stats/github.txt':
+        `Os dados do GitHub são carregados
+dinamicamente pelo aplicativo Estatísticas.
 
-O currículo será disponibilizado em PDF
-diretamente pelo portfólio.`,
+Digite:
+
+open stats`,
+
+    '~/portfolio/stats/wakatime.txt':
+        `Os dados de desenvolvimento do WakaTime
+podem ser visualizados no aplicativo Estatísticas.
+
+Digite:
+
+open stats`,
 }
 
-const allowedApps = [
+
+/* === COMANDOS === */
+
+const baseCommands = [
+    'help',
     'about',
     'projects',
     'technologies',
     'contact',
     'resume',
+    'stats',
+    'apps',
+    'ls',
+    'cd',
+    'pwd',
+    'cat',
+    'repo',
+    'open',
+    'whoami',
+    'date',
+    'echo',
+    'history',
+    'github',
+    'linkedin',
+    'email',
+    'clear',
+    'reset',
 ]
 
-const appNames = {
-    about: 'Sobre mim',
-    projects: 'Projetos',
-    technologies: 'Tecnologias',
-    contact: 'Contato',
-    resume: 'Currículo',
-}
 
-function Terminal({ onOpenApp }) {
-    const [command, setCommand] = useState('')
-    const [history, setHistory] = useState([])
+/* === AJUDA === */
 
-    const terminalRef = useRef(null)
-    const inputRef = useRef(null)
+const helpText =
+    `WS OS Terminal
+
+NAVEGAÇÃO
+  ls                         Lista arquivos e diretórios
+  cd <diretório>             Navega entre diretórios
+  cd ..                      Volta um diretório
+  cd ~                       Volta para a raiz
+  pwd                        Exibe o diretório atual
+  cat <arquivo>              Exibe um arquivo
+
+PORTFÓLIO
+  about                      Informações sobre mim
+  projects                   Lista meus projetos
+  technologies               Tecnologias e ferramentas
+  contact                    Informações de contato
+  resume                     Informações sobre currículo
+  stats                      Informações sobre estatísticas
+  apps                       Lista aplicativos do WS OS
+
+ABRIR
+  open <app>                 Abre um aplicativo
+  open project <projeto>     Abre a demonstração de um projeto
+  repo <projeto>             Exibe detalhes de um projeto
+
+SISTEMA
+  whoami                     Exibe o usuário atual
+  date                       Exibe data e hora
+  echo <texto>               Imprime um texto
+  history                    Exibe histórico
+  clear                      Limpa a tela
+  reset                      Reinicia a sessão
+
+LINKS
+  github                     Abre meu GitHub
+  linkedin                   Abre meu LinkedIn
+  email                      Abre o cliente de e-mail
+
+ATALHOS
+  ↑ / ↓                      Histórico de comandos
+  Tab                        Autocomplete
+
+EXEMPLOS
+  cd projects
+  cd sna<Tab>
+  cat RE<Tab>
+  repo snakepy
+  open project snakepy
+  open stats`
+
+
+function Terminal({
+    onOpenApp,
+}) {
+    const [
+        command,
+        setCommand,
+    ] = useState('')
+
+    const [
+        history,
+        setHistory,
+    ] = useState([])
+
+    const [
+        commandHistory,
+        setCommandHistory,
+    ] = useState([])
+
+    const [
+        historyIndex,
+        setHistoryIndex,
+    ] = useState(null)
+
+    const [
+        currentPath,
+        setCurrentPath,
+    ] = useState(
+        '~/portfolio',
+    )
+
+
+    const terminalRef =
+        useRef(null)
+
+    const inputRef =
+        useRef(null)
+
+
+    /* === CAMINHO DO PROMPT === */
+
+    const promptPath =
+        useMemo(
+            () =>
+                currentPath,
+            [
+                currentPath,
+            ],
+        )
+
+
+    /* === SCROLL AUTOMÁTICO === */
 
     useEffect(() => {
-        const terminal = terminalRef.current
+        const terminal =
+            terminalRef.current
 
-        if (!terminal) return
 
-        requestAnimationFrame(() => {
-            terminal.scrollTop =
-                terminal.scrollHeight
-        })
-    }, [history])
-
-    const addHistory = (
-        typedCommand,
-        output,
-    ) => {
-        setHistory((currentHistory) => [
-            ...currentHistory,
-            {
-                command: typedCommand,
-                output,
-            },
-        ])
-    }
-
-    const executeCommand = () => {
-        const typedCommand =
-            command.trim().toLowerCase()
-
-        if (!typedCommand) return
-
-        if (typedCommand === 'clear') {
-            setHistory([])
-            setCommand('')
+        if (
+            !terminal
+        ) {
             return
         }
 
-        if (typedCommand.startsWith('open ')) {
-            const appName =
-                typedCommand
-                    .replace('open ', '')
-                    .trim()
 
-            if (allowedApps.includes(appName)) {
-                onOpenApp?.(appName)
+        requestAnimationFrame(
+            () => {
+                terminal.scrollTop =
+                    terminal.scrollHeight
+            },
+        )
+    }, [
+        history,
+    ])
 
-                addHistory(
-                    typedCommand,
-                    `Abrindo ${appNames[appName]}...`,
+
+    /* === FOCO INICIAL === */
+
+    useEffect(() => {
+        inputRef.current
+            ?.focus()
+    }, [])
+
+
+    /* === ADICIONAR HISTÓRICO === */
+
+    const addHistory =
+        (
+            typedCommand,
+            output = '',
+            type = 'normal',
+        ) => {
+            setHistory(
+                (
+                    currentHistory,
+                ) => [
+                        ...currentHistory,
+
+                        {
+                            command:
+                                typedCommand,
+
+                            output,
+
+                            path:
+                                currentPath,
+
+                            type,
+                        },
+                    ],
+            )
+        }
+
+
+    /* === RESOLVER CAMINHO === */
+
+    const resolvePath =
+        (
+            target,
+        ) => {
+            if (
+                !target ||
+                target ===
+                '~' ||
+                target ===
+                '/'
+            ) {
+                return '~'
+            }
+
+
+            if (
+                target ===
+                '..'
+            ) {
+                if (
+                    currentPath ===
+                    '~'
+                ) {
+                    return '~'
+                }
+
+
+                const parts =
+                    currentPath.split(
+                        '/',
+                    )
+
+
+                parts.pop()
+
+
+                return (
+                    parts.join(
+                        '/',
+                    ) ||
+                    '~'
+                )
+            }
+
+
+            if (
+                target.startsWith(
+                    '~/',
+                )
+            ) {
+                return target
+            }
+
+
+            return `${currentPath}/${target}`
+        }
+
+
+    /* === LISTAR DIRETÓRIO === */
+
+    const listDirectory =
+        () => {
+            const directory =
+                fileSystem[
+                currentPath
+                ]
+
+
+            if (
+                !directory
+            ) {
+                return 'Diretório não encontrado.'
+            }
+
+
+            const directories =
+                directory.directories.map(
+                    (
+                        item,
+                    ) =>
+                        `${item}/`,
                 )
 
-                setCommand('')
+
+            const items = [
+                ...directories,
+                ...directory.files,
+            ]
+
+
+            if (
+                items.length ===
+                0
+            ) {
+                return 'Diretório vazio.'
+            }
+
+
+            return items.join(
+                '    ',
+            )
+        }
+
+
+    /* === LER ARQUIVO === */
+
+    const readFile =
+        (
+            fileName,
+        ) => {
+            if (
+                !fileName
+            ) {
+                return 'Uso: cat <arquivo>'
+            }
+
+
+            const directory =
+                fileSystem[
+                currentPath
+                ]
+
+
+            if (
+                !directory
+            ) {
+                return `cat: ${fileName}: diretório não encontrado`
+            }
+
+
+            const realFileName =
+                directory.files.find(
+                    (
+                        item,
+                    ) =>
+                        item
+                            .toLowerCase() ===
+                        fileName
+                            .toLowerCase(),
+                )
+
+
+            if (
+                !realFileName
+            ) {
+                return `cat: ${fileName}: arquivo não encontrado`
+            }
+
+
+            const fullPath =
+                `${currentPath}/${realFileName}`
+
+
+            const content =
+                fileContents[
+                fullPath
+                ]
+
+
+            if (
+                content
+            ) {
+                return content
+            }
+
+
+            /* ----- README DE PROJETO ----- */
+
+            if (
+                realFileName
+                    .toLowerCase() ===
+                'readme.md' &&
+                currentPath.startsWith(
+                    '~/portfolio/projects/',
+                )
+            ) {
+                const projectId =
+                    currentPath
+                        .split(
+                            '/',
+                        )
+                        .pop()
+
+                const project =
+                    projects[
+                    projectId
+                    ]
+
+
+                if (
+                    project
+                ) {
+                    return `${project.name}
+
+${project.description}
+
+Tecnologias:
+${project.technologies}
+
+GitHub:
+${project.github}`
+                }
+            }
+
+
+            /* ----- PDF ----- */
+
+            if (
+                realFileName
+                    .toLowerCase() ===
+                'curriculo-warlley.pdf'
+            ) {
+                return `Arquivo PDF.
+
+Use:
+
+open resume`
+            }
+
+
+            return `Não foi possível ler: ${realFileName}`
+        }
+
+
+    /* === LISTAR PROJETOS === */
+
+    const getProjectsOutput =
+        () =>
+            Object
+                .entries(
+                    projects,
+                )
+                .map(
+                    (
+                        [
+                            id,
+                            project,
+                        ],
+                    ) =>
+                        `${id.padEnd(
+                            22,
+                            ' ',
+                        )} ${project.name}`,
+                )
+                .join(
+                    '\n',
+                )
+
+
+    /* === DETALHES DO PROJETO === */
+
+    const getProjectOutput =
+        (
+            projectName,
+        ) => {
+            if (
+                !projectName
+            ) {
+                return `Uso: repo <projeto>
+
+Projetos disponíveis:
+${Object.keys(
+                    projects,
+                ).join(
+                    ', ',
+                )}`
+            }
+
+
+            const project =
+                projects[
+                projectName
+                ]
+
+
+            if (
+                !project
+            ) {
+                return `Projeto não encontrado: ${projectName}
+
+Digite projects para visualizar os projetos disponíveis.`
+            }
+
+
+            return `${project.name}
+
+Repositório:
+${project.repository}
+
+Descrição:
+${project.description}
+
+Tecnologias:
+${project.technologies}
+
+GitHub:
+${project.github}
+
+Abrir demonstração:
+open project ${projectName}`
+        }
+
+
+    /* === ABRIR LINK EXTERNO === */
+
+    const openExternal =
+        (
+            url,
+        ) => {
+            window.open(
+                url,
+                '_blank',
+                'noopener,noreferrer',
+            )
+        }
+
+
+    /* === ABRIR APP === */
+
+    const openApp =
+        (
+            appId,
+        ) => {
+            if (
+                !appId
+            ) {
+                return `Uso: open <app>
+
+Digite apps para visualizar os aplicativos disponíveis.`
+            }
+
+
+            if (
+                !apps[
+                appId
+                ]
+            ) {
+                return `Aplicativo não encontrado: ${appId}
+
+Digite apps para visualizar os aplicativos disponíveis.`
+            }
+
+
+            onOpenApp?.(
+                appId,
+            )
+
+
+            return `Abrindo ${apps[appId].name}...`
+        }
+
+
+    /* === ABRIR PROJETO === */
+
+    const openProject =
+        (
+            projectId,
+        ) => {
+            if (
+                !projectId
+            ) {
+                return `Uso: open project <projeto>
+
+Projetos disponíveis:
+${Object.keys(
+                    projects,
+                ).join(
+                    ', ',
+                )}`
+            }
+
+
+            const project =
+                projects[
+                projectId
+                ]
+
+
+            if (
+                !project
+            ) {
+                return `Projeto não encontrado: ${projectId}
+
+Digite projects para visualizar os projetos disponíveis.`
+            }
+
+
+            onOpenApp?.(
+                `project-${project.id}`,
+            )
+
+
+            return `Abrindo ${project.name}...`
+        }
+
+
+    /* === AUTOCOMPLETE === */
+
+    const handleAutocomplete =
+        () => {
+            const value =
+                command
+
+
+            if (
+                !value.trim()
+            ) {
                 return
             }
 
-            addHistory(
-                typedCommand,
-                `Aplicativo não encontrado: ${appName}
 
-Digite help para visualizar os aplicativos disponíveis.`,
-            )
+            const trimmedValue =
+                value.trimStart()
 
-            setCommand('')
-            return
+            const parts =
+                trimmedValue.split(
+                    /\s+/,
+                )
+
+            const commandName =
+                parts[0]
+                    .toLowerCase()
+
+
+            /* ----- COMANDO PRINCIPAL ----- */
+
+            if (
+                parts.length ===
+                1
+            ) {
+                const matches =
+                    baseCommands.filter(
+                        (
+                            item,
+                        ) =>
+                            item.startsWith(
+                                commandName,
+                            ),
+                    )
+
+
+                if (
+                    matches.length ===
+                    1
+                ) {
+                    setCommand(
+                        `${matches[0]} `,
+                    )
+
+                    return
+                }
+
+
+                if (
+                    matches.length >
+                    1
+                ) {
+                    addHistory(
+                        value,
+                        matches.join(
+                            '    ',
+                        ),
+                        'system',
+                    )
+                }
+
+
+                return
+            }
+
+
+            /* ----- CD ----- */
+
+            if (
+                commandName ===
+                'cd'
+            ) {
+                const argument =
+                    parts[1]
+                        ?.toLowerCase() ??
+                    ''
+
+                const directory =
+                    fileSystem[
+                    currentPath
+                    ]
+
+
+                const options = [
+                    '..',
+                    '~',
+                    ...(
+                        directory
+                            ?.directories ??
+                        []
+                    ),
+                ]
+
+
+                const matches =
+                    options.filter(
+                        (
+                            item,
+                        ) =>
+                            item
+                                .toLowerCase()
+                                .startsWith(
+                                    argument,
+                                ),
+                    )
+
+
+                if (
+                    matches.length ===
+                    1
+                ) {
+                    setCommand(
+                        `cd ${matches[0]}`,
+                    )
+
+                    return
+                }
+
+
+                if (
+                    matches.length >
+                    1
+                ) {
+                    addHistory(
+                        value,
+                        matches.join(
+                            '    ',
+                        ),
+                        'system',
+                    )
+                }
+
+
+                return
+            }
+
+
+            /* ----- CAT ----- */
+
+            if (
+                commandName ===
+                'cat'
+            ) {
+                const argument =
+                    parts
+                        .slice(
+                            1,
+                        )
+                        .join(
+                            ' ',
+                        )
+                        .toLowerCase()
+
+                const directory =
+                    fileSystem[
+                    currentPath
+                    ]
+
+
+                const files =
+                    directory
+                        ?.files ??
+                    []
+
+
+                const matches =
+                    files.filter(
+                        (
+                            item,
+                        ) =>
+                            item
+                                .toLowerCase()
+                                .startsWith(
+                                    argument,
+                                ),
+                    )
+
+
+                if (
+                    matches.length ===
+                    1
+                ) {
+                    setCommand(
+                        `cat ${matches[0]}`,
+                    )
+
+                    return
+                }
+
+
+                if (
+                    matches.length >
+                    1
+                ) {
+                    addHistory(
+                        value,
+                        matches.join(
+                            '    ',
+                        ),
+                        'system',
+                    )
+                }
+
+
+                return
+            }
+
+
+            /* ----- REPO ----- */
+
+            if (
+                commandName ===
+                'repo'
+            ) {
+                const argument =
+                    parts
+                        .slice(
+                            1,
+                        )
+                        .join(
+                            ' ',
+                        )
+                        .toLowerCase()
+
+
+                const matches =
+                    Object
+                        .keys(
+                            projects,
+                        )
+                        .filter(
+                            (
+                                item,
+                            ) =>
+                                item.startsWith(
+                                    argument,
+                                ),
+                        )
+
+
+                if (
+                    matches.length ===
+                    1
+                ) {
+                    setCommand(
+                        `repo ${matches[0]}`,
+                    )
+
+                    return
+                }
+
+
+                if (
+                    matches.length >
+                    1
+                ) {
+                    addHistory(
+                        value,
+                        matches.join(
+                            '    ',
+                        ),
+                        'system',
+                    )
+                }
+
+
+                return
+            }
+
+
+            /* ----- OPEN ----- */
+
+            if (
+                commandName ===
+                'open' &&
+                parts.length ===
+                2
+            ) {
+                const argument =
+                    parts[1]
+                        .toLowerCase()
+
+
+                const options = [
+                    'project',
+                    ...Object.keys(
+                        apps,
+                    ),
+                ]
+
+
+                const matches =
+                    options.filter(
+                        (
+                            item,
+                        ) =>
+                            item.startsWith(
+                                argument,
+                            ),
+                    )
+
+
+                if (
+                    matches.length ===
+                    1
+                ) {
+                    setCommand(
+                        `open ${matches[0]} `,
+                    )
+
+                    return
+                }
+
+
+                if (
+                    matches.length >
+                    1
+                ) {
+                    addHistory(
+                        value,
+                        matches.join(
+                            '    ',
+                        ),
+                        'system',
+                    )
+                }
+
+
+                return
+            }
+
+
+            /* ----- OPEN PROJECT ----- */
+
+            if (
+                commandName ===
+                'open' &&
+                parts[1]
+                    ?.toLowerCase() ===
+                'project'
+            ) {
+                const argument =
+                    parts
+                        .slice(
+                            2,
+                        )
+                        .join(
+                            ' ',
+                        )
+                        .toLowerCase()
+
+
+                const matches =
+                    Object
+                        .keys(
+                            projects,
+                        )
+                        .filter(
+                            (
+                                item,
+                            ) =>
+                                item.startsWith(
+                                    argument,
+                                ),
+                        )
+
+
+                if (
+                    matches.length ===
+                    1
+                ) {
+                    setCommand(
+                        `open project ${matches[0]}`,
+                    )
+
+                    return
+                }
+
+
+                if (
+                    matches.length >
+                    1
+                ) {
+                    addHistory(
+                        value,
+                        matches.join(
+                            '    ',
+                        ),
+                        'system',
+                    )
+                }
+            }
         }
 
-        const commandExists =
-            Object.prototype.hasOwnProperty.call(
-                commands,
-                typedCommand,
+
+    /* === EXECUTAR COMANDO === */
+
+    const executeCommand =
+        () => {
+            const rawCommand =
+                command.trim()
+
+
+            if (
+                !rawCommand
+            ) {
+                return
+            }
+
+
+            const parts =
+                rawCommand.split(
+                    /\s+/,
+                )
+
+            const commandName =
+                parts[0]
+                    .toLowerCase()
+
+            const normalizedArguments =
+                parts
+                    .slice(
+                        1,
+                    )
+                    .map(
+                        (
+                            item,
+                        ) =>
+                            item.toLowerCase(),
+                    )
+
+            const argument =
+                normalizedArguments.join(
+                    ' ',
+                )
+
+
+            setCommandHistory(
+                (
+                    current,
+                ) => [
+                        ...current,
+                        rawCommand,
+                    ],
             )
 
-        const output =
-            commandExists
-                ? commands[typedCommand]
-                : `Comando não encontrado: ${typedCommand}
+            setHistoryIndex(
+                null,
+            )
+
+
+            /* === CLEAR === */
+
+            if (
+                commandName ===
+                'clear'
+            ) {
+                setHistory(
+                    [],
+                )
+
+                setCommand(
+                    '',
+                )
+
+                return
+            }
+
+
+            /* === RESET === */
+
+            if (
+                commandName ===
+                'reset'
+            ) {
+                setHistory(
+                    [],
+                )
+
+                setCommandHistory(
+                    [],
+                )
+
+                setHistoryIndex(
+                    null,
+                )
+
+                setCurrentPath(
+                    '~/portfolio',
+                )
+
+                setCommand(
+                    '',
+                )
+
+                return
+            }
+
+
+            let output =
+                ''
+
+
+            switch (
+            commandName
+            ) {
+                case 'help':
+                    output =
+                        helpText
+                    break
+
+
+                case 'about':
+                    output =
+                        fileContents[
+                        '~/portfolio/about/profile.txt'
+                        ]
+                    break
+
+
+                case 'projects':
+                    output =
+                        `Projetos disponíveis:
+
+${getProjectsOutput()}
+
+Detalhes:
+repo <projeto>
+
+Abrir:
+open project <projeto>`
+                    break
+
+
+                case 'technologies':
+                    output =
+                        fileContents[
+                        '~/portfolio/technologies/stack.txt'
+                        ]
+                    break
+
+
+                case 'contact':
+                    output =
+                        fileContents[
+                        '~/portfolio/contact/contact.txt'
+                        ]
+                    break
+
+
+                case 'resume':
+                    output =
+                        `Currículo profissional
+
+Use:
+
+open resume
+
+para visualizar o PDF dentro do WS OS.`
+                    break
+
+
+                case 'stats':
+                    output =
+                        `Estatísticas de desenvolvimento
+
+Integrações:
+- GitHub
+- WakaTime
+- Linguagens
+- Repositórios
+- Atividade por período
+
+Use:
+
+open stats`
+                    break
+
+
+                case 'apps':
+                    output =
+                        Object
+                            .entries(
+                                apps,
+                            )
+                            .map(
+                                (
+                                    [
+                                        id,
+                                        app,
+                                    ],
+                                ) =>
+                                    `${id.padEnd(
+                                        16,
+                                        ' ',
+                                    )} ${app.name}`,
+                            )
+                            .join(
+                                '\n',
+                            )
+                    break
+
+
+                case 'ls':
+                    output =
+                        listDirectory()
+                    break
+
+
+                case 'pwd':
+                    output =
+                        currentPath
+                    break
+
+
+                case 'cd': {
+                    const targetPath =
+                        resolvePath(
+                            argument,
+                        )
+
+
+                    if (
+                        fileSystem[
+                        targetPath
+                        ]
+                    ) {
+                        setCurrentPath(
+                            targetPath,
+                        )
+
+                        output =
+                            ''
+                    } else {
+                        output =
+                            `cd: ${argument}: diretório não encontrado`
+                    }
+
+                    break
+                }
+
+
+                case 'cat': {
+                    const originalArgument =
+                        parts
+                            .slice(
+                                1,
+                            )
+                            .join(
+                                ' ',
+                            )
+
+
+                    output =
+                        readFile(
+                            originalArgument,
+                        )
+
+                    break
+                }
+
+
+                case 'repo':
+                    output =
+                        getProjectOutput(
+                            argument,
+                        )
+                    break
+
+
+                case 'open': {
+                    if (
+                        normalizedArguments[0] ===
+                        'project'
+                    ) {
+                        const projectId =
+                            normalizedArguments
+                                .slice(
+                                    1,
+                                )
+                                .join(
+                                    ' ',
+                                )
+
+
+                        output =
+                            openProject(
+                                projectId,
+                            )
+
+                        break
+                    }
+
+
+                    output =
+                        openApp(
+                            argument,
+                        )
+
+                    break
+                }
+
+
+                case 'whoami':
+                    output =
+                        `warlley
+
+Warlley Silva Baião Braga
+Estudante de Engenharia de Software
+PUC Minas`
+                    break
+
+
+                case 'date':
+                    output =
+                        new Intl.DateTimeFormat(
+                            'pt-BR',
+                            {
+                                dateStyle:
+                                    'full',
+
+                                timeStyle:
+                                    'medium',
+                            },
+                        ).format(
+                            new Date(),
+                        )
+                    break
+
+
+                case 'echo':
+                    output =
+                        rawCommand.replace(
+                            /^echo\s*/i,
+                            '',
+                        )
+                    break
+
+
+                case 'history':
+                    output =
+                        commandHistory
+                            .concat(
+                                rawCommand,
+                            )
+                            .map(
+                                (
+                                    item,
+                                    index,
+                                ) =>
+                                    `${String(
+                                        index +
+                                        1,
+                                    ).padStart(
+                                        3,
+                                        ' ',
+                                    )}  ${item}`,
+                            )
+                            .join(
+                                '\n',
+                            )
+                    break
+
+
+                case 'github':
+                    openExternal(
+                        externalLinks.github,
+                    )
+
+                    output =
+                        'Abrindo GitHub...'
+                    break
+
+
+                case 'linkedin':
+                    openExternal(
+                        externalLinks.linkedin,
+                    )
+
+                    output =
+                        'Abrindo LinkedIn...'
+                    break
+
+
+                case 'email':
+                    window.location.href =
+                        externalLinks.email
+
+                    output =
+                        'Abrindo cliente de e-mail...'
+                    break
+
+
+                default:
+                    output =
+                        `Comando não encontrado: ${commandName}
 
 Digite help para visualizar os comandos disponíveis.`
 
-        addHistory(
-            typedCommand,
-            output,
-        )
+                    break
+            }
 
-        setCommand('')
-    }
 
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            executeCommand()
+            addHistory(
+                rawCommand,
+                output,
+            )
+
+            setCommand(
+                '',
+            )
         }
-    }
 
-    const showHint =
-        history.length === 0 &&
-        command.length === 0
+
+    /* === TECLADO === */
+
+    const handleKeyDown =
+        (
+            event,
+        ) => {
+            if (
+                event.key ===
+                'Enter'
+            ) {
+                executeCommand()
+
+                return
+            }
+
+
+            /* ----- HISTÓRICO ANTERIOR ----- */
+
+            if (
+                event.key ===
+                'ArrowUp'
+            ) {
+                event.preventDefault()
+
+
+                if (
+                    commandHistory.length ===
+                    0
+                ) {
+                    return
+                }
+
+
+                const nextIndex =
+                    historyIndex ===
+                        null
+                        ? commandHistory.length -
+                        1
+                        : Math.max(
+                            historyIndex -
+                            1,
+                            0,
+                        )
+
+
+                setHistoryIndex(
+                    nextIndex,
+                )
+
+                setCommand(
+                    commandHistory[
+                    nextIndex
+                    ],
+                )
+
+                return
+            }
+
+
+            /* ----- HISTÓRICO SEGUINTE ----- */
+
+            if (
+                event.key ===
+                'ArrowDown'
+            ) {
+                event.preventDefault()
+
+
+                if (
+                    historyIndex ===
+                    null
+                ) {
+                    return
+                }
+
+
+                const nextIndex =
+                    historyIndex +
+                    1
+
+
+                if (
+                    nextIndex >=
+                    commandHistory.length
+                ) {
+                    setHistoryIndex(
+                        null,
+                    )
+
+                    setCommand(
+                        '',
+                    )
+
+                    return
+                }
+
+
+                setHistoryIndex(
+                    nextIndex,
+                )
+
+                setCommand(
+                    commandHistory[
+                    nextIndex
+                    ],
+                )
+
+                return
+            }
+
+
+            /* ----- AUTOCOMPLETE ----- */
+
+            if (
+                event.key ===
+                'Tab'
+            ) {
+                event.preventDefault()
+
+                handleAutocomplete()
+            }
+        }
+
+
+    /* === LIMPAR TERMINAL === */
+
+    const clearTerminal =
+        () => {
+            setHistory(
+                [],
+            )
+
+            setCommand(
+                '',
+            )
+
+            inputRef.current
+                ?.focus()
+        }
+
+
+    /* === RESETAR TERMINAL === */
+
+    const resetTerminal =
+        () => {
+            setHistory(
+                [],
+            )
+
+            setCommand(
+                '',
+            )
+
+            setCommandHistory(
+                [],
+            )
+
+            setHistoryIndex(
+                null,
+            )
+
+            setCurrentPath(
+                '~/portfolio',
+            )
+
+            inputRef.current
+                ?.focus()
+        }
+
 
     return (
-        <div
-            className="portfolio-terminal"
-            ref={terminalRef}
-            onClick={() =>
-                inputRef.current?.focus()
-            }
-        >
-            {showHint && (
-                <div className="portfolio-terminal-hint">
-                    Digite <strong>help</strong> para
-                    ver os comandos disponíveis.
-                </div>
-            )}
+        <div className="portfolio-terminal-shell">
 
-            {history.map((item, index) => (
-                <div
-                    className="portfolio-terminal-history"
-                    key={`${item.command}-${index}`}
-                >
-                    <div className="portfolio-terminal-line">
-                        <span className="portfolio-terminal-user">
-                            warlley
-                        </span>
+            {/* === CABEÇALHO === */}
 
-                        <span className="portfolio-terminal-separator">
-                            @
-                        </span>
+            <header className="portfolio-terminal-header">
+                <div className="portfolio-terminal-header-info">
+                    <span className="portfolio-terminal-status" />
 
-                        <span className="portfolio-terminal-path">
-                            portfolio
-                        </span>
-
-                        <span className="portfolio-terminal-symbol">
-                            $
-                        </span>
+                    <div>
+                        <strong>
+                            WS OS Terminal
+                        </strong>
 
                         <span>
-                            {item.command}
+                            sessão local
                         </span>
                     </div>
-
-                    <pre className="portfolio-terminal-output">
-                        {item.output}
-                    </pre>
                 </div>
-            ))}
 
-            <div className="portfolio-terminal-line">
-                <span className="portfolio-terminal-user">
-                    warlley
-                </span>
 
-                <span className="portfolio-terminal-separator">
-                    @
-                </span>
+                <div className="portfolio-terminal-actions">
+                    <button
+                        type="button"
+                        onClick={
+                            clearTerminal
+                        }
+                        title="Limpar terminal"
+                        aria-label="Limpar terminal"
+                    >
+                        <Trash2
+                            size={14}
+                            strokeWidth={1.8}
+                        />
+                    </button>
 
-                <span className="portfolio-terminal-path">
-                    portfolio
-                </span>
+                    <button
+                        type="button"
+                        onClick={
+                            resetTerminal
+                        }
+                        title="Reiniciar terminal"
+                        aria-label="Reiniciar terminal"
+                    >
+                        <RotateCcw
+                            size={14}
+                            strokeWidth={1.8}
+                        />
+                    </button>
+                </div>
+            </header>
 
-                <span className="portfolio-terminal-symbol">
-                    $
-                </span>
 
-                <input
-                    ref={inputRef}
-                    className="portfolio-terminal-input"
-                    type="text"
-                    value={command}
-                    onChange={(event) =>
-                        setCommand(event.target.value)
-                    }
-                    onKeyDown={handleKeyDown}
-                    autoFocus
-                    autoComplete="off"
-                    spellCheck="false"
-                    aria-label="Terminal"
-                />
+            {/* === TERMINAL === */}
+
+            <div
+                className="portfolio-terminal"
+                ref={
+                    terminalRef
+                }
+                onClick={
+                    () =>
+                        inputRef.current
+                            ?.focus()
+                }
+            >
+
+                {/* === APRESENTAÇÃO === */}
+
+                {history.length ===
+                    0 && (
+                        <div className="portfolio-terminal-welcome">
+                            <strong>
+                                WS OS Terminal
+                            </strong>
+
+                            <span>
+                                Interface de linha de comando
+                                do portfólio.
+                            </span>
+
+                            <span>
+                                Digite{' '}
+                                <b>
+                                    help
+                                </b>{' '}
+                                para visualizar os comandos.
+                            </span>
+
+                            <span className="portfolio-terminal-shortcuts">
+                                ↑↓ histórico · Tab autocomplete
+                            </span>
+                        </div>
+                    )}
+
+
+                {/* === HISTÓRICO === */}
+
+                {history.map(
+                    (
+                        item,
+                        index,
+                    ) => (
+                        <div
+                            className="portfolio-terminal-history"
+                            key={`${item.command}-${index}`}
+                        >
+                            <div className="portfolio-terminal-line">
+                                <span className="portfolio-terminal-user">
+                                    warlley
+                                </span>
+
+                                <span className="portfolio-terminal-separator">
+                                    @
+                                </span>
+
+                                <span className="portfolio-terminal-host">
+                                    ws-os
+                                </span>
+
+                                <span className="portfolio-terminal-separator">
+                                    :
+                                </span>
+
+                                <span className="portfolio-terminal-path">
+                                    {
+                                        item.path
+                                    }
+                                </span>
+
+                                <span className="portfolio-terminal-symbol">
+                                    $
+                                </span>
+
+                                <span className="portfolio-terminal-command">
+                                    {
+                                        item.command
+                                    }
+                                </span>
+                            </div>
+
+
+                            {item.output && (
+                                <pre
+                                    className={[
+                                        'portfolio-terminal-output',
+
+                                        item.type ===
+                                            'system'
+                                            ? 'portfolio-terminal-output-system'
+                                            : '',
+                                    ]
+                                        .filter(
+                                            Boolean,
+                                        )
+                                        .join(
+                                            ' ',
+                                        )}
+                                >
+                                    {
+                                        item.output
+                                    }
+                                </pre>
+                            )}
+                        </div>
+                    ),
+                )}
+
+
+                {/* === LINHA ATUAL === */}
+
+                <div className="portfolio-terminal-line portfolio-terminal-current">
+                    <span className="portfolio-terminal-user">
+                        warlley
+                    </span>
+
+                    <span className="portfolio-terminal-separator">
+                        @
+                    </span>
+
+                    <span className="portfolio-terminal-host">
+                        ws-os
+                    </span>
+
+                    <span className="portfolio-terminal-separator">
+                        :
+                    </span>
+
+                    <span className="portfolio-terminal-path">
+                        {
+                            promptPath
+                        }
+                    </span>
+
+                    <span className="portfolio-terminal-symbol">
+                        $
+                    </span>
+
+                    <input
+                        ref={
+                            inputRef
+                        }
+                        className="portfolio-terminal-input"
+                        type="text"
+                        value={
+                            command
+                        }
+                        onChange={
+                            (
+                                event,
+                            ) => {
+                                setCommand(
+                                    event
+                                        .target
+                                        .value,
+                                )
+
+                                setHistoryIndex(
+                                    null,
+                                )
+                            }
+                        }
+                        onKeyDown={
+                            handleKeyDown
+                        }
+                        autoFocus
+                        autoComplete="off"
+                        spellCheck="false"
+                        aria-label="Terminal"
+                    />
+                </div>
             </div>
         </div>
     )
 }
+
 
 export default Terminal
