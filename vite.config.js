@@ -6,6 +6,5 @@ export default defineConfig({
     react(),
   ],
 
-  base:
-    '/portfolio-warlley/',
+  base: '/portfolio-warlley/',
 })
