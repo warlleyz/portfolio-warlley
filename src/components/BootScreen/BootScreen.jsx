@@ -29,12 +29,28 @@ function BootScreen({
     const [
         currentStep,
         setCurrentStep,
-    ] = useState(0)
+    ] = useState(
+        () => {
+            const reducedMotion =
+                window.matchMedia(
+                    '(prefers-reduced-motion: reduce)',
+                ).matches
+
+
+            return reducedMotion
+                ? BOOT_STEPS.length - 1
+                : 0
+        },
+    )
+
+    const baseUrl =
+        import.meta.env.BASE_URL
+
 
     const logoSource =
         theme === 'dark'
-            ? '/images/branding/ws-os-dark.png'
-            : '/images/branding/ws-os-light.png'
+            ? `${baseUrl}images/branding/ws-os-dark.png`
+            : `${baseUrl}images/branding/ws-os-light.png`
 
     const screenClassName = [
         'boot-screen',
@@ -55,11 +71,9 @@ function BootScreen({
                 '(prefers-reduced-motion: reduce)',
             ).matches
 
-        if (reducedMotion) {
-            setCurrentStep(
-                BOOT_STEPS.length - 1,
-            )
-
+        if (
+            reducedMotion
+        ) {
             return
         }
 

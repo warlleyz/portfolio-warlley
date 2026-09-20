@@ -374,101 +374,162 @@
 
 
 /* === REDIMENSIONAMENTO === */
-.window-resize {
-    position: absolute;
 
-    z-index: 10;
+.window-resize {
+    position:
+        absolute;
+
+    z-index:
+        10;
 }
 
 
 /* ----- LATERAIS ----- */
-.window-resize-top {
-    top: 0;
-    right: 8px;
-    left: 8px;
 
-    height: 5px;
+.window-resize-top {
+    top:
+        0;
+
+    right:
+        8px;
+
+    left:
+        8px;
+
+    height:
+        5px;
 
     cursor:
+        var(--cursor-resize-vertical),
         ns-resize;
 }
 
 .window-resize-bottom {
-    right: 8px;
-    bottom: 0;
-    left: 8px;
+    right:
+        8px;
 
-    height: 5px;
+    bottom:
+        0;
+
+    left:
+        8px;
+
+    height:
+        5px;
 
     cursor:
+        var(--cursor-resize-vertical),
         ns-resize;
 }
 
 .window-resize-left {
-    top: 8px;
-    bottom: 8px;
-    left: 0;
+    top:
+        8px;
 
-    width: 5px;
+    bottom:
+        8px;
+
+    left:
+        0;
+
+    width:
+        5px;
 
     cursor:
+        var(--cursor-resize-horizontal),
         ew-resize;
 }
 
 .window-resize-right {
-    top: 8px;
-    right: 0;
-    bottom: 8px;
+    top:
+        8px;
 
-    width: 5px;
+    right:
+        0;
+
+    bottom:
+        8px;
+
+    width:
+        5px;
 
     cursor:
+        var(--cursor-resize-horizontal),
         ew-resize;
 }
 
 
 /* ----- CANTOS ----- */
-.window-resize-top-left {
-    top: 0;
-    left: 0;
 
-    width: 10px;
-    height: 10px;
+.window-resize-top-left {
+    top:
+        0;
+
+    left:
+        0;
+
+    width:
+        10px;
+
+    height:
+        10px;
 
     cursor:
+        var(--cursor-resize-diagonal-1),
         nwse-resize;
 }
 
 .window-resize-top-right {
-    top: 0;
-    right: 0;
+    top:
+        0;
 
-    width: 10px;
-    height: 10px;
+    right:
+        0;
+
+    width:
+        10px;
+
+    height:
+        10px;
 
     cursor:
+        var(--cursor-resize-diagonal-2),
         nesw-resize;
 }
 
 .window-resize-bottom-left {
-    bottom: 0;
-    left: 0;
+    bottom:
+        0;
 
-    width: 10px;
-    height: 10px;
+    left:
+        0;
+
+    width:
+        10px;
+
+    height:
+        10px;
 
     cursor:
+        var(--cursor-resize-diagonal-2),
         nesw-resize;
 }
 
 .window-resize-bottom-right {
-    right: 0;
-    bottom: 0;
+    right:
+        0;
 
-    width: 10px;
-    height: 10px;
+    bottom:
+        0;
+
+    width:
+        10px;
+
+    height:
+        10px;
 
     cursor:
+        var(--cursor-resize-diagonal-1),
         nwse-resize;
 }
 

@@ -1,4 +1,5 @@
 /* === CONTROLES RÁPIDOS === */
+
 .quick-controls {
     position: absolute;
 
@@ -11,7 +12,8 @@
         min(285px,
             calc(100vw - 22px));
 
-    overflow: hidden;
+    overflow:
+        hidden;
 
     border:
         1px solid var(--glass-border);
@@ -44,10 +46,15 @@
             1,
             0.36,
             1);
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* === CABEÇALHO === */
+
 .quick-controls-header {
     padding:
         11px 13px 9px;
@@ -58,8 +65,10 @@
 
 
 /* ----- IDENTIFICAÇÃO ----- */
+
 .quick-controls-label {
-    display: block;
+    display:
+        block;
 
     margin-bottom:
         2px;
@@ -82,8 +91,10 @@
 
 
 /* ----- TÍTULO ----- */
+
 .quick-controls-title {
-    margin: 0;
+    margin:
+        0;
 
     color:
         var(--text-primary);
@@ -100,11 +111,13 @@
 
 
 /* === CONTEÚDO === */
+
 .quick-controls-content {
     display: flex;
     flex-direction: column;
 
-    gap: 7px;
+    gap:
+        7px;
 
     padding:
         8px;
@@ -112,13 +125,16 @@
 
 
 /* === TEMA === */
+
 .quick-control-theme {
-    width: 100%;
+    width:
+        100%;
 
     display: flex;
     align-items: center;
 
-    gap: 9px;
+    gap:
+        9px;
 
     padding:
         8px 9px;
@@ -139,6 +155,10 @@
 
     text-align:
         left;
+
+    cursor:
+        var(--cursor-pointer),
+        pointer;
 
     transition:
         background var(--transition-fast),
@@ -161,15 +181,20 @@
 
 
 /* ----- ÍCONE ----- */
+
 .quick-control-theme-icon {
-    width: 32px;
-    height: 32px;
+    width:
+        32px;
+
+    height:
+        32px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    flex-shrink: 0;
+    flex-shrink:
+        0;
 
     border-radius:
         8px;
@@ -179,13 +204,23 @@
 
     background:
         var(--accent-soft);
+
+    pointer-events:
+        none;
 }
 
 
 /* ----- TEXTO ----- */
+
 .quick-control-theme-text {
-    display: flex;
-    flex-direction: column;
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    pointer-events:
+        none;
 }
 
 .quick-control-theme-text strong {
@@ -218,6 +253,7 @@
 
 
 /* === GRUPO === */
+
 .quick-control-group {
     padding:
         9px 10px;
@@ -232,28 +268,38 @@
         color-mix(in srgb,
             var(--surface-secondary) 18%,
             transparent);
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* === CABEÇALHO DO CONTROLE === */
+
 .quick-control-heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    gap: 9px;
+    gap:
+        9px;
 
     margin-bottom:
         8px;
 }
 
 .quick-control-heading>div {
-    display: flex;
-    flex-direction: column;
+    display:
+        flex;
+
+    flex-direction:
+        column;
 }
 
 
 /* ----- TÍTULO DO CONTROLE ----- */
+
 .quick-control-heading strong {
     color:
         var(--text-primary);
@@ -270,6 +316,7 @@
 
 
 /* ----- DESCRIÇÃO ----- */
+
 .quick-control-heading span {
     margin-top:
         2px;
@@ -286,8 +333,10 @@
 
 
 /* ----- VALOR ----- */
+
 .quick-control-value {
-    margin: 0 !important;
+    margin:
+        0 !important;
 
     color:
         var(--text-secondary) !important;
@@ -304,11 +353,16 @@
 
 
 /* === RANGE === */
-.quick-control-range {
-    width: 100%;
-    height: 4px;
 
-    margin: 0;
+.quick-control-range {
+    width:
+        100%;
+
+    height:
+        4px;
+
+    margin:
+        0;
 
     appearance:
         none;
@@ -330,11 +384,13 @@
             var(--border-default) 100%);
 
     cursor:
+        var(--cursor-pointer),
         pointer;
 }
 
 
 /* ----- TRILHO WEBKIT ----- */
+
 .quick-control-range::-webkit-slider-runnable-track {
     height:
         4px;
@@ -344,10 +400,15 @@
 
     background:
         transparent;
+
+    cursor:
+        var(--cursor-pointer),
+        pointer;
 }
 
 
 /* ----- BOTÃO WEBKIT ----- */
+
 .quick-control-range::-webkit-slider-thumb {
     width:
         15px;
@@ -379,6 +440,10 @@
             0,
             0.18);
 
+    cursor:
+        var(--cursor-pointer),
+        pointer;
+
     transition:
         transform var(--transition-fast);
 }
@@ -390,6 +455,7 @@
 
 
 /* ----- FIREFOX ----- */
+
 .quick-control-range::-moz-range-track {
     height:
         4px;
@@ -399,6 +465,10 @@
 
     background:
         transparent;
+
+    cursor:
+        var(--cursor-pointer),
+        pointer;
 }
 
 .quick-control-range::-moz-range-progress {
@@ -433,11 +503,17 @@
             0,
             0,
             0.18);
+
+    cursor:
+        var(--cursor-pointer),
+        pointer;
 }
 
 
 /* === ANIMAÇÃO === */
+
 @keyframes quick-controls-open {
+
     from {
         opacity:
             0;
@@ -457,7 +533,9 @@
 
 
 /* === RESPONSIVIDADE === */
+
 @media (max-width: 600px) {
+
     .quick-controls {
         bottom:
             68px;
@@ -470,6 +548,7 @@
 
 
 /* === ACESSIBILIDADE === */
+
 @media (prefers-reduced-motion: reduce) {
 
     .quick-controls,

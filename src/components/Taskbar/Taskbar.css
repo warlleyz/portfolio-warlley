@@ -1,4 +1,5 @@
 /* === TASKBAR === */
+
 .taskbar {
     position: absolute;
 
@@ -16,10 +17,15 @@
 
     user-select:
         none;
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* === CONTEÚDO PRINCIPAL === */
+
 .taskbar-main {
     min-height: 52px;
 
@@ -38,9 +44,9 @@
         16px;
 
     background:
-            color-mix(in srgb,
-                var(--glass-background-strong) var(--runtime-glass-opacity, 78%),
-                transparent);
+        color-mix(in srgb,
+            var(--glass-background-strong) var(--runtime-glass-opacity, 78%),
+            transparent);
 
     backdrop-filter:
         blur(24px) saturate(135%);
@@ -50,10 +56,15 @@
 
     box-shadow:
         var(--shadow-medium);
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* === DIVISORES === */
+
 .taskbar-divider,
 .taskbar-system-divider {
     width: 1px;
@@ -62,10 +73,15 @@
 
     background:
         var(--border-subtle);
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* ----- DIVISOR PRINCIPAL ----- */
+
 .taskbar-divider {
     height: 26px;
 
@@ -75,6 +91,7 @@
 
 
 /* ----- DIVISOR DO SISTEMA ----- */
+
 .taskbar-system-divider {
     height: 28px;
 
@@ -84,6 +101,7 @@
 
 
 /* === BOTÕES === */
+
 .taskbar-button {
     position: relative;
 
@@ -108,6 +126,7 @@
         transparent;
 
     cursor:
+        var(--cursor-pointer),
         pointer;
 
     transition:
@@ -129,7 +148,9 @@
         scale(0.94);
 }
 
+
 /* === CONTADOR DE NOTIFICAÇÕES === */
+
 .taskbar-notification-badge {
     position: absolute;
 
@@ -171,7 +192,9 @@
         none;
 }
 
+
 /* ----- BOTÃO ATIVO ----- */
+
 .taskbar-button-active {
     color:
         var(--accent-primary);
@@ -180,7 +203,9 @@
         var(--active-background);
 }
 
+
 /* === WS MENU === */
+
 .taskbar-menu-button {
     width: 38px;
     height: 38px;
@@ -188,6 +213,7 @@
 
 
 /* ----- MENU ABERTO ----- */
+
 .taskbar-menu-button-active {
     background:
         var(--active-background);
@@ -195,6 +221,7 @@
 
 
 /* ----- LOGO ----- */
+
 .taskbar-menu-logo {
     width: 28px;
     height: 28px;
@@ -246,6 +273,7 @@
 
 
 /* ----- MENU ABERTO / LOGO ----- */
+
 .taskbar-menu-button-active .taskbar-menu-logo {
     color:
         var(--accent-primary);
@@ -261,6 +289,7 @@
 
 
 /* === APLICATIVOS === */
+
 .taskbar-apps {
     max-width:
         min(420px,
@@ -276,6 +305,10 @@
 
     scrollbar-width:
         none;
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 .taskbar-apps::-webkit-scrollbar {
@@ -285,6 +318,7 @@
 
 
 /* === APP === */
+
 .taskbar-app {
     position: relative;
 
@@ -310,6 +344,7 @@
         transparent;
 
     cursor:
+        var(--cursor-pointer),
         pointer;
 
     transition:
@@ -335,14 +370,19 @@
 
 
 /* ----- ÍCONE ----- */
+
 .taskbar-app-icon {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    pointer-events:
+        none;
 }
 
 
 /* ----- ESTADO ----- */
+
 .taskbar-app-state {
     position: absolute;
 
@@ -366,10 +406,14 @@
         width var(--transition-fast),
         background var(--transition-fast),
         opacity var(--transition-fast);
+
+    pointer-events:
+        none;
 }
 
 
 /* ----- ATIVO ----- */
+
 .taskbar-app-active {
     color:
         var(--accent-primary);
@@ -390,6 +434,7 @@
 
 
 /* ----- MINIMIZADO ----- */
+
 .taskbar-app-minimized {
     color:
         var(--text-muted);
@@ -407,15 +452,21 @@
 
 
 /* === SISTEMA === */
+
 .taskbar-system {
     display: flex;
     align-items: center;
 
     gap: 2px;
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* === STATUS === */
+
 .taskbar-status {
     min-height: 38px;
 
@@ -430,6 +481,10 @@
     border-radius:
         10px;
 
+    cursor:
+        var(--cursor-default),
+        default;
+
     transition:
         background var(--transition-fast);
 }
@@ -441,6 +496,7 @@
 
 
 /* === CLIMA === */
+
 .weather-widget {
     min-height: 34px;
 
@@ -458,10 +514,15 @@
 
     font-size:
         11px;
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* === RELÓGIO === */
+
 .taskbar-clock {
     min-width: 76px;
     height: 38px;
@@ -479,10 +540,15 @@
 
     line-height:
         1;
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* ----- HORA ----- */
+
 .taskbar-time {
     font-size:
         12px;
@@ -496,6 +562,7 @@
 
 
 /* ----- DATA ----- */
+
 .taskbar-date {
     margin-top:
         4px;
@@ -519,8 +586,8 @@
 
 /* === RESPONSIVIDADE === */
 
-/* ----- TELAS MÉDIAS ----- */
 @media (max-width: 900px) {
+
     .taskbar {
         max-width:
             calc(100vw - 16px);
@@ -546,8 +613,8 @@
 }
 
 
-/* ----- TELAS ESTREITAS ----- */
 @media (max-width: 700px) {
+
     .taskbar {
         bottom:
             6px;
@@ -598,8 +665,8 @@
 }
 
 
-/* ----- TELAS MUITO ESTREITAS ----- */
 @media (max-width: 480px) {
+
     .taskbar-main {
         min-height:
             48px;
@@ -672,7 +739,6 @@
 
 /* === ACESSIBILIDADE === */
 
-/* ----- FOCO ----- */
 .taskbar-button:focus-visible,
 .taskbar-app:focus-visible {
     outline:
@@ -683,7 +749,6 @@
 }
 
 
-/* ----- MOVIMENTO REDUZIDO ----- */
 @media (prefers-reduced-motion: reduce) {
 
     .taskbar-main,

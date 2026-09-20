@@ -1455,8 +1455,7 @@ Digite projects para visualizar os projetos disponíveis.`
             }
 
 
-            let output =
-                ''
+            let output
 
 
             switch (

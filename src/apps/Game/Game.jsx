@@ -1,4 +1,5 @@
 import {
+    useCallback,
     useEffect,
     useRef,
     useState,
@@ -556,7 +557,20 @@ function Game({
 
 
     useEffect(() => {
-        loadRanking()
+        const timer =
+            setTimeout(
+                () => {
+                    loadRanking()
+                },
+                0,
+            )
+
+
+        return () => {
+            clearTimeout(
+                timer,
+            )
+        }
     }, [])
 
 
@@ -564,11 +578,27 @@ function Game({
 
     useEffect(() => {
         if (
-            !isActive &&
-            !gameOver
+            isActive ||
+            gameOver
         ) {
-            setPaused(
-                true,
+            return
+        }
+
+
+        const timer =
+            setTimeout(
+                () => {
+                    setPaused(
+                        true,
+                    )
+                },
+                0,
+            )
+
+
+        return () => {
+            clearTimeout(
+                timer,
             )
         }
     }, [
@@ -687,9 +717,10 @@ function Game({
     /* === DIREÇÃO === */
 
     const changeDirection =
-        (
-            newDirection,
-        ) => {
+        useCallback(
+            (
+                newDirection,
+            ) => {
             if (
                 gameOver ||
                 paused ||
@@ -717,15 +748,22 @@ function Game({
             }
 
 
-            directionRef.current =
-                newDirection
-        }
+                directionRef.current =
+                    newDirection
+            },
+            [
+                gameOver,
+                paused,
+                isActive,
+            ],
+        )
 
 
     /* === REINICIAR === */
 
     const resetGame =
-        () => {
+        useCallback(
+            () => {
             const newFoods =
                 createInitialFoods()
 
@@ -775,27 +813,34 @@ function Game({
             setSaveError(
                 '',
             )
-        }
+            },
+            [],
+        )
 
 
     /* === PAUSAR === */
 
     const togglePause =
-        () => {
-            if (
-                gameOver
-            ) {
-                return
-            }
+        useCallback(
+            () => {
+                if (
+                    gameOver
+                ) {
+                    return
+                }
 
 
-            setPaused(
-                (
-                    current,
-                ) =>
-                    !current,
-            )
-        }
+                setPaused(
+                    (
+                        current,
+                    ) =>
+                        !current,
+                )
+            },
+            [
+                gameOver,
+            ],
+        )
 
 
     /* === TECLADO === */
@@ -943,9 +988,10 @@ function Game({
             )
         }
     }, [
-        gameOver,
-        paused,
         isActive,
+        changeDirection,
+        resetGame,
+        togglePause,
     ])
 
 

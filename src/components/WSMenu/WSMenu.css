@@ -1,4 +1,5 @@
 /* === WS MENU === */
+
 .ws-menu {
     position: absolute;
 
@@ -27,9 +28,9 @@
         18px;
 
     background:
-            color-mix(in srgb,
-                var(--glass-background-strong) var(--runtime-glass-opacity, 78%),
-                transparent);
+        color-mix(in srgb,
+            var(--glass-background-strong) var(--runtime-glass-opacity, 78%),
+            transparent);
 
     color:
         var(--text-primary);
@@ -51,10 +52,15 @@
             1,
             0.36,
             1);
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* === TOPO === */
+
 .ws-menu-top {
     flex-shrink: 0;
 
@@ -67,6 +73,7 @@
 
 
 /* === CABEÇALHO === */
+
 .ws-menu-heading {
     display: flex;
     align-items: center;
@@ -79,6 +86,7 @@
 
 
 /* ----- MARCA ----- */
+
 .ws-menu-brand {
     width: 34px;
     height: 34px;
@@ -110,6 +118,7 @@
 
 
 /* ----- IDENTIFICAÇÃO ----- */
+
 .ws-menu-label {
     display: block;
 
@@ -134,8 +143,10 @@
 
 
 /* ----- TÍTULO ----- */
+
 .ws-menu-title {
-    margin: 0;
+    margin:
+        0;
 
     color:
         var(--text-primary);
@@ -152,6 +163,7 @@
 
 
 /* === BUSCA === */
+
 .ws-menu-search {
     height: 38px;
 
@@ -185,6 +197,7 @@
 
 
 /* ----- FOCO ----- */
+
 .ws-menu-search:focus-within {
     border-color:
         color-mix(in srgb,
@@ -204,14 +217,22 @@
 
 
 /* ----- INPUT ----- */
+
 .ws-menu-search input {
-    width: 100%;
-    min-width: 0;
+    width:
+        100%;
 
-    padding: 0;
+    min-width:
+        0;
 
-    border: 0;
-    outline: 0;
+    padding:
+        0;
+
+    border:
+        0;
+
+    outline:
+        0;
 
     color:
         var(--text-primary);
@@ -227,6 +248,10 @@
 
     box-shadow:
         none;
+
+    cursor:
+        var(--cursor-text),
+        text;
 }
 
 .ws-menu-search input:focus,
@@ -245,12 +270,15 @@
 
 
 /* === CONTEÚDO === */
+
 .ws-menu-content {
     flex: 1;
 
-    min-height: 0;
+    min-height:
+        0;
 
-    overflow-y: auto;
+    overflow-y:
+        auto;
 
     padding:
         18px;
@@ -260,10 +288,15 @@
 
     scrollbar-color:
         var(--border-default) transparent;
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* === GRID DE APPS === */
+
 .ws-menu-grid {
     display: grid;
 
@@ -281,19 +314,23 @@
 
 
 /* === APP === */
+
 .ws-menu-app {
-    min-width: 0;
+    min-width:
+        0;
 
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    gap: 7px;
+    gap:
+        7px;
 
     padding:
         5px;
 
-    border: 0;
+    border:
+        0;
 
     border-radius:
         12px;
@@ -305,6 +342,7 @@
         transparent;
 
     cursor:
+        var(--cursor-pointer),
         pointer;
 
     transition:
@@ -326,6 +364,7 @@
 
 
 /* ----- ÍCONE ----- */
+
 .ws-menu-app-icon {
     position: relative;
 
@@ -352,10 +391,14 @@
 
     box-shadow:
         var(--shadow-small);
+
+    pointer-events:
+        none;
 }
 
 
 /* ----- APP ATIVO ----- */
+
 .ws-menu-app-active .ws-menu-app-icon {
     color:
         var(--accent-primary);
@@ -369,6 +412,7 @@
 
 
 /* ----- ESTADO ----- */
+
 .ws-menu-app-state {
     position: absolute;
 
@@ -386,6 +430,9 @@
 
     background:
         var(--text-muted);
+
+    pointer-events:
+        none;
 }
 
 .ws-menu-app-active .ws-menu-app-state {
@@ -395,10 +442,13 @@
 
 
 /* ----- NOME ----- */
-.ws-menu-app-name {
-    width: 100%;
 
-    overflow: hidden;
+.ws-menu-app-name {
+    width:
+        100%;
+
+    overflow:
+        hidden;
 
     color:
         inherit;
@@ -417,10 +467,14 @@
 
     white-space:
         nowrap;
+
+    pointer-events:
+        none;
 }
 
 
 /* === PESQUISA GLOBAL === */
+
 .ws-search-results {
     display: flex;
     flex-direction: column;
@@ -428,6 +482,7 @@
 
 
 /* ----- TÍTULO DOS RESULTADOS ----- */
+
 .ws-search-heading {
     margin:
         0 4px 9px;
@@ -450,23 +505,30 @@
 
 
 /* === LISTA DE RESULTADOS === */
+
 .ws-search-list {
     display: flex;
     flex-direction: column;
 
-    gap: 3px;
+    gap:
+        3px;
 }
 
 
 /* ----- RESULTADO ----- */
+
 .ws-search-result {
-    width: 100%;
-    min-height: 52px;
+    width:
+        100%;
+
+    min-height:
+        52px;
 
     display: flex;
     align-items: center;
 
-    gap: 11px;
+    gap:
+        11px;
 
     padding:
         7px 9px;
@@ -484,6 +546,7 @@
         transparent;
 
     cursor:
+        var(--cursor-pointer),
         pointer;
 
     text-align:
@@ -508,6 +571,7 @@
 
 
 /* ----- ÍCONE DO RESULTADO ----- */
+
 .ws-search-result-icon {
     width: 36px;
     height: 36px;
@@ -516,7 +580,8 @@
     align-items: center;
     justify-content: center;
 
-    flex-shrink: 0;
+    flex-shrink:
+        0;
 
     border:
         1px solid var(--border-subtle);
@@ -531,20 +596,33 @@
         color-mix(in srgb,
             var(--accent-soft) 62%,
             transparent);
+
+    pointer-events:
+        none;
 }
 
 
 /* ----- TEXTO ----- */
+
 .ws-search-result-text {
-    min-width: 0;
+    min-width:
+        0;
 
     display: flex;
-    flex: 1;
-    flex-direction: column;
+
+    flex:
+        1;
+
+    flex-direction:
+        column;
+
+    pointer-events:
+        none;
 }
 
 .ws-search-result-text strong {
-    overflow: hidden;
+    overflow:
+        hidden;
 
     color:
         var(--text-primary);
@@ -575,8 +653,10 @@
 
 
 /* ----- TIPO ----- */
+
 .ws-search-result-type {
-    flex-shrink: 0;
+    flex-shrink:
+        0;
 
     padding:
         3px 6px;
@@ -595,25 +675,35 @@
 
     font-weight:
         600;
+
+    pointer-events:
+        none;
 }
 
 
 /* === RESULTADO VAZIO === */
+
 .ws-menu-empty {
-    min-height: 190px;
+    min-height:
+        190px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    gap: 7px;
+    gap:
+        7px;
 
     color:
         var(--text-muted);
 
     text-align:
         center;
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 .ws-menu-empty strong {
@@ -634,16 +724,20 @@
 
 
 /* === RODAPÉ === */
+
 .ws-menu-footer {
-    min-height: 56px;
+    min-height:
+        56px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    flex-shrink: 0;
+    flex-shrink:
+        0;
 
-    gap: 14px;
+    gap:
+        14px;
 
     padding:
         9px 16px;
@@ -655,28 +749,39 @@
         color-mix(in srgb,
             var(--surface-secondary) 18%,
             transparent);
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* === PERFIL === */
+
 .ws-menu-profile {
-    min-width: 0;
+    min-width:
+        0;
 
     display: flex;
     align-items: center;
 
-    gap: 9px;
+    gap:
+        9px;
 }
 
 .ws-menu-avatar {
-    width: 30px;
-    height: 30px;
+    width:
+        30px;
+
+    height:
+        30px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    flex-shrink: 0;
+    flex-shrink:
+        0;
 
     border:
         1px solid var(--border-default);
@@ -698,10 +803,14 @@
 }
 
 .ws-menu-profile-text {
-    min-width: 0;
+    min-width:
+        0;
 
-    display: flex;
-    flex-direction: column;
+    display:
+        flex;
+
+    flex-direction:
+        column;
 }
 
 .ws-menu-profile-text strong {
@@ -728,14 +837,17 @@
 
 
 /* === GITHUB === */
+
 .ws-menu-github {
-    min-height: 32px;
+    min-height:
+        32px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    gap: 6px;
+    gap:
+        6px;
 
     padding:
         0 9px;
@@ -748,6 +860,10 @@
 
     font-size:
         10px;
+
+    cursor:
+        var(--cursor-pointer),
+        pointer;
 
     transition:
         color var(--transition-fast),
@@ -764,7 +880,9 @@
 
 
 /* === ANIMAÇÃO === */
+
 @keyframes ws-menu-open {
+
     from {
         opacity:
             0;
@@ -784,7 +902,9 @@
 
 
 /* === RESPONSIVIDADE === */
+
 @media (max-width: 600px) {
+
     .ws-menu {
         bottom:
             68px;
@@ -806,6 +926,7 @@
 
 
 @media (max-width: 420px) {
+
     .ws-menu-top {
         padding:
             15px 14px 12px;
@@ -834,6 +955,7 @@
 
 
 /* === ACESSIBILIDADE === */
+
 @media (prefers-reduced-motion: reduce) {
 
     .ws-menu,

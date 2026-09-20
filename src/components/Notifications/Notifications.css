@@ -1,4 +1,5 @@
 /* === NOTIFICAÇÕES === */
+
 .notifications-panel {
     position: absolute;
 
@@ -11,7 +12,8 @@
         min(300px,
             calc(100vw - 22px));
 
-    overflow: hidden;
+    overflow:
+        hidden;
 
     border:
         1px solid var(--glass-border);
@@ -44,16 +46,22 @@
             1,
             0.36,
             1);
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* === CABEÇALHO === */
+
 .notifications-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    gap: 10px;
+    gap:
+        10px;
 
     padding:
         11px 13px 9px;
@@ -64,8 +72,10 @@
 
 
 /* ----- IDENTIFICAÇÃO ----- */
+
 .notifications-label {
-    display: block;
+    display:
+        block;
 
     margin-bottom:
         2px;
@@ -88,8 +98,10 @@
 
 
 /* ----- TÍTULO ----- */
+
 .notifications-title {
-    margin: 0;
+    margin:
+        0;
 
     color:
         var(--text-primary);
@@ -106,15 +118,20 @@
 
 
 /* === LIMPAR === */
+
 .notifications-clear {
-    width: 30px;
-    height: 30px;
+    width:
+        30px;
+
+    height:
+        30px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    flex-shrink: 0;
+    flex-shrink:
+        0;
 
     border:
         0;
@@ -129,6 +146,7 @@
         transparent;
 
     cursor:
+        var(--cursor-pointer),
         pointer;
 
     transition:
@@ -152,11 +170,13 @@
 
 
 /* === CONTEÚDO === */
+
 .notifications-content {
     display: flex;
     flex-direction: column;
 
-    gap: 6px;
+    gap:
+        6px;
 
     max-height:
         310px;
@@ -166,27 +186,30 @@
 
     overflow-y:
         auto;
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 
 /* === NOTIFICAÇÃO === */
+
 .notification-item {
+    width:
+        100%;
+
     display: flex;
     align-items: flex-start;
 
-    width:
-            100%;
-    
-        text-align:
-            left;
-
-    gap: 9px;
+    gap:
+        9px;
 
     padding:
         9px;
 
     border:
-            1px solid var(--border-subtle);
+        1px solid var(--border-subtle);
 
     border-radius:
         10px;
@@ -196,11 +219,18 @@
             var(--surface-secondary) 17%,
             transparent);
 
+    text-align:
+        left;
+
+    cursor:
+        var(--cursor-default),
+        default;
+
     transition:
-            background var(--transition-fast),
-            border-color var(--transition-fast),
-            opacity var(--transition-fast),
-            transform var(--transition-fast);
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        opacity var(--transition-fast),
+        transform var(--transition-fast);
 }
 
 .notification-item:hover {
@@ -211,9 +241,12 @@
         var(--hover-background);
 }
 
+
 /* === NOTIFICAÇÃO INTERATIVA === */
+
 .notification-action {
     cursor:
+        var(--cursor-pointer),
         pointer;
 }
 
@@ -229,10 +262,13 @@
 
 .notification-item:disabled {
     cursor:
-        default;
+        var(--cursor-not-allowed),
+        not-allowed;
 }
 
+
 /* ----- NÃO LIDA ----- */
+
 .notification-unread {
     border-color:
         color-mix(in srgb,
@@ -247,6 +283,7 @@
 
 
 /* ----- LIDA ----- */
+
 .notification-read {
     opacity:
         0.76;
@@ -259,15 +296,20 @@
 
 
 /* === ÍCONE === */
+
 .notification-icon {
-    width: 30px;
-    height: 30px;
+    width:
+        30px;
+
+    height:
+        30px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    flex-shrink: 0;
+    flex-shrink:
+        0;
 
     border-radius:
         8px;
@@ -277,32 +319,45 @@
 
     background:
         var(--accent-soft);
+
+    pointer-events:
+        none;
 }
 
 
 /* === TEXTO === */
-.notification-text {
-    min-width: 0;
 
-    flex: 1;
+.notification-text {
+    min-width:
+        0;
+
+    flex:
+        1;
 
     display: flex;
     flex-direction: column;
+
+    pointer-events:
+        none;
 }
 
 
 /* ----- LINHA DO TÍTULO ----- */
+
 .notification-title-row {
     display: flex;
     align-items: center;
 
-    gap: 6px;
+    gap:
+        6px;
 }
 
 .notification-title-row strong {
-    min-width: 0;
+    min-width:
+        0;
 
-    overflow: hidden;
+    overflow:
+        hidden;
 
     color:
         var(--text-primary);
@@ -325,21 +380,30 @@
 
 
 /* ----- INDICADOR NÃO LIDO ----- */
-.notification-unread-dot {
-    width: 5px;
-    height: 5px;
 
-    flex-shrink: 0;
+.notification-unread-dot {
+    width:
+        5px;
+
+    height:
+        5px;
+
+    flex-shrink:
+        0;
 
     border-radius:
         50%;
 
     background:
         var(--accent-primary);
+
+    pointer-events:
+        none;
 }
 
 
 /* ----- DESCRIÇÃO ----- */
+
 .notification-text>span {
     margin-top:
         3px;
@@ -356,6 +420,7 @@
 
 
 /* ----- HORÁRIO ----- */
+
 .notification-text small {
     margin-top:
         5px;
@@ -372,6 +437,7 @@
 
 
 /* === SEM NOTIFICAÇÕES === */
+
 .notifications-empty {
     min-height:
         135px;
@@ -389,11 +455,18 @@
 
     text-align:
         center;
+
+    cursor:
+        var(--cursor-default),
+        default;
 }
 
 .notifications-empty-icon {
-    width: 40px;
-    height: 40px;
+    width:
+        40px;
+
+    height:
+        40px;
 
     display: flex;
     align-items: center;
@@ -436,6 +509,7 @@
 
 
 /* === SCROLL === */
+
 .notifications-content::-webkit-scrollbar {
     width:
         5px;
@@ -452,6 +526,10 @@
 
     background:
         var(--border-default);
+
+    cursor:
+        var(--cursor-pointer),
+        pointer;
 }
 
 .notifications-content::-webkit-scrollbar-thumb:hover {
@@ -461,7 +539,9 @@
 
 
 /* === ANIMAÇÃO === */
+
 @keyframes notifications-open {
+
     from {
         opacity:
             0;
@@ -481,7 +561,9 @@
 
 
 /* === RESPONSIVIDADE === */
+
 @media (max-width: 600px) {
+
     .notifications-panel {
         bottom:
             68px;
@@ -499,6 +581,7 @@
 
 
 /* === ACESSIBILIDADE === */
+
 @media (prefers-reduced-motion: reduce) {
 
     .notifications-panel,

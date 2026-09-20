@@ -9,6 +9,44 @@ import Desktop from './components/Desktop/Desktop'
 const BOOT_MINIMUM_TIME = 1200
 const BOOT_EXIT_TIME = 420
 
+const BASE_URL =
+  import.meta.env.BASE_URL
+
+const globalAssets = {
+  cursorDefault:
+    `${BASE_URL}cursor-default.svg`,
+
+  cursorPointer:
+    `${BASE_URL}cursor-pointer.svg`,
+
+  cursorGrab:
+    `${BASE_URL}cursor-grab.svg`,
+
+  cursorGrabbing:
+    `${BASE_URL}cursor-grabbing.svg`,
+
+  cursorText:
+    `${BASE_URL}cursor-text.svg`,
+
+  cursorResizeHorizontal:
+    `${BASE_URL}cursor-resize-horizontal.svg`,
+
+  cursorResizeVertical:
+    `${BASE_URL}cursor-resize-vertical.svg`,
+
+  cursorResizeDiagonal1:
+    `${BASE_URL}cursor-resize-diagonal-1.svg`,
+
+  cursorResizeDiagonal2:
+    `${BASE_URL}cursor-resize-diagonal-2.svg`,
+
+  cursorMove:
+    `${BASE_URL}cursor-move.svg`,
+
+  cursorNotAllowed:
+    `${BASE_URL}cursor-not-allowed.svg`,
+}
+
 const getInitialTheme = () => {
   const savedTheme =
     localStorage.getItem('theme')
@@ -42,11 +80,76 @@ function App() {
   ] = useState(getInitialTheme)
 
 
-  /* === TEMA === */
+  /* === TEMA E ASSETS GLOBAIS === */
   useEffect(() => {
-    document.documentElement.setAttribute(
+    const root =
+      document.documentElement
+
+
+    root.setAttribute(
       'data-theme',
       theme,
+    )
+
+
+    root.style.setProperty(
+      '--wallpaper-image',
+      `url("${BASE_URL}wallpapers/ws-${theme}.png")`,
+    )
+
+    root.style.setProperty(
+      '--cursor-default',
+      `url("${globalAssets.cursorDefault}") 4 2`,
+    )
+
+    root.style.setProperty(
+      '--cursor-pointer',
+      `url("${globalAssets.cursorPointer}") 4 2`,
+    )
+
+    root.style.setProperty(
+      '--cursor-grab',
+      `url("${globalAssets.cursorGrab}") 8 8`,
+    )
+
+    root.style.setProperty(
+      '--cursor-grabbing',
+      `url("${globalAssets.cursorGrabbing}") 8 8`,
+    )
+
+    root.style.setProperty(
+      '--cursor-text',
+      `url("${globalAssets.cursorText}") 12 12`,
+    )
+
+    root.style.setProperty(
+      '--cursor-resize-horizontal',
+      `url("${globalAssets.cursorResizeHorizontal}") 12 12`,
+    )
+
+    root.style.setProperty(
+      '--cursor-resize-vertical',
+      `url("${globalAssets.cursorResizeVertical}") 12 12`,
+    )
+
+    root.style.setProperty(
+      '--cursor-resize-diagonal-1',
+      `url("${globalAssets.cursorResizeDiagonal1}") 12 12`,
+    )
+
+    root.style.setProperty(
+      '--cursor-resize-diagonal-2',
+      `url("${globalAssets.cursorResizeDiagonal2}") 12 12`,
+    )
+
+    root.style.setProperty(
+      '--cursor-move',
+      `url("${globalAssets.cursorMove}") 12 12`,
+    )
+
+    root.style.setProperty(
+      '--cursor-not-allowed',
+      `url("${globalAssets.cursorNotAllowed}") 12 12`,
     )
 
     localStorage.setItem(
