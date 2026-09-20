@@ -5,112 +5,356 @@ import {
 } from 'react'
 
 import {
+    Pause,
+    Play,
+    RotateCcw,
+    Trophy,
+} from 'lucide-react'
+
+import {
+    FaJava,
+} from 'react-icons/fa'
+
+import {
+    SiCss,
+    SiDocker,
+    SiGit,
+    SiHtml5,
+    SiJavascript,
+    SiPython,
+    SiSpring,
+} from 'react-icons/si'
+
+import {
     isSupabaseConfigured,
     supabase,
 } from '../../lib/supabase'
 
 import './Game.css'
 
-const boardSize = 20
 
-const initialSnake = [
-    { x: 10, y: 10 },
-    { x: 9, y: 10 },
-    { x: 8, y: 10 },
+/* === CONFIGURAÇÃO === */
+
+const boardSize =
+    20
+
+
+/* === TECNOLOGIAS === */
+
+const foodTechnologies = [
+    {
+        id:
+            'java',
+
+        name:
+            'Java',
+
+        icon:
+            FaJava,
+
+        color:
+            '#f89820',
+    },
+
+    {
+        id:
+            'javascript',
+
+        name:
+            'JavaScript',
+
+        icon:
+            SiJavascript,
+
+        color:
+            '#f7df1e',
+    },
+
+    {
+        id:
+            'python',
+
+        name:
+            'Python',
+
+        icon:
+            SiPython,
+
+        color:
+            '#3776ab',
+    },
+
+    {
+        id:
+            'html',
+
+        name:
+            'HTML',
+
+        icon:
+            SiHtml5,
+
+        color:
+            '#e34f26',
+    },
+
+    {
+        id:
+            'css',
+
+        name:
+            'CSS',
+
+        icon:
+            SiCss,
+
+        color:
+            '#1572b6',
+    },
+
+    {
+        id:
+            'docker',
+
+        name:
+            'Docker',
+
+        icon:
+            SiDocker,
+
+        color:
+            '#2496ed',
+    },
+
+    {
+        id:
+            'git',
+
+        name:
+            'Git',
+
+        icon:
+            SiGit,
+
+        color:
+            '#f05032',
+    },
+
+    {
+        id:
+            'spring',
+
+        name:
+            'Spring',
+
+        icon:
+            SiSpring,
+
+        color:
+            '#6db33f',
+    },
 ]
 
+
+/* === ESTADO INICIAL === */
+
+const initialSnake = [
+    {
+        x:
+            10,
+
+        y:
+            10,
+    },
+
+    {
+        x:
+            9,
+
+        y:
+            10,
+    },
+
+    {
+        x:
+            8,
+
+        y:
+            10,
+    },
+]
+
+
 const initialDirection = {
-    x: 1,
-    y: 0,
+    x:
+        1,
+
+    y:
+        0,
 }
 
-const initialFood = {
-    x: 14,
-    y: 10,
+
+function getRandomTechnology() {
+    return foodTechnologies[
+        Math.floor(
+            Math.random() *
+            foodTechnologies.length,
+        )
+    ].id
 }
+
+
+function createInitialFoods() {
+    return [
+        {
+            x:
+                14,
+
+            y:
+                10,
+
+            technology:
+                getRandomTechnology(),
+        },
+
+        {
+            x:
+                5,
+
+            y:
+                5,
+
+            technology:
+                getRandomTechnology(),
+        },
+    ]
+}
+
 
 function Game({
     isActive = true,
 }) {
-    const [snake, setSnake] =
-        useState(initialSnake)
+    /* === JOGO === */
 
-    const [food, setFood] =
-        useState(initialFood)
+    const [
+        snake,
+        setSnake,
+    ] = useState(
+        initialSnake,
+    )
 
-    const [score, setScore] =
-        useState(0)
+    const [
+        foods,
+        setFoods,
+    ] = useState(
+        createInitialFoods,
+    )
 
-    const [record, setRecord] =
-        useState(() => {
-            return Number(
+    const [
+        score,
+        setScore,
+    ] = useState(
+        0,
+    )
+
+    const [
+        record,
+        setRecord,
+    ] = useState(
+        () =>
+            Number(
                 localStorage.getItem(
                     'snake-record',
-                ) ?? 0,
-            )
-        })
+                ) ??
+                0,
+            ),
+    )
 
     const [
-        globalRecord,
-        setGlobalRecord,
-    ] = useState(0)
+        gameOver,
+        setGameOver,
+    ] = useState(
+        false,
+    )
 
     const [
-        globalPlayer,
-        setGlobalPlayer,
-    ] = useState('')
+        paused,
+        setPaused,
+    ] = useState(
+        false,
+    )
+
+
+    /* === RANKING === */
 
     const [
         ranking,
         setRanking,
-    ] = useState([])
+    ] = useState(
+        [],
+    )
 
     const [
         rankingStatus,
         setRankingStatus,
-    ] = useState('loading')
+    ] = useState(
+        'loading',
+    )
 
     const [
         qualifiesForRanking,
         setQualifiesForRanking,
-    ] = useState(false)
+    ] = useState(
+        false,
+    )
 
     const [
         playerName,
         setPlayerName,
-    ] = useState('')
+    ] = useState(
+        '',
+    )
 
     const [
         saveError,
         setSaveError,
-    ] = useState('')
+    ] = useState(
+        '',
+    )
 
-    const [gameOver, setGameOver] =
-        useState(false)
 
-    const [paused, setPaused] =
-        useState(false)
+    /* === REFS === */
 
     const directionRef =
-        useRef(initialDirection)
-
-    const globalRecordRef =
-        useRef(0)
-
-    const rankingRef =
-        useRef([])
+        useRef(
+            initialDirection,
+        )
 
     const snakeRef =
-        useRef(initialSnake)
+        useRef(
+            initialSnake,
+        )
 
-    const foodRef =
-        useRef(initialFood)
+    const foodsRef =
+        useRef(
+            foods,
+        )
 
     const scoreRef =
-        useRef(0)
+        useRef(
+            0,
+        )
 
     const recordRef =
-        useRef(record)
+        useRef(
+            record,
+        )
+
+    const rankingRef =
+        useRef(
+            [],
+        )
+
 
     /* === RANKING GLOBAL === */
 
@@ -120,40 +364,52 @@ function Game({
                 !isSupabaseConfigured ||
                 !supabase
             ) {
-                setRanking([])
-                setGlobalRecord(0)
-                setGlobalPlayer('')
+                setRanking(
+                    [],
+                )
+
                 setRankingStatus(
                     'unavailable',
                 )
 
-                rankingRef.current = []
-                globalRecordRef.current = 0
+                rankingRef.current =
+                    []
 
                 return
             }
+
 
             setRankingStatus(
                 'loading',
             )
 
+
             const {
                 data,
                 error,
-            } = await supabase
-                .from('snake_scores')
-                .select(
-                    'player_name, score',
-                )
-                .order(
-                    'score',
-                    {
-                        ascending: false,
-                    },
-                )
-                .limit(5)
+            } =
+                await supabase
+                    .from(
+                        'snake_scores',
+                    )
+                    .select(
+                        'player_name, score',
+                    )
+                    .order(
+                        'score',
+                        {
+                            ascending:
+                                false,
+                        },
+                    )
+                    .limit(
+                        5,
+                    )
 
-            if (error) {
+
+            if (
+                error
+            ) {
                 console.error(
                     'Erro ao carregar ranking:',
                     error,
@@ -166,8 +422,11 @@ function Game({
                 return
             }
 
+
             const scores =
-                data ?? []
+                data ??
+                []
+
 
             setRanking(
                 scores,
@@ -176,59 +435,53 @@ function Game({
             rankingRef.current =
                 scores
 
-            const bestScore =
-                scores[0]?.score ?? 0
-
-            const bestPlayer =
-                scores[0]?.player_name ??
-                ''
-
-            setGlobalRecord(
-                bestScore,
-            )
-
-            setGlobalPlayer(
-                bestPlayer,
-            )
-
-            globalRecordRef.current =
-                bestScore
 
             setRankingStatus(
                 'success',
             )
         }
 
+
     const scoreQualifiesForTop5 =
-        (finalScore) => {
+        (
+            finalScore,
+        ) => {
             if (
                 !isSupabaseConfigured ||
                 !supabase ||
-                finalScore <= 0
+                finalScore <=
+                0
             ) {
                 return false
             }
 
+
             const currentRanking =
                 rankingRef.current
 
+
             if (
-                currentRanking.length < 5
+                currentRanking.length <
+                5
             ) {
                 return true
             }
 
+
             const fifthPlaceScore =
                 Number(
                     currentRanking[4]
-                        ?.score ?? 0,
+                        ?.score ??
+                    0,
                 )
+
 
             return (
                 finalScore >
                 fifthPlaceScore
             )
         }
+
 
     const saveGlobalRecord =
         async (
@@ -240,311 +493,448 @@ function Game({
                 !supabase
             ) {
                 setSaveError(
-                    'Ranking global indisponível.',
+                    'Ranking indisponível.',
                 )
 
                 return
             }
 
+
             const trimmedName =
                 name.trim() ||
                 'Visitante'
 
-            setSaveError('')
+
+            setSaveError(
+                '',
+            )
+
 
             const {
                 error,
-            } = await supabase
-                .from('snake_scores')
-                .insert({
-                    player_name:
-                        trimmedName,
+            } =
+                await supabase
+                    .from(
+                        'snake_scores',
+                    )
+                    .insert({
+                        player_name:
+                            trimmedName,
 
-                    score:
-                        newScore,
-                })
+                        score:
+                            newScore,
+                    })
 
-            if (error) {
+
+            if (
+                error
+            ) {
                 console.error(
                     'Erro ao salvar pontuação:',
                     error,
                 )
 
                 setSaveError(
-                    'Não foi possível salvar. Tente novamente.',
+                    'Não foi possível salvar.',
                 )
 
                 return
             }
 
+
             setQualifiesForRanking(
                 false,
             )
 
-            setPlayerName('')
+            setPlayerName(
+                '',
+            )
+
 
             await loadRanking()
         }
 
-    useEffect(() => {
-        const timer =
-            setTimeout(() => {
-                loadRanking()
-            }, 0)
 
-        return () => {
-            clearTimeout(timer)
-        }
+    useEffect(() => {
+        loadRanking()
     }, [])
 
-    /* === FOCO DO JOGO === */
+
+    /* === PAUSA AUTOMÁTICA === */
 
     useEffect(() => {
         if (
-            isActive ||
-            gameOver
+            !isActive &&
+            !gameOver
         ) {
-            return
-        }
-
-        const timer =
-            setTimeout(() => {
-                setPaused(true)
-            }, 0)
-
-        return () => {
-            clearTimeout(timer)
+            setPaused(
+                true,
+            )
         }
     }, [
         isActive,
         gameOver,
     ])
 
+
     useEffect(() => {
-        const handleWindowBlur =
+        const handleBlur =
             () => {
-                if (!gameOver) {
-                    setPaused(true)
+                if (
+                    !gameOver
+                ) {
+                    setPaused(
+                        true,
+                    )
                 }
             }
 
-        const handleVisibilityChange =
+
+        const handleVisibility =
             () => {
                 if (
                     document.hidden &&
                     !gameOver
                 ) {
-                    setPaused(true)
+                    setPaused(
+                        true,
+                    )
                 }
             }
 
+
         window.addEventListener(
             'blur',
-            handleWindowBlur,
+            handleBlur,
         )
 
         document.addEventListener(
             'visibilitychange',
-            handleVisibilityChange,
+            handleVisibility,
         )
+
 
         return () => {
             window.removeEventListener(
                 'blur',
-                handleWindowBlur,
+                handleBlur,
             )
 
             document.removeEventListener(
                 'visibilitychange',
-                handleVisibilityChange,
+                handleVisibility,
             )
         }
-    }, [gameOver])
+    }, [
+        gameOver,
+    ])
 
-    /* === COMIDA === */
 
-    const getRandomFood = (
-        currentSnake,
-    ) => {
-        let newFood
+    /* === NOVA COMIDA === */
 
-        do {
-            newFood = {
-                x: Math.floor(
-                    Math.random() *
-                    boardSize,
-                ),
-
-                y: Math.floor(
-                    Math.random() *
-                    boardSize,
-                ),
-            }
-        } while (
-            currentSnake.some(
-                (segment) =>
-                    segment.x ===
-                    newFood.x &&
-                    segment.y ===
-                    newFood.y,
-            )
-        )
-
-        return newFood
-    }
-
-    /* === REINICIAR === */
-
-    const resetGame = () => {
-        setSnake(
-            initialSnake,
-        )
-
-        setFood(
-            initialFood,
-        )
-
-        directionRef.current =
-            initialDirection
-
-        snakeRef.current =
-            initialSnake
-
-        foodRef.current =
-            initialFood
-
-        scoreRef.current = 0
-
-        setScore(0)
-        setGameOver(false)
-        setPaused(false)
-
-        setQualifiesForRanking(
-            false,
-        )
-
-        setPlayerName('')
-        setSaveError('')
-    }
-
-    /* === CONTROLES === */
-
-    useEffect(() => {
-        const handleKeyDown = (
-            event,
+    const getRandomFood =
+        (
+            currentSnake,
+            otherFoods = [],
         ) => {
-            const target =
-                event.target
+            let newFood
 
+
+            do {
+                newFood = {
+                    x:
+                        Math.floor(
+                            Math.random() *
+                            boardSize,
+                        ),
+
+                    y:
+                        Math.floor(
+                            Math.random() *
+                            boardSize,
+                        ),
+
+                    technology:
+                        getRandomTechnology(),
+                }
+            } while (
+                currentSnake.some(
+                    (
+                        segment,
+                    ) =>
+                        segment.x ===
+                        newFood.x &&
+                        segment.y ===
+                        newFood.y,
+                ) ||
+
+                otherFoods.some(
+                    (
+                        food,
+                    ) =>
+                        food.x ===
+                        newFood.x &&
+                        food.y ===
+                        newFood.y,
+                )
+            )
+
+
+            return newFood
+        }
+
+
+    /* === DIREÇÃO === */
+
+    const changeDirection =
+        (
+            newDirection,
+        ) => {
             if (
-                target instanceof
-                HTMLInputElement ||
-                target instanceof
-                HTMLTextAreaElement
+                gameOver ||
+                paused ||
+                !isActive
             ) {
                 return
             }
 
-            const key =
-                event.key.toLowerCase()
-
-            if (!isActive) {
-                return
-            }
-
-            if (key === 'p') {
-                if (!gameOver) {
-                    setPaused(
-                        (current) =>
-                            !current,
-                    )
-                }
-
-                return
-            }
-
-            if (key === 'r') {
-                resetGame()
-
-                return
-            }
-
-            let newDirection =
-                null
-
-            if (
-                key === 'arrowup' ||
-                key === 'w'
-            ) {
-                event.preventDefault()
-
-                newDirection = {
-                    x: 0,
-                    y: -1,
-                }
-            }
-
-            if (
-                key === 'arrowdown' ||
-                key === 's'
-            ) {
-                event.preventDefault()
-
-                newDirection = {
-                    x: 0,
-                    y: 1,
-                }
-            }
-
-            if (
-                key === 'arrowleft' ||
-                key === 'a'
-            ) {
-                event.preventDefault()
-
-                newDirection = {
-                    x: -1,
-                    y: 0,
-                }
-            }
-
-            if (
-                key === 'arrowright' ||
-                key === 'd'
-            ) {
-                event.preventDefault()
-
-                newDirection = {
-                    x: 1,
-                    y: 0,
-                }
-            }
-
-            if (!newDirection) {
-                return
-            }
 
             const currentDirection =
                 directionRef.current
 
-            const oppositeDirection =
+
+            const opposite =
                 newDirection.x ===
                 -currentDirection.x &&
                 newDirection.y ===
                 -currentDirection.y
 
-            if (oppositeDirection) {
+
+            if (
+                opposite
+            ) {
                 return
             }
+
 
             directionRef.current =
                 newDirection
         }
 
+
+    /* === REINICIAR === */
+
+    const resetGame =
+        () => {
+            const newFoods =
+                createInitialFoods()
+
+
+            setSnake(
+                initialSnake,
+            )
+
+            setFoods(
+                newFoods,
+            )
+
+
+            snakeRef.current =
+                initialSnake
+
+            foodsRef.current =
+                newFoods
+
+            directionRef.current =
+                initialDirection
+
+            scoreRef.current =
+                0
+
+
+            setScore(
+                0,
+            )
+
+            setGameOver(
+                false,
+            )
+
+            setPaused(
+                false,
+            )
+
+            setQualifiesForRanking(
+                false,
+            )
+
+            setPlayerName(
+                '',
+            )
+
+            setSaveError(
+                '',
+            )
+        }
+
+
+    /* === PAUSAR === */
+
+    const togglePause =
+        () => {
+            if (
+                gameOver
+            ) {
+                return
+            }
+
+
+            setPaused(
+                (
+                    current,
+                ) =>
+                    !current,
+            )
+        }
+
+
+    /* === TECLADO === */
+
+    useEffect(() => {
+        const handleKeyDown =
+            (
+                event,
+            ) => {
+                const target =
+                    event.target
+
+
+                if (
+                    target instanceof
+                    HTMLInputElement ||
+                    target instanceof
+                    HTMLTextAreaElement
+                ) {
+                    return
+                }
+
+
+                if (
+                    !isActive
+                ) {
+                    return
+                }
+
+
+                const key =
+                    event.key
+                        .toLowerCase()
+
+
+                if (
+                    key ===
+                    'p'
+                ) {
+                    togglePause()
+
+                    return
+                }
+
+
+                if (
+                    key ===
+                    'r'
+                ) {
+                    resetGame()
+
+                    return
+                }
+
+
+                if (
+                    key ===
+                    'arrowup' ||
+                    key ===
+                    'w'
+                ) {
+                    event.preventDefault()
+
+                    changeDirection({
+                        x:
+                            0,
+
+                        y:
+                            -1,
+                    })
+
+                    return
+                }
+
+
+                if (
+                    key ===
+                    'arrowdown' ||
+                    key ===
+                    's'
+                ) {
+                    event.preventDefault()
+
+                    changeDirection({
+                        x:
+                            0,
+
+                        y:
+                            1,
+                    })
+
+                    return
+                }
+
+
+                if (
+                    key ===
+                    'arrowleft' ||
+                    key ===
+                    'a'
+                ) {
+                    event.preventDefault()
+
+                    changeDirection({
+                        x:
+                            -1,
+
+                        y:
+                            0,
+                    })
+
+                    return
+                }
+
+
+                if (
+                    key ===
+                    'arrowright' ||
+                    key ===
+                    'd'
+                ) {
+                    event.preventDefault()
+
+                    changeDirection({
+                        x:
+                            1,
+
+                        y:
+                            0,
+                    })
+                }
+            }
+
+
         window.addEventListener(
             'keydown',
             handleKeyDown,
         )
+
 
         return () => {
             window.removeEventListener(
@@ -554,8 +944,10 @@ function Game({
         }
     }, [
         gameOver,
+        paused,
         isActive,
     ])
+
 
     /* === LOOP DO JOGO === */
 
@@ -568,145 +960,205 @@ function Game({
             return
         }
 
+
         const speed =
             Math.max(
                 85,
-                165 - score * 3,
+                165 -
+                score *
+                3,
             )
 
+
         const interval =
-            setInterval(() => {
-                const currentSnake =
-                    snakeRef.current
+            setInterval(
+                () => {
+                    const currentSnake =
+                        snakeRef.current
 
-                const currentFood =
-                    foodRef.current
+                    const currentFoods =
+                        foodsRef.current
 
-                const head =
-                    currentSnake[0]
+                    const head =
+                        currentSnake[0]
 
-                const nextHead = {
-                    x:
-                        head.x +
-                        directionRef
-                            .current.x,
 
-                    y:
-                        head.y +
-                        directionRef
-                            .current.y,
-                }
+                    const nextHead = {
+                        x:
+                            head.x +
+                            directionRef
+                                .current
+                                .x,
 
-                const hitWall =
-                    nextHead.x < 0 ||
-                    nextHead.x >=
-                    boardSize ||
-                    nextHead.y < 0 ||
-                    nextHead.y >=
-                    boardSize
+                        y:
+                            head.y +
+                            directionRef
+                                .current
+                                .y,
+                    }
 
-                const ateFood =
-                    nextHead.x ===
-                    currentFood.x &&
-                    nextHead.y ===
-                    currentFood.y
 
-                const bodyToCheck =
-                    ateFood
-                        ? currentSnake
-                        : currentSnake.slice(
-                            0,
-                            -1,
+                    const hitWall =
+                        nextHead.x <
+                        0 ||
+                        nextHead.x >=
+                        boardSize ||
+                        nextHead.y <
+                        0 ||
+                        nextHead.y >=
+                        boardSize
+
+
+                    const eatenFoodIndex =
+                        currentFoods.findIndex(
+                            (
+                                currentFood,
+                            ) =>
+                                nextHead.x ===
+                                currentFood.x &&
+                                nextHead.y ===
+                                currentFood.y,
                         )
 
-                const hitSnake =
-                    bodyToCheck.some(
-                        (segment) =>
-                            segment.x ===
-                            nextHead.x &&
-                            segment.y ===
-                            nextHead.y,
-                    )
 
-                if (
-                    hitWall ||
-                    hitSnake
-                ) {
-                    const finalScore =
-                        scoreRef.current
+                    const ateFood =
+                        eatenFoodIndex !==
+                        -1
 
-                    setGameOver(true)
 
-                    setQualifiesForRanking(
-                        scoreQualifiesForTop5(
-                            finalScore,
-                        ),
-                    )
+                    const bodyToCheck =
+                        ateFood
+                            ? currentSnake
+                            : currentSnake.slice(
+                                0,
+                                -1,
+                            )
 
-                    return
-                }
 
-                const nextSnake = [
-                    nextHead,
-                    ...currentSnake,
-                ]
+                    const hitSnake =
+                        bodyToCheck.some(
+                            (
+                                segment,
+                            ) =>
+                                segment.x ===
+                                nextHead.x &&
+                                segment.y ===
+                                nextHead.y,
+                        )
 
-                if (ateFood) {
-                    const newScore =
-                        scoreRef.current + 1
 
-                    scoreRef.current =
-                        newScore
+                    if (
+                        hitWall ||
+                        hitSnake
+                    ) {
+                        const finalScore =
+                            scoreRef.current
 
-                    setScore(
-                        newScore,
-                    )
 
-                    const newRecord =
-                        Math.max(
-                            recordRef.current,
+                        setGameOver(
+                            true,
+                        )
+
+                        setQualifiesForRanking(
+                            scoreQualifiesForTop5(
+                                finalScore,
+                            ),
+                        )
+
+                        return
+                    }
+
+
+                    const nextSnake = [
+                        nextHead,
+                        ...currentSnake,
+                    ]
+
+
+                    if (
+                        ateFood
+                    ) {
+                        const newScore =
+                            scoreRef.current +
+                            1
+
+
+                        scoreRef.current =
+                            newScore
+
+
+                        setScore(
                             newScore,
                         )
 
-                    if (
-                        newRecord >
-                        recordRef.current
-                    ) {
-                        recordRef.current =
-                            newRecord
 
-                        setRecord(
-                            newRecord,
-                        )
+                        if (
+                            newScore >
+                            recordRef.current
+                        ) {
+                            recordRef.current =
+                                newScore
 
-                        localStorage.setItem(
-                            'snake-record',
-                            newRecord,
+
+                            setRecord(
+                                newScore,
+                            )
+
+
+                            localStorage.setItem(
+                                'snake-record',
+                                newScore,
+                            )
+                        }
+
+
+                        const remainingFoods =
+                            currentFoods.filter(
+                                (
+                                    _,
+                                    index,
+                                ) =>
+                                    index !==
+                                    eatenFoodIndex,
+                            )
+
+
+                        const newFood =
+                            getRandomFood(
+                                nextSnake,
+                                remainingFoods,
+                            )
+
+
+                        const nextFoods = [
+                            ...remainingFoods,
+                            newFood,
+                        ]
+
+
+                        foodsRef.current =
+                            nextFoods
+
+
+                        setFoods(
+                            nextFoods,
                         )
+                    } else {
+                        nextSnake.pop()
                     }
 
-                    const newFood =
-                        getRandomFood(
-                            nextSnake,
-                        )
 
-                    foodRef.current =
-                        newFood
+                    snakeRef.current =
+                        nextSnake
 
-                    setFood(
-                        newFood,
+
+                    setSnake(
+                        nextSnake,
                     )
-                } else {
-                    nextSnake.pop()
-                }
+                },
+                speed,
+            )
 
-                snakeRef.current =
-                    nextSnake
-
-                setSnake(
-                    nextSnake,
-                )
-            }, speed)
 
         return () => {
             clearInterval(
@@ -720,33 +1172,43 @@ function Game({
         isActive,
     ])
 
+
     /* === POSIÇÃO === */
 
-    const getPositionStyle = (
-        x,
-        y,
-    ) => {
-        const cellSize =
-            100 / boardSize
+    const getPositionStyle =
+        (
+            x,
+            y,
+        ) => {
+            const cellSize =
+                100 /
+                boardSize
 
-        return {
-            width:
-                `${cellSize}%`,
 
-            height:
-                `${cellSize}%`,
+            return {
+                width:
+                    `${cellSize}%`,
 
-            left:
-                `${x * cellSize}%`,
+                height:
+                    `${cellSize}%`,
 
-            top:
-                `${y * cellSize}%`,
+                left:
+                    `${x * cellSize}%`,
+
+                top:
+                    `${y * cellSize}%`,
+            }
         }
-    }
+
+
+    /* === TECNOLOGIA === */
 
     return (
         <div className="game">
-            <div className="game-header">
+
+            {/* === CABEÇALHO === */}
+
+            <header className="game-header">
                 <div>
                     <span className="game-label">
                         Arcade
@@ -757,64 +1219,107 @@ function Game({
                     </h1>
 
                     <p>
-                        Setas ou WASD para jogar.
-                        P pausa e R reinicia.
+                        Setas / WASD para jogar
                     </p>
                 </div>
 
-                <div className="game-score">
-                    <div>
-                        <span>
-                            Pontos
-                        </span>
 
-                        <strong>
-                            {score}
-                        </strong>
-                    </div>
+                <div className="game-header-right">
 
-                    <div>
-                        <span>
-                            Seu recorde
-                        </span>
+                    <span
+                        className={[
+                            'game-status',
 
-                        <strong>
-                            {record}
-                        </strong>
-                    </div>
+                            paused
+                                ? 'game-status-paused'
+                                : '',
 
-                    <div>
-                        <span>
-                            Global
-                        </span>
+                            gameOver
+                                ? 'game-status-over'
+                                : '',
+                        ]
+                            .filter(
+                                Boolean,
+                            )
+                            .join(
+                                ' ',
+                            )}
+                    >
+                        <span />
 
-                        <strong>
-                            {globalRecord}
-                        </strong>
+                        {gameOver
+                            ? 'Game Over'
+                            : paused
+                                ? 'Pausado'
+                                : 'Jogando'}
+                    </span>
 
-                        {globalPlayer && (
-                            <small>
-                                {globalPlayer}
-                            </small>
+
+                    <button
+                        type="button"
+                        onClick={
+                            togglePause
+                        }
+                        disabled={
+                            gameOver
+                        }
+                    >
+                        {paused ? (
+                            <Play
+                                size={14}
+                                strokeWidth={1.8}
+                            />
+                        ) : (
+                            <Pause
+                                size={14}
+                                strokeWidth={1.8}
+                            />
                         )}
-                    </div>
+
+                        {paused
+                            ? 'Continuar'
+                            : 'Pausar'}
+                    </button>
+
+
+                    <button
+                        type="button"
+                        onClick={
+                            resetGame
+                        }
+                    >
+                        <RotateCcw
+                            size={14}
+                            strokeWidth={1.8}
+                        />
+
+                        Reiniciar
+                    </button>
                 </div>
-            </div>
+            </header>
+
+
+            {/* === ÁREA PRINCIPAL === */}
 
             <div className="game-main">
-                <div className="game-container">
+
+                {/* === TABULEIRO === */}
+
+                <section className="game-play">
                     <div className="game-board">
+
+                        {/* === COBRA === */}
+
                         {snake.map(
                             (
                                 segment,
                                 index,
                             ) => (
                                 <div
-                                    key={
-                                        `${segment.x}-${segment.y}-${index}`
-                                    }
+                                    key={`${segment.x}-${segment.y}-${index}`}
                                     className={
-                                        index === 0
+                                        index ===
+                                            0
                                             ? 'snake-segment snake-head'
                                             : 'snake-segment'
                                     }
@@ -828,69 +1333,136 @@ function Game({
                             ),
                         )}
 
-                        <div
-                            className="game-food"
-                            style={
-                                getPositionStyle(
-                                    food.x,
-                                    food.y,
+
+                        {/* === COMIDAS === */}
+
+                        {foods.map(
+                            (
+                                food,
+                                index,
+                            ) => {
+                                const technology =
+                                    foodTechnologies.find(
+                                        (
+                                            item,
+                                        ) =>
+                                            item.id ===
+                                            food.technology,
+                                    ) ??
+                                    foodTechnologies[0]
+
+
+                                const FoodIcon =
+                                    technology.icon
+
+
+                                return (
+                                    <div
+                                        className="game-food"
+                                        key={`${food.x}-${food.y}-${food.technology}-${index}`}
+                                        style={
+                                            getPositionStyle(
+                                                food.x,
+                                                food.y,
+                                            )
+                                        }
+                                        title={
+                                            technology.name
+                                        }
+                                    >
+                                        <span
+                                            className="game-food-icon"
+                                            style={{
+                                                '--food-color':
+                                                    technology.color,
+                                            }}
+                                        >
+                                            <FoodIcon />
+                                        </span>
+                                    </div>
                                 )
-                            }
-                        />
+                            },
+                        )}
+
+
+                        {/* === OVERLAY === */}
 
                         {(gameOver ||
                             paused) && (
                                 <div className="game-overlay">
+
                                     {gameOver ? (
                                         <>
+                                            <Trophy
+                                                size={28}
+                                                strokeWidth={1.6}
+                                            />
+
                                             <strong>
                                                 Game Over
                                             </strong>
 
                                             <span>
-                                                Pontuação: {score}
+                                                {score} pontos
                                             </span>
+
 
                                             {qualifiesForRanking ? (
                                                 <div className="game-record-form">
-                                                    <span className="game-global-record">
+                                                    <b>
                                                         Você entrou no Top 5!
-                                                    </span>
+                                                    </b>
 
                                                     <input
                                                         type="text"
-                                                        maxLength={20}
+                                                        maxLength={
+                                                            20
+                                                        }
                                                         placeholder="Seu nome"
                                                         value={
                                                             playerName
                                                         }
-                                                        onChange={(
-                                                            event,
-                                                        ) =>
-                                                            setPlayerName(
-                                                                event
-                                                                    .target
-                                                                    .value,
-                                                            )
+                                                        onChange={
+                                                            (
+                                                                event,
+                                                            ) =>
+                                                                setPlayerName(
+                                                                    event
+                                                                        .target
+                                                                        .value,
+                                                                )
                                                         }
                                                     />
 
                                                     {saveError && (
-                                                        <span>
-                                                            {saveError}
-                                                        </span>
+                                                        <small>
+                                                            {
+                                                                saveError
+                                                            }
+                                                        </small>
                                                     )}
 
                                                     <button
                                                         type="button"
-                                                        onClick={() =>
-                                                            saveGlobalRecord(
-                                                                score,
-                                                                playerName,
-                                                            )
+                                                        onClick={
+                                                            () =>
+                                                                saveGlobalRecord(
+                                                                    score,
+                                                                    playerName,
+                                                                )
                                                         }
                                                     >
                                                         Salvar pontuação
+                                                    </button>
+
+                                                    <button
+                                                        type="button"
+                                                        className="game-secondary-button"
+                                                        onClick={
+                                                            resetGame
+                                                        }
+                                                    >
+                                                        Jogar novamente
                                                     </button>
                                                 </div>
                                             ) : (
@@ -906,95 +1478,170 @@ function Game({
                                         </>
                                     ) : (
                                         <>
+                                            <Pause
+                                                size={28}
+                                                strokeWidth={1.6}
+                                            />
+
                                             <strong>
                                                 Pausado
                                             </strong>
 
-                                            <span>
-                                                Pressione P para continuar
-                                            </span>
+                                            <button
+                                                type="button"
+                                                onClick={
+                                                    togglePause
+                                                }
+                                            >
+                                                Continuar
+                                            </button>
                                         </>
                                     )}
                                 </div>
                             )}
                     </div>
-                </div>
 
-                <div className="game-ranking">
-                    <div className="game-ranking-header">
-                        <span>
-                            Top 5
-                        </span>
 
-                        <span>
-                            Recordes globais
-                        </span>
+                    <span className="game-hint">
+                        P pausa · R reinicia
+                    </span>
+                </section>
+
+
+                {/* === PAINEL LATERAL === */}
+
+                <aside className="game-sidebar">
+
+                    {/* === PONTUAÇÃO === */}
+
+                    <div className="game-score">
+                        <div>
+                            <span>
+                                Pontos
+                            </span>
+
+                            <strong>
+                                {score}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>
+                                Recorde
+                            </span>
+
+                            <strong>
+                                {record}
+                            </strong>
+                        </div>
                     </div>
 
-                    <div className="game-ranking-list">
-                        {rankingStatus ===
-                            'loading' && (
-                                <div className="game-ranking-empty">
-                                    Carregando ranking...
-                                </div>
-                            )}
 
-                        {rankingStatus ===
-                            'error' && (
-                                <div className="game-ranking-empty">
-                                    Não foi possível carregar o ranking.
-                                </div>
-                            )}
+                    {/* === RANKING === */}
 
-                        {rankingStatus ===
-                            'unavailable' && (
-                                <div className="game-ranking-empty">
-                                    Ranking indisponível.
-                                </div>
-                            )}
+                    <div className="game-ranking">
+                        <div className="game-ranking-header">
+                            <div>
+                                <span>
+                                    Ranking
+                                </span>
 
-                        {rankingStatus ===
-                            'success' &&
-                            ranking.length ===
-                            0 && (
-                                <div className="game-ranking-empty">
-                                    Nenhum recorde ainda.
-                                </div>
-                            )}
+                                <h2>
+                                    Top 5
+                                </h2>
+                            </div>
 
-                        {rankingStatus ===
-                            'success' &&
-                            ranking.map(
-                                (
-                                    player,
-                                    index,
-                                ) => (
-                                    <div
-                                        className="game-ranking-item"
-                                        key={
-                                            `${player.player_name}-${player.score}-${index}`
-                                        }
-                                    >
-                                        <span className="game-ranking-position">
-                                            {index + 1}º
-                                        </span>
+                            <Trophy
+                                size={18}
+                                strokeWidth={1.7}
+                            />
+                        </div>
 
-                                        <span className="game-ranking-name">
-                                            {player.player_name ||
-                                                'Visitante'}
-                                        </span>
 
-                                        <strong>
-                                            {player.score}
-                                        </strong>
+                        <div className="game-ranking-list">
+
+                            {rankingStatus ===
+                                'loading' && (
+                                    <div className="game-ranking-empty">
+                                        Carregando...
                                     </div>
-                                ),
-                            )}
+                                )}
+
+
+                            {rankingStatus ===
+                                'error' && (
+                                    <div className="game-ranking-empty">
+                                        Erro ao carregar.
+                                    </div>
+                                )}
+
+
+                            {rankingStatus ===
+                                'unavailable' && (
+                                    <div className="game-ranking-empty">
+                                        Ranking indisponível.
+                                    </div>
+                                )}
+
+
+                            {rankingStatus ===
+                                'success' &&
+                                ranking.length ===
+                                0 && (
+                                    <div className="game-ranking-empty">
+                                        Nenhum recorde.
+                                    </div>
+                                )}
+
+
+                            {rankingStatus ===
+                                'success' &&
+                                ranking.map(
+                                    (
+                                        player,
+                                        index,
+                                    ) => (
+                                        <div
+                                            className={[
+                                                'game-ranking-item',
+
+                                                index ===
+                                                    0
+                                                    ? 'game-ranking-first'
+                                                    : '',
+                                            ]
+                                                .filter(
+                                                    Boolean,
+                                                )
+                                                .join(
+                                                    ' ',
+                                                )}
+                                            key={`${player.player_name}-${player.score}-${index}`}
+                                        >
+                                            <span>
+                                                {index + 1}
+                                            </span>
+
+                                            <p>
+                                                {player.player_name ||
+                                                    'Visitante'}
+                                            </p>
+
+                                            <strong>
+                                                {
+                                                    player.score
+                                                }
+                                            </strong>
+                                        </div>
+                                    ),
+                                )}
+                        </div>
                     </div>
-                </div>
+                </aside>
             </div>
         </div>
     )
 }
+
 
 export default Game
