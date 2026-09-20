@@ -1,14 +1,13 @@
 /* === ESTATÍSTICAS === */
-
 .stats {
-    width:
-        100%;
-
     display:
         flex;
 
     flex-direction:
         column;
+
+    width:
+        100%;
 
     gap:
         12px;
@@ -22,7 +21,6 @@
 
 
 /* === CABEÇALHO === */
-
 .stats-header {
     display:
         flex;
@@ -53,11 +51,7 @@
 
 
 /* ----- CONTEÚDO ----- */
-
 .stats-header-content {
-    min-width:
-        0;
-
     display:
         flex;
 
@@ -70,10 +64,12 @@
     align-items:
         flex-start;
 
+    min-width:
+        0;
+
     gap:
         3px;
 }
-
 
 .stats-label {
     margin-bottom:
@@ -88,13 +84,12 @@
     font-weight:
         650;
 
-    text-transform:
-        uppercase;
-
     letter-spacing:
         0.7px;
-}
 
+    text-transform:
+        uppercase;
+}
 
 .stats-header h1 {
     margin:
@@ -116,7 +111,6 @@
         -0.35px;
 }
 
-
 .stats-header p {
     margin:
         0;
@@ -133,7 +127,6 @@
 
 
 /* === STATUS === */
-
 .stats-status {
     display:
         flex;
@@ -144,18 +137,14 @@
     justify-content:
         flex-end;
 
-    gap:
-        6px;
-
     flex-shrink:
         0;
+
+    gap:
+        6px;
 }
 
-
 .stats-status-item {
-    min-height:
-        27px;
-
     display:
         inline-flex;
 
@@ -164,6 +153,9 @@
 
     justify-content:
         center;
+
+    min-height:
+        27px;
 
     gap:
         5px;
@@ -192,7 +184,6 @@
         600;
 }
 
-
 .stats-status-success {
     color:
         var(--accent-primary);
@@ -206,12 +197,10 @@
         var(--accent-soft);
 }
 
-
 .stats-status-loading {
     opacity:
         0.7;
 }
-
 
 .stats-status-error {
     opacity:
@@ -220,7 +209,6 @@
 
 
 /* === RESUMO === */
-
 .stats-summary {
     display:
         grid;
@@ -236,16 +224,15 @@
 
 
 /* === CARD === */
-
 .stats-card {
-    min-width:
-        0;
-
     display:
         flex;
 
     align-items:
         center;
+
+    min-width:
+        0;
 
     gap:
         10px;
@@ -267,14 +254,7 @@
 
 
 /* ----- ÍCONE ----- */
-
 .stats-card-icon {
-    width:
-        38px;
-
-    height:
-        38px;
-
     display:
         flex;
 
@@ -286,6 +266,12 @@
 
     flex-shrink:
         0;
+
+    width:
+        38px;
+
+    height:
+        38px;
 
     border-radius:
         10px;
@@ -299,21 +285,19 @@
 
 
 /* ----- CONTEÚDO ----- */
-
 .stats-card-content {
-    min-width:
-        0;
-
     display:
         flex;
 
     flex-direction:
         column;
 
+    min-width:
+        0;
+
     gap:
         1px;
 }
-
 
 .stats-card-content>span {
     overflow:
@@ -331,7 +315,6 @@
     white-space:
         nowrap;
 }
-
 
 .stats-card-content strong {
     overflow:
@@ -353,7 +336,6 @@
         nowrap;
 }
 
-
 .stats-card-content small {
     color:
         var(--text-muted);
@@ -364,7 +346,6 @@
 
 
 /* === SEÇÃO === */
-
 .stats-section {
     padding:
         13px 14px;
@@ -383,7 +364,6 @@
 
 
 /* === CABEÇALHO DA SEÇÃO === */
-
 .stats-section-header {
     display:
         flex;
@@ -401,44 +381,35 @@
         12px;
 }
 
-
 .stats-section-heading {
-    min-width:
-        0;
-
     display:
         flex;
 
     align-items:
         center;
 
+    min-width:
+        0;
+
     gap:
         9px;
 }
 
-
 .stats-section-heading>div {
-    min-width:
-        0;
-
     display:
         flex;
 
     flex-direction:
         column;
 
+    min-width:
+        0;
+
     gap:
         1px;
 }
 
-
 .stats-section-icon {
-    width:
-        30px;
-
-    height:
-        30px;
-
     display:
         flex;
 
@@ -451,6 +422,12 @@
     flex-shrink:
         0;
 
+    width:
+        30px;
+
+    height:
+        30px;
+
     border-radius:
         8px;
 
@@ -460,7 +437,6 @@
     background:
         var(--accent-soft);
 }
-
 
 .stats-section-heading h2 {
     margin:
@@ -476,7 +452,6 @@
         650;
 }
 
-
 .stats-section-heading p {
     margin:
         0;
@@ -487,7 +462,6 @@
     font-size:
         8px;
 }
-
 
 .stats-source {
     flex-shrink:
@@ -502,11 +476,7 @@
 
 
 /* === PLACEHOLDER === */
-
 .stats-placeholder {
-    min-height:
-        90px;
-
     display:
         flex;
 
@@ -515,6 +485,9 @@
 
     justify-content:
         center;
+
+    min-height:
+        90px;
 
     padding:
         14px;
@@ -537,7 +510,6 @@
 
 
 /* === WAKATIME: LINGUAGENS === */
-
 .wakatime-languages {
     display:
         grid;
@@ -553,16 +525,15 @@
 
 
 /* ----- LINGUAGEM ----- */
-
 .wakatime-language {
-    min-width:
-        0;
-
     display:
         flex;
 
     flex-direction:
         column;
+
+    min-width:
+        0;
 
     gap:
         5px;
@@ -582,7 +553,6 @@
             transparent);
 }
 
-
 .wakatime-language-header {
     display:
         flex;
@@ -599,7 +569,6 @@
     font-size:
         8px;
 }
-
 
 .wakatime-language-header span {
     min-width:
@@ -621,7 +590,6 @@
         nowrap;
 }
 
-
 .wakatime-language-header strong {
     flex-shrink:
         0;
@@ -638,7 +606,6 @@
 
 
 /* ----- BARRA ----- */
-
 .wakatime-language-bar {
     width:
         100%;
@@ -650,7 +617,7 @@
         hidden;
 
     border-radius:
-        999px;
+        var(--radius-full);
 
     background:
         color-mix(in srgb,
@@ -658,13 +625,12 @@
             transparent);
 }
 
-
 .wakatime-language-progress {
-    height:
-        100%;
-
     display:
         block;
+
+    height:
+        100%;
 
     border-radius:
         inherit;
@@ -675,7 +641,6 @@
 
 
 /* === ATIVIDADE === */
-
 .wakatime-activity {
     display:
         flex;
@@ -698,7 +663,6 @@
 
 
 /* === CABEÇALHO DA ATIVIDADE === */
-
 .wakatime-activity-header {
     display:
         flex;
@@ -713,7 +677,6 @@
         16px;
 }
 
-
 .wakatime-activity-info {
     display:
         flex;
@@ -725,7 +688,6 @@
         1px;
 }
 
-
 .wakatime-activity-info>span {
     color:
         var(--text-muted);
@@ -736,13 +698,12 @@
     font-weight:
         600;
 
-    text-transform:
-        uppercase;
-
     letter-spacing:
         0.5px;
-}
 
+    text-transform:
+        uppercase;
+}
 
 .wakatime-activity-info h3 {
     margin:
@@ -757,7 +718,6 @@
     font-weight:
         550;
 }
-
 
 .wakatime-activity-info strong {
     margin-top:
@@ -775,19 +735,18 @@
 
 
 /* === SELETOR === */
-
 .wakatime-period-selector {
     display:
         flex;
+
+    flex-shrink:
+        0;
 
     gap:
         3px;
 
     padding:
         3px;
-
-    flex-shrink:
-        0;
 
     border:
         1px solid var(--glass-border);
@@ -800,7 +759,6 @@
             var(--surface-secondary) 12%,
             transparent);
 }
-
 
 .wakatime-period-button {
     min-width:
@@ -828,13 +786,13 @@
         550;
 
     cursor:
+        var(--cursor-pointer),
         pointer;
 
     transition:
         color var(--transition-fast),
         background var(--transition-fast);
 }
-
 
 .wakatime-period-button:hover {
     color:
@@ -843,7 +801,6 @@
     background:
         var(--hover-background);
 }
-
 
 .wakatime-period-button.active {
     color:
@@ -855,16 +812,15 @@
 
 
 /* === GRÁFICO === */
-
 .wakatime-chart {
-    height:
-        120px;
-
     display:
         flex;
 
     align-items:
         stretch;
+
+    height:
+        120px;
 
     gap:
         6px;
@@ -879,11 +835,7 @@
         1px solid var(--glass-border);
 }
 
-
 .wakatime-chart-item {
-    min-width:
-        0;
-
     display:
         flex;
 
@@ -896,20 +848,16 @@
     align-items:
         center;
 
+    min-width:
+        0;
+
     gap:
         5px;
 }
 
-
 .wakatime-chart-column {
     position:
         relative;
-
-    width:
-        100%;
-
-    min-height:
-        0;
 
     display:
         flex;
@@ -922,19 +870,24 @@
 
     justify-content:
         center;
+
+    width:
+        100%;
+
+    min-height:
+        0;
 }
 
-
 .wakatime-chart-bar {
+    display:
+        block;
+
     width:
         min(20px,
             70%);
 
     min-height:
         3px;
-
-    display:
-        block;
 
     border-radius:
         5px 5px 2px 2px;
@@ -947,7 +900,6 @@
         transform var(--transition-fast);
 }
 
-
 .wakatime-chart-column:hover .wakatime-chart-bar {
     opacity:
         0.8;
@@ -955,7 +907,6 @@
     transform:
         translateY(-1px);
 }
-
 
 .wakatime-chart-label {
     min-height:
@@ -981,8 +932,7 @@
 }
 
 
-/* === TOOLTIP === */
-
+/* === TOOLTIP DO GRÁFICO === */
 .wakatime-chart-tooltip {
     position:
         absolute;
@@ -1003,16 +953,21 @@
         hidden;
 
     border:
-        1px solid var(--glass-border);
+        1px solid color-mix(in srgb,
+            var(--accent-primary) 35%,
+            var(--glass-border));
 
     border-radius:
         6px;
 
     color:
-        #ffffff;
+        var(--text-primary);
 
     background:
-        #111827;
+        var(--surface-primary);
+
+    box-shadow:
+        var(--shadow-sm);
 
     font-size:
         8px;
@@ -1020,11 +975,11 @@
     white-space:
         nowrap;
 
-    transform:
-        translateX(-50%) translateY(3px);
-
     pointer-events:
         none;
+
+    transform:
+        translateX(-50%) translateY(3px);
 
     transition:
         opacity 0.15s ease,
@@ -1033,7 +988,6 @@
     z-index:
         5;
 }
-
 
 .wakatime-chart-column:hover .wakatime-chart-tooltip {
     opacity:
@@ -1048,7 +1002,6 @@
 
 
 /* === GITHUB === */
-
 .github-stats-grid {
     display:
         grid;
@@ -1062,16 +1015,15 @@
         7px;
 }
 
-
 .github-stat {
-    min-width:
-        0;
-
     display:
         flex;
 
     flex-direction:
         column;
+
+    min-width:
+        0;
 
     gap:
         2px;
@@ -1091,7 +1043,6 @@
             transparent);
 }
 
-
 .github-stat span {
     overflow:
         hidden;
@@ -1108,7 +1059,6 @@
     white-space:
         nowrap;
 }
-
 
 .github-stat strong {
     overflow:
@@ -1132,7 +1082,6 @@
 
 
 /* === RESPONSIVIDADE === */
-
 @media (max-width: 800px) {
     .wakatime-languages {
         grid-template-columns:
@@ -1140,7 +1089,6 @@
                 minmax(0,
                     1fr));
     }
-
 
     .github-stats-grid {
         grid-template-columns:
@@ -1163,18 +1111,15 @@
             10px;
     }
 
-
     .stats-status {
         justify-content:
             flex-start;
     }
 
-
     .stats-summary {
         grid-template-columns:
             1fr;
     }
-
 
     .wakatime-languages {
         grid-template-columns:
@@ -1182,7 +1127,6 @@
                 minmax(0,
                     1fr));
     }
-
 
     .wakatime-activity-header {
         align-items:
@@ -1192,19 +1136,17 @@
             column;
     }
 
-
     .wakatime-period-selector {
         width:
             100%;
     }
 
-
     .wakatime-period-button {
-        min-width:
-            0;
-
         flex:
             1;
+
+        min-width:
+            0;
     }
 }
 
@@ -1215,23 +1157,40 @@
             8px;
     }
 
-
     .stats-header h1 {
         font-size:
             18px;
     }
-
 
     .wakatime-languages {
         grid-template-columns:
             1fr;
     }
 
-
     .github-stats-grid {
         grid-template-columns:
             repeat(2,
                 minmax(0,
                     1fr));
+    }
+
+    .wakatime-chart {
+        gap:
+            3px;
+
+        padding-inline:
+            2px;
+    }
+}
+
+
+/* === ACESSIBILIDADE === */
+@media (prefers-reduced-motion: reduce) {
+
+    .wakatime-period-button,
+    .wakatime-chart-bar,
+    .wakatime-chart-tooltip {
+        transition:
+            none;
     }
 }

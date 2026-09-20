@@ -6,16 +6,22 @@ import WebDemo from './demos/WebDemo/WebDemo'
 import './ProjectDemo.css'
 
 
+/* === TIPOS COM DEMONSTRAÇÃO === */
+const demoTypes =
+    new Set([
+        'terminal',
+        'web',
+        'media',
+    ])
+
+
 function ProjectDemo({
     project,
 }) {
     const hasDemo =
-        project.demoType ===
-        'terminal' ||
-        project.demoType ===
-        'web' ||
-        project.demoType ===
-        'media'
+        demoTypes.has(
+            project.demoType,
+        )
 
 
     /* === CONTEÚDO DA DEMONSTRAÇÃO === */
@@ -64,6 +70,7 @@ function ProjectDemo({
         }
 
 
+    /* === RENDERIZAÇÃO === */
     return (
         <div className="project-demo">
 

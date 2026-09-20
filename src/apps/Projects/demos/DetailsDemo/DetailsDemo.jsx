@@ -10,11 +10,26 @@ import {
 import './DetailsDemo.css'
 
 
-function formatDate(value) {
-    if (!value) {
+/* === FORMATAR DATA === */
+function formatDate(
+    value,
+) {
+    if (
+        !value
+    ) {
         return null
     }
 
+    const date =
+        new Date(value)
+
+    if (
+        Number.isNaN(
+            date.getTime(),
+        )
+    ) {
+        return null
+    }
 
     return new Intl.DateTimeFormat(
         'pt-BR',
@@ -29,9 +44,7 @@ function formatDate(value) {
                 'numeric',
         },
     ).format(
-        new Date(
-            value,
-        ),
+        date,
     )
 }
 
@@ -39,6 +52,8 @@ function formatDate(value) {
 function DetailsDemo({
     project,
 }) {
+
+    /* === DADOS === */
     const features =
         project.details?.features ??
         []
@@ -55,22 +70,24 @@ function DetailsDemo({
 
 
     /* === ABRIR LINK === */
-    const openLink =
-        (
-            url,
-        ) => {
-            if (!url) {
-                return
-            }
-
-            window.open(
-                url,
-                '_blank',
-                'noopener,noreferrer',
-            )
+    const openLink = (
+        url,
+    ) => {
+        if (
+            !url
+        ) {
+            return
         }
 
+        window.open(
+            url,
+            '_blank',
+            'noopener,noreferrer',
+        )
+    }
 
+
+    /* === RENDERIZAÇÃO === */
     return (
         <div className="details-demo">
 
@@ -81,9 +98,9 @@ function DetailsDemo({
                         <FolderGit2
                             size={18}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
                     </span>
-
 
                     <div>
                         <span className="details-demo-label">
@@ -108,21 +125,23 @@ function DetailsDemo({
                         </span>
                     )}
 
-
                     {project.github && (
                         <button
                             type="button"
                             className="details-demo-github"
-                            onClick={
-                                () =>
-                                    openLink(
-                                        project.github,
-                                    )
+                            onClick={() =>
+                                openLink(
+                                    project.github,
+                                )
+                            }
+                            aria-label={
+                                `Abrir ${project.title} no GitHub`
                             }
                         >
                             <GitBranch
                                 size={14}
                                 strokeWidth={1.8}
+                                aria-hidden="true"
                             />
 
                             Ver no GitHub
@@ -152,6 +171,7 @@ function DetailsDemo({
                     <Star
                         size={15}
                         strokeWidth={1.8}
+                        aria-hidden="true"
                     />
 
                     <div>
@@ -173,6 +193,7 @@ function DetailsDemo({
                     <GitFork
                         size={15}
                         strokeWidth={1.8}
+                        aria-hidden="true"
                     />
 
                     <div>
@@ -195,6 +216,7 @@ function DetailsDemo({
                         <CalendarDays
                             size={15}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
 
                         <div>
@@ -214,61 +236,59 @@ function DetailsDemo({
 
 
             {/* === TECNOLOGIAS === */}
-            {technologies.length >
-                0 && (
-                    <section className="details-demo-block">
-                        <span className="details-demo-section-label">
-                            Tecnologias
-                        </span>
+            {technologies.length > 0 && (
+                <section className="details-demo-block">
+                    <span className="details-demo-section-label">
+                        Tecnologias
+                    </span>
 
-                        <div className="details-demo-technologies">
-                            {technologies.map(
-                                (
-                                    technology,
-                                ) => (
-                                    <span
-                                        key={
-                                            technology
-                                        }
-                                    >
-                                        {
-                                            technology
-                                        }
-                                    </span>
-                                ),
-                            )}
-                        </div>
-                    </section>
-                )}
+                    <div className="details-demo-technologies">
+                        {technologies.map(
+                            (
+                                technology,
+                            ) => (
+                                <span
+                                    key={
+                                        technology
+                                    }
+                                >
+                                    {
+                                        technology
+                                    }
+                                </span>
+                            ),
+                        )}
+                    </div>
+                </section>
+            )}
 
 
             {/* === INFORMAÇÕES === */}
-            {features.length >
-                0 && (
-                    <section className="details-demo-block">
-                        <span className="details-demo-section-label">
-                            Informações
-                        </span>
+            {features.length > 0 && (
+                <section className="details-demo-block">
+                    <span className="details-demo-section-label">
+                        Informações
+                    </span>
 
-                        <ul className="details-demo-features">
-                            {features.map(
-                                (
-                                    feature,
-                                ) => (
-                                    <li
-                                        key={
-                                            feature
-                                        }
-                                    >
-                                        {
-                                            feature
-                                        }
-                                    </li>
-                                ),
-                            )}
-                        </ul>
-                    </section>
-                )}
+                    <ul className="details-demo-features">
+                        {features.map(
+                            (
+                                feature,
+                            ) => (
+                                <li
+                                    key={
+                                        feature
+                                    }
+                                >
+                                    {
+                                        feature
+                                    }
+                                </li>
+                            ),
+                        )}
+                    </ul>
+                </section>
+            )}
 
 
             {/* === AÇÃO EXTERNA === */}
@@ -277,16 +297,19 @@ function DetailsDemo({
                     <button
                         type="button"
                         className="details-demo-button details-demo-button-primary"
-                        onClick={
-                            () =>
-                                openLink(
-                                    project.details.link,
-                                )
+                        onClick={() =>
+                            openLink(
+                                project.details.link,
+                            )
+                        }
+                        aria-label={
+                            `Abrir projeto ${project.title}`
                         }
                     >
                         <ExternalLink
                             size={15}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
 
                         Abrir projeto

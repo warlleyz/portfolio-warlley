@@ -1,6 +1,5 @@
 import {
     useEffect,
-    useMemo,
     useRef,
     useState,
 } from 'react'
@@ -14,7 +13,6 @@ import './Terminal.css'
 
 
 /* === APLICATIVOS DO WS OS === */
-
 const apps = {
     about: {
         name:
@@ -54,7 +52,6 @@ const apps = {
 
 
 /* === PROJETOS === */
-
 const projects = {
     'api-clima': {
         id:
@@ -139,7 +136,6 @@ const projects = {
 
 
 /* === LINKS === */
-
 const externalLinks = {
     github:
         'https://github.com/warlleyz',
@@ -153,7 +149,6 @@ const externalLinks = {
 
 
 /* === SISTEMA DE ARQUIVOS SIMULADO === */
-
 const fileSystem = {
     '~': {
         directories: [
@@ -179,8 +174,7 @@ const fileSystem = {
     },
 
     '~/portfolio/about': {
-        directories:
-            [],
+        directories: [],
 
         files: [
             'profile.txt',
@@ -199,8 +193,7 @@ const fileSystem = {
     },
 
     '~/portfolio/projects/api-clima': {
-        directories:
-            [],
+        directories: [],
 
         files: [
             'README.md',
@@ -208,8 +201,7 @@ const fileSystem = {
     },
 
     '~/portfolio/projects/carrinho-compras': {
-        directories:
-            [],
+        directories: [],
 
         files: [
             'README.md',
@@ -217,8 +209,7 @@ const fileSystem = {
     },
 
     '~/portfolio/projects/login-puc': {
-        directories:
-            [],
+        directories: [],
 
         files: [
             'README.md',
@@ -226,8 +217,7 @@ const fileSystem = {
     },
 
     '~/portfolio/projects/snakepy': {
-        directories:
-            [],
+        directories: [],
 
         files: [
             'README.md',
@@ -235,8 +225,7 @@ const fileSystem = {
     },
 
     '~/portfolio/technologies': {
-        directories:
-            [],
+        directories: [],
 
         files: [
             'stack.txt',
@@ -244,8 +233,7 @@ const fileSystem = {
     },
 
     '~/portfolio/contact': {
-        directories:
-            [],
+        directories: [],
 
         files: [
             'contact.txt',
@@ -253,8 +241,7 @@ const fileSystem = {
     },
 
     '~/portfolio/resume': {
-        directories:
-            [],
+        directories: [],
 
         files: [
             'curriculo-warlley.pdf',
@@ -262,8 +249,7 @@ const fileSystem = {
     },
 
     '~/portfolio/stats': {
-        directories:
-            [],
+        directories: [],
 
         files: [
             'github.txt',
@@ -274,7 +260,6 @@ const fileSystem = {
 
 
 /* === CONTEÚDO DOS ARQUIVOS === */
-
 const fileContents = {
     '~/portfolio/README.md':
         `WS OS Portfolio
@@ -355,7 +340,6 @@ open stats`,
 
 
 /* === COMANDOS === */
-
 const baseCommands = [
     'help',
     'about',
@@ -384,7 +368,6 @@ const baseCommands = [
 
 
 /* === AJUDA === */
-
 const helpText =
     `WS OS Terminal
 
@@ -439,6 +422,8 @@ EXEMPLOS
 function Terminal({
     onOpenApp,
 }) {
+
+    /* === ESTADO === */
     const [
         command,
         setCommand,
@@ -460,6 +445,11 @@ function Terminal({
     ] = useState(null)
 
     const [
+        draftCommand,
+        setDraftCommand,
+    ] = useState('')
+
+    const [
         currentPath,
         setCurrentPath,
     ] = useState(
@@ -467,6 +457,7 @@ function Terminal({
     )
 
 
+    /* === REFERÊNCIAS === */
     const terminalRef =
         useRef(null)
 
@@ -474,24 +465,10 @@ function Terminal({
         useRef(null)
 
 
-    /* === CAMINHO DO PROMPT === */
-
-    const promptPath =
-        useMemo(
-            () =>
-                currentPath,
-            [
-                currentPath,
-            ],
-        )
-
-
     /* === SCROLL AUTOMÁTICO === */
-
     useEffect(() => {
         const terminal =
             terminalRef.current
-
 
         if (
             !terminal
@@ -499,118 +476,115 @@ function Terminal({
             return
         }
 
+        const frame =
+            requestAnimationFrame(
+                () => {
+                    terminal.scrollTop =
+                        terminal.scrollHeight
+                },
+            )
 
-        requestAnimationFrame(
-            () => {
-                terminal.scrollTop =
-                    terminal.scrollHeight
-            },
-        )
+        return () => {
+            cancelAnimationFrame(
+                frame,
+            )
+        }
     }, [
         history,
     ])
 
 
     /* === FOCO INICIAL === */
-
     useEffect(() => {
         inputRef.current
             ?.focus()
     }, [])
 
 
-    /* === ADICIONAR HISTÓRICO === */
-
-    const addHistory =
-        (
-            typedCommand,
-            output = '',
-            type = 'normal',
-        ) => {
-            setHistory(
-                (
-                    currentHistory,
-                ) => [
-                        ...currentHistory,
-
-                        {
-                            command:
-                                typedCommand,
-
-                            output,
-
-                            path:
-                                currentPath,
-
-                            type,
-                        },
-                    ],
-            )
+    /* === FOCO === */
+    const focusInput =
+        () => {
+            inputRef.current
+                ?.focus()
         }
 
 
-    /* === RESOLVER CAMINHO === */
+    /* === ADICIONAR HISTÓRICO === */
+    const addHistory = (
+        typedCommand,
+        output = '',
+        type = 'normal',
+    ) => {
+        setHistory(
+            (
+                currentHistory,
+            ) => [
+                    ...currentHistory,
 
-    const resolvePath =
-        (
-            target,
-        ) => {
+                    {
+                        command:
+                            typedCommand,
+
+                        output,
+
+                        path:
+                            currentPath,
+
+                        type,
+                    },
+                ],
+        )
+    }
+
+
+    /* === RESOLVER CAMINHO === */
+    const resolvePath = (
+        target,
+    ) => {
+        if (
+            !target ||
+            target === '~' ||
+            target === '/'
+        ) {
+            return '~'
+        }
+
+        if (
+            target === '..'
+        ) {
             if (
-                !target ||
-                target ===
-                '~' ||
-                target ===
-                '/'
+                currentPath ===
+                '~'
             ) {
                 return '~'
             }
 
-
-            if (
-                target ===
-                '..'
-            ) {
-                if (
-                    currentPath ===
-                    '~'
-                ) {
-                    return '~'
-                }
-
-
-                const parts =
-                    currentPath.split(
-                        '/',
-                    )
-
-
-                parts.pop()
-
-
-                return (
-                    parts.join(
-                        '/',
-                    ) ||
-                    '~'
+            const parts =
+                currentPath.split(
+                    '/',
                 )
-            }
 
+            parts.pop()
 
-            if (
-                target.startsWith(
-                    '~/',
-                )
-            ) {
-                return target
-            }
-
-
-            return `${currentPath}/${target}`
+            return (
+                parts.join('/') ||
+                '~'
+            )
         }
+
+        if (
+            target.startsWith(
+                '~/',
+            )
+        ) {
+            return target
+        }
+
+        return `${currentPath}/${target}`
+    }
 
 
     /* === LISTAR DIRETÓRIO === */
-
     const listDirectory =
         () => {
             const directory =
@@ -618,13 +592,11 @@ function Terminal({
                 currentPath
                 ]
 
-
             if (
                 !directory
             ) {
                 return 'Diretório não encontrado.'
             }
-
 
             const directories =
                 directory.directories.map(
@@ -634,12 +606,10 @@ function Terminal({
                         `${item}/`,
                 )
 
-
             const items = [
                 ...directories,
                 ...directory.files,
             ]
-
 
             if (
                 items.length ===
@@ -648,7 +618,6 @@ function Terminal({
                 return 'Diretório vazio.'
             }
 
-
             return items.join(
                 '    ',
             )
@@ -656,127 +625,111 @@ function Terminal({
 
 
     /* === LER ARQUIVO === */
+    const readFile = (
+        fileName,
+    ) => {
+        if (
+            !fileName
+        ) {
+            return 'Uso: cat <arquivo>'
+        }
 
-    const readFile =
-        (
-            fileName,
-        ) => {
-            if (
-                !fileName
-            ) {
-                return 'Uso: cat <arquivo>'
-            }
+        const directory =
+            fileSystem[
+            currentPath
+            ]
 
+        if (
+            !directory
+        ) {
+            return `cat: ${fileName}: diretório não encontrado`
+        }
 
-            const directory =
-                fileSystem[
-                currentPath
-                ]
+        const realFileName =
+            directory.files.find(
+                (
+                    item,
+                ) =>
+                    item
+                        .toLowerCase() ===
+                    fileName
+                        .toLowerCase(),
+            )
 
+        if (
+            !realFileName
+        ) {
+            return `cat: ${fileName}: arquivo não encontrado`
+        }
 
-            if (
-                !directory
-            ) {
-                return `cat: ${fileName}: diretório não encontrado`
-            }
+        const fullPath =
+            `${currentPath}/${realFileName}`
 
+        const content =
+            fileContents[
+            fullPath
+            ]
 
-            const realFileName =
-                directory.files.find(
-                    (
-                        item,
-                    ) =>
-                        item
-                            .toLowerCase() ===
-                        fileName
-                            .toLowerCase(),
-                )
-
-
-            if (
-                !realFileName
-            ) {
-                return `cat: ${fileName}: arquivo não encontrado`
-            }
-
-
-            const fullPath =
-                `${currentPath}/${realFileName}`
-
-
-            const content =
-                fileContents[
-                fullPath
-                ]
-
-
-            if (
-                content
-            ) {
-                return content
-            }
-
-
-            /* ----- README DE PROJETO ----- */
-
-            if (
-                realFileName
-                    .toLowerCase() ===
-                'readme.md' &&
-                currentPath.startsWith(
-                    '~/portfolio/projects/',
-                )
-            ) {
-                const projectId =
-                    currentPath
-                        .split(
-                            '/',
-                        )
-                        .pop()
-
-                const project =
-                    projects[
-                    projectId
-                    ]
-
-
-                if (
-                    project
-                ) {
-                    return `${project.name}
-
-${project.description}
-
-Tecnologias:
-${project.technologies}
-
-GitHub:
-${project.github}`
-                }
-            }
-
-
-            /* ----- PDF ----- */
-
-            if (
-                realFileName
-                    .toLowerCase() ===
-                'curriculo-warlley.pdf'
-            ) {
-                return `Arquivo PDF.
-
-Use:
-
-open resume`
-            }
-
-
-            return `Não foi possível ler: ${realFileName}`
+        if (
+            content
+        ) {
+            return content
         }
 
 
-    /* === LISTAR PROJETOS === */
+        /* ----- README DE PROJETO ----- */
+        if (
+            realFileName
+                .toLowerCase() ===
+            'readme.md' &&
+            currentPath.startsWith(
+                '~/portfolio/projects/',
+            )
+        ) {
+            const projectId =
+                currentPath
+                    .split('/')
+                    .pop()
 
+            const project =
+                projects[
+                projectId
+                ]
+
+            if (
+                project
+            ) {
+                return `${project.name}
+
+                ${project.description}
+
+                Tecnologias:
+                ${project.technologies}
+
+                GitHub:
+                ${project.github}`
+            }
+        }
+
+
+        /* ----- PDF ----- */
+        if (
+            realFileName
+                .toLowerCase() ===
+            'curriculo-warlley.pdf'
+        ) {
+            return `Arquivo PDF.
+
+            Use:
+
+            open resume`
+        }
+
+        return `Não foi possível ler: ${realFileName}`
+    }
+
+
+    /* === LISTAR PROJETOS === */
     const getProjectsOutput =
         () =>
             Object
@@ -795,172 +748,151 @@ open resume`
                             ' ',
                         )} ${project.name}`,
                 )
-                .join(
-                    '\n',
-                )
+                .join('\n')
 
 
     /* === DETALHES DO PROJETO === */
+    const getProjectOutput = (
+        projectName,
+    ) => {
+        if (
+            !projectName
+        ) {
+            return `Uso: repo <projeto>
 
-    const getProjectOutput =
-        (
-            projectName,
-        ) => {
-            if (
-                !projectName
-            ) {
-                return `Uso: repo <projeto>
-
-Projetos disponíveis:
-${Object.keys(
-                    projects,
-                ).join(
-                    ', ',
-                )}`
-            }
-
-
-            const project =
-                projects[
-                projectName
-                ]
-
-
-            if (
-                !project
-            ) {
-                return `Projeto não encontrado: ${projectName}
-
-Digite projects para visualizar os projetos disponíveis.`
-            }
-
-
-            return `${project.name}
-
-Repositório:
-${project.repository}
-
-Descrição:
-${project.description}
-
-Tecnologias:
-${project.technologies}
-
-GitHub:
-${project.github}
-
-Abrir demonstração:
-open project ${projectName}`
+            Projetos disponíveis:
+            ${Object.keys(
+                projects,
+            ).join(', ')}`
         }
+
+        const project =
+            projects[
+            projectName
+            ]
+
+        if (
+            !project
+        ) {
+            return `Projeto não encontrado: ${projectName}
+
+            Digite projects para visualizar os projetos disponíveis.`
+        }
+
+        return `${project.name}
+
+        Repositório:
+        ${project.repository}
+
+        Descrição:
+        ${project.description}
+
+        Tecnologias:
+        ${project.technologies}
+
+        GitHub:
+        ${project.github}
+
+        Abrir demonstração:
+        open project ${projectName}`
+    }
 
 
     /* === ABRIR LINK EXTERNO === */
-
-    const openExternal =
-        (
-            url,
-        ) => {
-            window.open(
-                url,
-                '_blank',
-                'noopener,noreferrer',
-            )
+    const openExternal = (
+        url,
+    ) => {
+        if (
+            !url
+        ) {
+            return
         }
+
+        window.open(
+            url,
+            '_blank',
+            'noopener,noreferrer',
+        )
+    }
 
 
     /* === ABRIR APP === */
+    const openApp = (
+        appId,
+    ) => {
+        if (
+            !appId
+        ) {
+            return `Uso: open <app>
 
-    const openApp =
-        (
-            appId,
-        ) => {
-            if (
-                !appId
-            ) {
-                return `Uso: open <app>
-
-Digite apps para visualizar os aplicativos disponíveis.`
-            }
-
-
-            if (
-                !apps[
-                appId
-                ]
-            ) {
-                return `Aplicativo não encontrado: ${appId}
-
-Digite apps para visualizar os aplicativos disponíveis.`
-            }
-
-
-            onOpenApp?.(
-                appId,
-            )
-
-
-            return `Abrindo ${apps[appId].name}...`
+            Digite apps para visualizar os aplicativos disponíveis.`
         }
+
+        if (
+            !apps[
+            appId
+            ]
+        ) {
+            return `Aplicativo não encontrado: ${appId}
+
+            Digite apps para visualizar os aplicativos disponíveis.`
+        }
+
+        onOpenApp?.(
+            appId,
+        )
+
+        return `Abrindo ${apps[appId].name}...`
+    }
 
 
     /* === ABRIR PROJETO === */
+    const openProject = (
+        projectId,
+    ) => {
+        if (
+            !projectId
+        ) {
+            return `Uso: open project <projeto>
 
-    const openProject =
-        (
-            projectId,
-        ) => {
-            if (
-                !projectId
-            ) {
-                return `Uso: open project <projeto>
-
-Projetos disponíveis:
-${Object.keys(
-                    projects,
-                ).join(
-                    ', ',
-                )}`
-            }
-
-
-            const project =
-                projects[
-                projectId
-                ]
-
-
-            if (
-                !project
-            ) {
-                return `Projeto não encontrado: ${projectId}
-
-Digite projects para visualizar os projetos disponíveis.`
-            }
-
-
-            onOpenApp?.(
-                `project-${project.id}`,
-            )
-
-
-            return `Abrindo ${project.name}...`
+            Projetos disponíveis:
+            ${Object.keys(
+                projects,
+            ).join(', ')}`
         }
+
+        const project =
+            projects[
+            projectId
+            ]
+
+        if (
+            !project
+        ) {
+            return `Projeto não encontrado: ${projectId}
+
+            Digite projects para visualizar os projetos disponíveis.`
+        }
+
+        onOpenApp?.(
+            `project-${project.id}`,
+        )
+
+        return `Abrindo ${project.name}...`
+    }
 
 
     /* === AUTOCOMPLETE === */
-
     const handleAutocomplete =
         () => {
             const value =
                 command
-
 
             if (
                 !value.trim()
             ) {
                 return
             }
-
 
             const trimmedValue =
                 value.trimStart()
@@ -976,7 +908,6 @@ Digite projects para visualizar os projetos disponíveis.`
 
 
             /* ----- COMANDO PRINCIPAL ----- */
-
             if (
                 parts.length ===
                 1
@@ -991,7 +922,6 @@ Digite projects para visualizar os projetos disponíveis.`
                             ),
                     )
 
-
                 if (
                     matches.length ===
                     1
@@ -1003,10 +933,8 @@ Digite projects para visualizar os projetos disponíveis.`
                     return
                 }
 
-
                 if (
-                    matches.length >
-                    1
+                    matches.length > 1
                 ) {
                     addHistory(
                         value,
@@ -1017,13 +945,11 @@ Digite projects para visualizar os projetos disponíveis.`
                     )
                 }
 
-
                 return
             }
 
 
             /* ----- CD ----- */
-
             if (
                 commandName ===
                 'cd'
@@ -1038,7 +964,6 @@ Digite projects para visualizar os projetos disponíveis.`
                     currentPath
                     ]
 
-
                 const options = [
                     '..',
                     '~',
@@ -1048,7 +973,6 @@ Digite projects para visualizar os projetos disponíveis.`
                         []
                     ),
                 ]
-
 
                 const matches =
                     options.filter(
@@ -1062,7 +986,6 @@ Digite projects para visualizar os projetos disponíveis.`
                                 ),
                     )
 
-
                 if (
                     matches.length ===
                     1
@@ -1074,10 +997,8 @@ Digite projects para visualizar os projetos disponíveis.`
                     return
                 }
 
-
                 if (
-                    matches.length >
-                    1
+                    matches.length > 1
                 ) {
                     addHistory(
                         value,
@@ -1088,25 +1009,19 @@ Digite projects para visualizar os projetos disponíveis.`
                     )
                 }
 
-
                 return
             }
 
 
             /* ----- CAT ----- */
-
             if (
                 commandName ===
                 'cat'
             ) {
                 const argument =
                     parts
-                        .slice(
-                            1,
-                        )
-                        .join(
-                            ' ',
-                        )
+                        .slice(1)
+                        .join(' ')
                         .toLowerCase()
 
                 const directory =
@@ -1114,12 +1029,9 @@ Digite projects para visualizar os projetos disponíveis.`
                     currentPath
                     ]
 
-
                 const files =
-                    directory
-                        ?.files ??
+                    directory?.files ??
                     []
-
 
                 const matches =
                     files.filter(
@@ -1133,7 +1045,6 @@ Digite projects para visualizar os projetos disponíveis.`
                                 ),
                     )
 
-
                 if (
                     matches.length ===
                     1
@@ -1145,10 +1056,8 @@ Digite projects para visualizar os projetos disponíveis.`
                     return
                 }
 
-
                 if (
-                    matches.length >
-                    1
+                    matches.length > 1
                 ) {
                     addHistory(
                         value,
@@ -1159,27 +1068,20 @@ Digite projects para visualizar os projetos disponíveis.`
                     )
                 }
 
-
                 return
             }
 
 
             /* ----- REPO ----- */
-
             if (
                 commandName ===
                 'repo'
             ) {
                 const argument =
                     parts
-                        .slice(
-                            1,
-                        )
-                        .join(
-                            ' ',
-                        )
+                        .slice(1)
+                        .join(' ')
                         .toLowerCase()
-
 
                 const matches =
                     Object
@@ -1194,7 +1096,6 @@ Digite projects para visualizar os projetos disponíveis.`
                                     argument,
                                 ),
                         )
-
 
                 if (
                     matches.length ===
@@ -1207,10 +1108,8 @@ Digite projects para visualizar os projetos disponíveis.`
                     return
                 }
 
-
                 if (
-                    matches.length >
-                    1
+                    matches.length > 1
                 ) {
                     addHistory(
                         value,
@@ -1221,13 +1120,11 @@ Digite projects para visualizar os projetos disponíveis.`
                     )
                 }
 
-
                 return
             }
 
 
             /* ----- OPEN ----- */
-
             if (
                 commandName ===
                 'open' &&
@@ -1238,14 +1135,12 @@ Digite projects para visualizar os projetos disponíveis.`
                     parts[1]
                         .toLowerCase()
 
-
                 const options = [
                     'project',
                     ...Object.keys(
                         apps,
                     ),
                 ]
-
 
                 const matches =
                     options.filter(
@@ -1256,7 +1151,6 @@ Digite projects para visualizar os projetos disponíveis.`
                                 argument,
                             ),
                     )
-
 
                 if (
                     matches.length ===
@@ -1269,10 +1163,8 @@ Digite projects para visualizar os projetos disponíveis.`
                     return
                 }
 
-
                 if (
-                    matches.length >
-                    1
+                    matches.length > 1
                 ) {
                     addHistory(
                         value,
@@ -1283,13 +1175,11 @@ Digite projects para visualizar os projetos disponíveis.`
                     )
                 }
 
-
                 return
             }
 
 
             /* ----- OPEN PROJECT ----- */
-
             if (
                 commandName ===
                 'open' &&
@@ -1299,14 +1189,9 @@ Digite projects para visualizar os projetos disponíveis.`
             ) {
                 const argument =
                     parts
-                        .slice(
-                            2,
-                        )
-                        .join(
-                            ' ',
-                        )
+                        .slice(2)
+                        .join(' ')
                         .toLowerCase()
-
 
                 const matches =
                     Object
@@ -1322,7 +1207,6 @@ Digite projects para visualizar os projetos disponíveis.`
                                 ),
                         )
 
-
                 if (
                     matches.length ===
                     1
@@ -1334,10 +1218,8 @@ Digite projects para visualizar os projetos disponíveis.`
                     return
                 }
 
-
                 if (
-                    matches.length >
-                    1
+                    matches.length > 1
                 ) {
                     addHistory(
                         value,
@@ -1352,19 +1234,16 @@ Digite projects para visualizar os projetos disponíveis.`
 
 
     /* === EXECUTAR COMANDO === */
-
     const executeCommand =
         () => {
             const rawCommand =
                 command.trim()
-
 
             if (
                 !rawCommand
             ) {
                 return
             }
-
 
             const parts =
                 rawCommand.split(
@@ -1377,9 +1256,7 @@ Digite projects para visualizar os projetos disponíveis.`
 
             const normalizedArguments =
                 parts
-                    .slice(
-                        1,
-                    )
+                    .slice(1)
                     .map(
                         (
                             item,
@@ -1391,7 +1268,6 @@ Digite projects para visualizar os projetos disponíveis.`
                 normalizedArguments.join(
                     ' ',
                 )
-
 
             setCommandHistory(
                 (
@@ -1406,9 +1282,12 @@ Digite projects para visualizar os projetos disponíveis.`
                 null,
             )
 
+            setDraftCommand(
+                '',
+            )
+
 
             /* === CLEAR === */
-
             if (
                 commandName ===
                 'clear'
@@ -1426,7 +1305,6 @@ Digite projects para visualizar os projetos disponíveis.`
 
 
             /* === RESET === */
-
             if (
                 commandName ===
                 'reset'
@@ -1441,6 +1319,10 @@ Digite projects para visualizar os projetos disponíveis.`
 
                 setHistoryIndex(
                     null,
+                )
+
+                setDraftCommand(
+                    '',
                 )
 
                 setCurrentPath(
@@ -1458,6 +1340,7 @@ Digite projects para visualizar os projetos disponíveis.`
             let output
 
 
+            /* === COMANDOS === */
             switch (
             commandName
             ) {
@@ -1466,7 +1349,6 @@ Digite projects para visualizar os projetos disponíveis.`
                         helpText
                     break
 
-
                 case 'about':
                     output =
                         fileContents[
@@ -1474,20 +1356,18 @@ Digite projects para visualizar os projetos disponíveis.`
                         ]
                     break
 
-
                 case 'projects':
                     output =
                         `Projetos disponíveis:
 
-${getProjectsOutput()}
+                        ${getProjectsOutput()}
 
-Detalhes:
-repo <projeto>
+                        Detalhes:
+                        repo <projeto>
 
-Abrir:
-open project <projeto>`
+                        Abrir:
+                        open project <projeto>`
                     break
-
 
                 case 'technologies':
                     output =
@@ -1496,7 +1376,6 @@ open project <projeto>`
                         ]
                     break
 
-
                 case 'contact':
                     output =
                         fileContents[
@@ -1504,35 +1383,32 @@ open project <projeto>`
                         ]
                     break
 
-
                 case 'resume':
                     output =
                         `Currículo profissional
 
-Use:
+                        Use:
 
-open resume
+                        open resume
 
-para visualizar o PDF dentro do WS OS.`
+                        para visualizar o PDF dentro do WS OS.`
                     break
-
 
                 case 'stats':
                     output =
                         `Estatísticas de desenvolvimento
 
-Integrações:
-- GitHub
-- WakaTime
-- Linguagens
-- Repositórios
-- Atividade por período
+                        Integrações:
+                        - GitHub
+                        - WakaTime
+                        - Linguagens
+                        - Repositórios
+                        - Atividade por período
 
-Use:
+                        Use:
 
-open stats`
+                        open stats`
                     break
-
 
                 case 'apps':
                     output =
@@ -1552,30 +1428,24 @@ open stats`
                                         ' ',
                                     )} ${app.name}`,
                             )
-                            .join(
-                                '\n',
-                            )
+                            .join('\n')
                     break
-
 
                 case 'ls':
                     output =
                         listDirectory()
                     break
 
-
                 case 'pwd':
                     output =
                         currentPath
                     break
-
 
                 case 'cd': {
                     const targetPath =
                         resolvePath(
                             argument,
                         )
-
 
                     if (
                         fileSystem[
@@ -1596,17 +1466,11 @@ open stats`
                     break
                 }
 
-
                 case 'cat': {
                     const originalArgument =
                         parts
-                            .slice(
-                                1,
-                            )
-                            .join(
-                                ' ',
-                            )
-
+                            .slice(1)
+                            .join(' ')
 
                     output =
                         readFile(
@@ -1616,14 +1480,12 @@ open stats`
                     break
                 }
 
-
                 case 'repo':
                     output =
                         getProjectOutput(
                             argument,
                         )
                     break
-
 
                 case 'open': {
                     if (
@@ -1632,13 +1494,8 @@ open stats`
                     ) {
                         const projectId =
                             normalizedArguments
-                                .slice(
-                                    1,
-                                )
-                                .join(
-                                    ' ',
-                                )
-
+                                .slice(1)
+                                .join(' ')
 
                         output =
                             openProject(
@@ -1648,7 +1505,6 @@ open stats`
                         break
                     }
 
-
                     output =
                         openApp(
                             argument,
@@ -1657,16 +1513,14 @@ open stats`
                     break
                 }
 
-
                 case 'whoami':
                     output =
                         `warlley
 
-Warlley Silva Baião Braga
-Estudante de Engenharia de Software
-PUC Minas`
+                        Warlley Silva Baião Braga
+                        Estudante de Engenharia de Software
+                        PUC Minas`
                     break
-
 
                 case 'date':
                     output =
@@ -1684,7 +1538,6 @@ PUC Minas`
                         )
                     break
 
-
                 case 'echo':
                     output =
                         rawCommand.replace(
@@ -1692,7 +1545,6 @@ PUC Minas`
                             '',
                         )
                     break
-
 
                 case 'history':
                     output =
@@ -1706,18 +1558,14 @@ PUC Minas`
                                     index,
                                 ) =>
                                     `${String(
-                                        index +
-                                        1,
+                                        index + 1,
                                     ).padStart(
                                         3,
                                         ' ',
                                     )}  ${item}`,
                             )
-                            .join(
-                                '\n',
-                            )
+                            .join('\n')
                     break
-
 
                 case 'github':
                     openExternal(
@@ -1728,7 +1576,6 @@ PUC Minas`
                         'Abrindo GitHub...'
                     break
 
-
                 case 'linkedin':
                     openExternal(
                         externalLinks.linkedin,
@@ -1738,7 +1585,6 @@ PUC Minas`
                         'Abrindo LinkedIn...'
                     break
 
-
                 case 'email':
                     window.location.href =
                         externalLinks.email
@@ -1747,16 +1593,13 @@ PUC Minas`
                         'Abrindo cliente de e-mail...'
                     break
 
-
                 default:
                     output =
                         `Comando não encontrado: ${commandName}
 
-Digite help para visualizar os comandos disponíveis.`
-
+                        Digite help para visualizar os comandos disponíveis.`
                     break
             }
-
 
             addHistory(
                 rawCommand,
@@ -1769,103 +1612,33 @@ Digite help para visualizar os comandos disponíveis.`
         }
 
 
-    /* === TECLADO === */
+    /* === HISTÓRICO DE COMANDOS === */
+    const navigateHistory = (
+        direction,
+    ) => {
+        if (
+            commandHistory.length ===
+            0
+        ) {
+            return
+        }
 
-    const handleKeyDown =
-        (
-            event,
-        ) => {
+        if (
+            direction ===
+            'up'
+        ) {
             if (
-                event.key ===
-                'Enter'
+                historyIndex ===
+                null
             ) {
-                executeCommand()
-
-                return
-            }
-
-
-            /* ----- HISTÓRICO ANTERIOR ----- */
-
-            if (
-                event.key ===
-                'ArrowUp'
-            ) {
-                event.preventDefault()
-
-
-                if (
-                    commandHistory.length ===
-                    0
-                ) {
-                    return
-                }
-
-
-                const nextIndex =
-                    historyIndex ===
-                        null
-                        ? commandHistory.length -
-                        1
-                        : Math.max(
-                            historyIndex -
-                            1,
-                            0,
-                        )
-
-
-                setHistoryIndex(
-                    nextIndex,
+                setDraftCommand(
+                    command,
                 )
 
-                setCommand(
-                    commandHistory[
-                    nextIndex
-                    ],
-                )
-
-                return
-            }
-
-
-            /* ----- HISTÓRICO SEGUINTE ----- */
-
-            if (
-                event.key ===
-                'ArrowDown'
-            ) {
-                event.preventDefault()
-
-
-                if (
-                    historyIndex ===
-                    null
-                ) {
-                    return
-                }
-
-
                 const nextIndex =
-                    historyIndex +
+                    commandHistory.length -
                     1
 
-
-                if (
-                    nextIndex >=
-                    commandHistory.length
-                ) {
-                    setHistoryIndex(
-                        null,
-                    )
-
-                    setCommand(
-                        '',
-                    )
-
-                    return
-                }
-
-
                 setHistoryIndex(
                     nextIndex,
                 )
@@ -1879,22 +1652,141 @@ Digite help para visualizar os comandos disponíveis.`
                 return
             }
 
+            const nextIndex =
+                Math.max(
+                    historyIndex - 1,
+                    0,
+                )
 
-            /* ----- AUTOCOMPLETE ----- */
+            setHistoryIndex(
+                nextIndex,
+            )
 
-            if (
-                event.key ===
-                'Tab'
-            ) {
-                event.preventDefault()
+            setCommand(
+                commandHistory[
+                nextIndex
+                ],
+            )
 
-                handleAutocomplete()
-            }
+            return
         }
+
+        if (
+            historyIndex ===
+            null
+        ) {
+            return
+        }
+
+        const nextIndex =
+            historyIndex + 1
+
+        if (
+            nextIndex >=
+            commandHistory.length
+        ) {
+            setHistoryIndex(
+                null,
+            )
+
+            setCommand(
+                draftCommand,
+            )
+
+            return
+        }
+
+        setHistoryIndex(
+            nextIndex,
+        )
+
+        setCommand(
+            commandHistory[
+            nextIndex
+            ],
+        )
+    }
+
+
+    /* === TECLADO === */
+    const handleKeyDown = (
+        event,
+    ) => {
+        if (
+            event.key ===
+            'Enter'
+        ) {
+            event.preventDefault()
+
+            executeCommand()
+
+            return
+        }
+
+        if (
+            event.key ===
+            'ArrowUp'
+        ) {
+            event.preventDefault()
+
+            navigateHistory(
+                'up',
+            )
+
+            return
+        }
+
+        if (
+            event.key ===
+            'ArrowDown'
+        ) {
+            event.preventDefault()
+
+            navigateHistory(
+                'down',
+            )
+
+            return
+        }
+
+        if (
+            event.key ===
+            'Tab'
+        ) {
+            event.preventDefault()
+
+            handleAutocomplete()
+        }
+    }
+
+
+    /* === ALTERAR COMANDO === */
+    const handleCommandChange = (
+        event,
+    ) => {
+        const value =
+            event.target.value
+
+        setCommand(
+            value,
+        )
+
+        if (
+            historyIndex !==
+            null
+        ) {
+            setHistoryIndex(
+                null,
+            )
+
+            setDraftCommand(
+                value,
+            )
+        }
+    }
 
 
     /* === LIMPAR TERMINAL === */
-
     const clearTerminal =
         () => {
             setHistory(
@@ -1905,13 +1797,19 @@ Digite help para visualizar os comandos disponíveis.`
                 '',
             )
 
-            inputRef.current
-                ?.focus()
+            setHistoryIndex(
+                null,
+            )
+
+            setDraftCommand(
+                '',
+            )
+
+            focusInput()
         }
 
 
     /* === RESETAR TERMINAL === */
-
     const resetTerminal =
         () => {
             setHistory(
@@ -1930,23 +1828,29 @@ Digite help para visualizar os comandos disponíveis.`
                 null,
             )
 
+            setDraftCommand(
+                '',
+            )
+
             setCurrentPath(
                 '~/portfolio',
             )
 
-            inputRef.current
-                ?.focus()
+            focusInput()
         }
 
 
+    /* === RENDERIZAÇÃO === */
     return (
         <div className="portfolio-terminal-shell">
 
             {/* === CABEÇALHO === */}
-
             <header className="portfolio-terminal-header">
                 <div className="portfolio-terminal-header-info">
-                    <span className="portfolio-terminal-status" />
+                    <span
+                        className="portfolio-terminal-status"
+                        aria-hidden="true"
+                    />
 
                     <div>
                         <strong>
@@ -1958,7 +1862,6 @@ Digite help para visualizar os comandos disponíveis.`
                         </span>
                     </div>
                 </div>
-
 
                 <div className="portfolio-terminal-actions">
                     <button
@@ -1972,6 +1875,7 @@ Digite help para visualizar os comandos disponíveis.`
                         <Trash2
                             size={14}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
                     </button>
 
@@ -1986,6 +1890,7 @@ Digite help para visualizar os comandos disponíveis.`
                         <RotateCcw
                             size={14}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
                     </button>
                 </div>
@@ -1993,123 +1898,120 @@ Digite help para visualizar os comandos disponíveis.`
 
 
             {/* === TERMINAL === */}
-
             <div
                 className="portfolio-terminal"
                 ref={
                     terminalRef
                 }
                 onClick={
-                    () =>
-                        inputRef.current
-                            ?.focus()
+                    focusInput
                 }
             >
 
                 {/* === APRESENTAÇÃO === */}
+                {history.length === 0 && (
+                    <div className="portfolio-terminal-welcome">
+                        <strong>
+                            WS OS Terminal
+                        </strong>
 
-                {history.length ===
-                    0 && (
-                        <div className="portfolio-terminal-welcome">
-                            <strong>
-                                WS OS Terminal
-                            </strong>
+                        <span>
+                            Interface de linha de comando
+                            do portfólio.
+                        </span>
 
-                            <span>
-                                Interface de linha de comando
-                                do portfólio.
-                            </span>
+                        <span>
+                            Digite{' '}
+                            <b>
+                                help
+                            </b>{' '}
+                            para visualizar os comandos.
+                        </span>
 
-                            <span>
-                                Digite{' '}
-                                <b>
-                                    help
-                                </b>{' '}
-                                para visualizar os comandos.
-                            </span>
-
-                            <span className="portfolio-terminal-shortcuts">
-                                ↑↓ histórico · Tab autocomplete
-                            </span>
-                        </div>
-                    )}
-
-
-                {/* === HISTÓRICO === */}
-
-                {history.map(
-                    (
-                        item,
-                        index,
-                    ) => (
-                        <div
-                            className="portfolio-terminal-history"
-                            key={`${item.command}-${index}`}
-                        >
-                            <div className="portfolio-terminal-line">
-                                <span className="portfolio-terminal-user">
-                                    warlley
-                                </span>
-
-                                <span className="portfolio-terminal-separator">
-                                    @
-                                </span>
-
-                                <span className="portfolio-terminal-host">
-                                    ws-os
-                                </span>
-
-                                <span className="portfolio-terminal-separator">
-                                    :
-                                </span>
-
-                                <span className="portfolio-terminal-path">
-                                    {
-                                        item.path
-                                    }
-                                </span>
-
-                                <span className="portfolio-terminal-symbol">
-                                    $
-                                </span>
-
-                                <span className="portfolio-terminal-command">
-                                    {
-                                        item.command
-                                    }
-                                </span>
-                            </div>
-
-
-                            {item.output && (
-                                <pre
-                                    className={[
-                                        'portfolio-terminal-output',
-
-                                        item.type ===
-                                            'system'
-                                            ? 'portfolio-terminal-output-system'
-                                            : '',
-                                    ]
-                                        .filter(
-                                            Boolean,
-                                        )
-                                        .join(
-                                            ' ',
-                                        )}
-                                >
-                                    {
-                                        item.output
-                                    }
-                                </pre>
-                            )}
-                        </div>
-                    ),
+                        <span className="portfolio-terminal-shortcuts">
+                            ↑↓ histórico · Tab autocomplete
+                        </span>
+                    </div>
                 )}
 
 
-                {/* === LINHA ATUAL === */}
+                {/* === HISTÓRICO === */}
+                <div
+                    className="portfolio-terminal-history-list"
+                    role="log"
+                    aria-live="polite"
+                    aria-relevant="additions"
+                >
+                    {history.map(
+                        (
+                            item,
+                            index,
+                        ) => (
+                            <div
+                                className="portfolio-terminal-history"
+                                key={
+                                    `${item.command}-${index}`
+                                }
+                            >
+                                <div className="portfolio-terminal-line">
+                                    <span className="portfolio-terminal-user">
+                                        warlley
+                                    </span>
 
+                                    <span className="portfolio-terminal-separator">
+                                        @
+                                    </span>
+
+                                    <span className="portfolio-terminal-host">
+                                        ws-os
+                                    </span>
+
+                                    <span className="portfolio-terminal-separator">
+                                        :
+                                    </span>
+
+                                    <span className="portfolio-terminal-path">
+                                        {
+                                            item.path
+                                        }
+                                    </span>
+
+                                    <span className="portfolio-terminal-symbol">
+                                        $
+                                    </span>
+
+                                    <span className="portfolio-terminal-command">
+                                        {
+                                            item.command
+                                        }
+                                    </span>
+                                </div>
+
+                                {item.output && (
+                                    <pre
+                                        className={[
+                                            'portfolio-terminal-output',
+
+                                            item.type ===
+                                                'system'
+                                                ? 'portfolio-terminal-output-system'
+                                                : '',
+                                        ]
+                                            .filter(Boolean)
+                                            .join(' ')}
+                                    >
+                                        {
+                                            item.output
+                                        }
+                                    </pre>
+                                )}
+                            </div>
+                        ),
+                    )}
+                </div>
+
+
+                {/* === LINHA ATUAL === */}
                 <div className="portfolio-terminal-line portfolio-terminal-current">
                     <span className="portfolio-terminal-user">
                         warlley
@@ -2129,7 +2031,7 @@ Digite help para visualizar os comandos disponíveis.`
 
                     <span className="portfolio-terminal-path">
                         {
-                            promptPath
+                            currentPath
                         }
                     </span>
 
@@ -2147,19 +2049,7 @@ Digite help para visualizar os comandos disponíveis.`
                             command
                         }
                         onChange={
-                            (
-                                event,
-                            ) => {
-                                setCommand(
-                                    event
-                                        .target
-                                        .value,
-                                )
-
-                                setHistoryIndex(
-                                    null,
-                                )
-                            }
+                            handleCommandChange
                         }
                         onKeyDown={
                             handleKeyDown
@@ -2167,7 +2057,7 @@ Digite help para visualizar os comandos disponíveis.`
                         autoFocus
                         autoComplete="off"
                         spellCheck="false"
-                        aria-label="Terminal"
+                        aria-label="Terminal do WS OS"
                     />
                 </div>
             </div>

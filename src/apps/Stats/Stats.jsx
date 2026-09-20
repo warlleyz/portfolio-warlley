@@ -1,5 +1,6 @@
 import {
     useEffect,
+    useMemo,
     useState,
 } from 'react'
 
@@ -13,17 +14,22 @@ import './Stats.css'
 
 
 /* === CONFIGURAÇÕES === */
-
-const githubUsername =
+const GITHUB_USERNAME =
     'warlleyz'
 
-const wakatimeActivityUrl =
+const GITHUB_USER_URL =
+    `https://api.github.com/users/${GITHUB_USERNAME}`
+
+const GITHUB_REPOSITORIES_URL =
+    `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`
+
+const WAKATIME_ACTIVITY_URL =
     'https://wakatime.com/share/@0e884e2e-00dc-4836-8f8c-f99c10ff79e6/0a108179-dd25-4e77-a2b8-12ca5599f8a8.json'
 
-const wakatimeLanguagesUrl =
+const WAKATIME_LANGUAGES_URL =
     'https://wakatime.com/share/@0e884e2e-00dc-4836-8f8c-f99c10ff79e6/e55209d8-c799-4af9-9b5d-d90d8486e613.json'
 
-const wakatimeTimelineUrl =
+const WAKATIME_TIMELINE_URL =
     'https://wakatime.com/share/@0e884e2e-00dc-4836-8f8c-f99c10ff79e6/2e0cbf36-f48b-493a-828b-4df6366263d3.json'
 
 
@@ -55,54 +61,68 @@ const activityOptions = [
 
 
 /* === FORMATAR SEGUNDOS === */
-
 function formatSeconds(
-    seconds,
+    value,
 ) {
+    const seconds =
+        Number(value)
+
+    if (
+        !Number.isFinite(
+            seconds,
+        ) ||
+        seconds < 0
+    ) {
+        return '--'
+    }
+
     const hours =
         Math.floor(
-            seconds /
-            3600,
+            seconds / 3600,
         )
 
     const minutes =
         Math.floor(
             (
-                seconds %
-                3600
-            ) /
-            60,
+                seconds % 3600
+            ) / 60,
         )
 
-
     if (
-        hours ===
-        0
+        hours === 0
     ) {
         return `${minutes}min`
     }
-
 
     return `${hours}h ${minutes}min`
 }
 
 
 /* === FORMATAR HORAS === */
-
 function formatHours(
-    hours,
+    value,
 ) {
+    const hours =
+        Number(value)
+
+    if (
+        !Number.isFinite(
+            hours,
+        ) ||
+        hours < 0
+    ) {
+        return '--'
+    }
+
     return formatSeconds(
         Math.round(
-            hours *
-            3600,
+            hours * 3600,
         ),
     )
 }
 
 
 /* === EXTRAIR TIMELINE === */
-
 function extractTimelineDays(
     timelineData,
 ) {
@@ -113,25 +133,412 @@ function extractTimelineDays(
         timelineData?.data?.data,
     ]
 
-
-    const foundArray =
+    return (
         possibleArrays.find(
-            (
-                value,
-            ) =>
-                Array.isArray(
-                    value,
-                ),
+            Array.isArray,
+        ) ??
+        []
+    )
+}
+
+
+/* === DATA DO DIA === */
+function getDayDate(
+    day,
+) {
+    const dateValue =
+        day?.date ??
+        day?.range?.date ??
+        day?.range?.start ??
+        day?.start
+
+    if (
+        !dateValue
+    ) {
+        return null
+    }
+
+    if (
+        typeof dateValue ===
+        'string' &&
+        /^\d{4}-\d{2}-\d{2}$/.test(
+            dateValue,
+        )
+    ) {
+        const [
+            year,
+            month,
+            dayNumber,
+        ] =
+            dateValue
+                .split('-')
+                .map(Number)
+
+        const date =
+            new Date(
+                year,
+                month - 1,
+                dayNumber,
+            )
+
+        return Number.isNaN(
+            date.getTime(),
+        )
+            ? null
+            : date
+    }
+
+    const date =
+        new Date(
+            dateValue,
         )
 
+    return Number.isNaN(
+        date.getTime(),
+    )
+        ? null
+        : date
+}
 
-    return foundArray ?? []
+
+/* === SEGUNDOS DO DIA === */
+function getDaySeconds(
+    day,
+) {
+    const directValue =
+        day?.grand_total
+            ?.total_seconds ??
+        day?.total_seconds ??
+        day?.seconds ??
+        day?.duration ??
+        day?.total ??
+        day?.value
+
+    if (
+        directValue !==
+        undefined &&
+        directValue !==
+        null
+    ) {
+        const value =
+            Number(
+                directValue,
+            )
+
+        return Number.isFinite(
+            value,
+        )
+            ? Math.max(
+                value,
+                0,
+            )
+            : 0
+    }
+
+    const hours =
+        Number(
+            day?.grand_total
+                ?.hours ??
+            0,
+        )
+
+    const minutes =
+        Number(
+            day?.grand_total
+                ?.minutes ??
+            0,
+        )
+
+    const seconds =
+        Number(
+            day?.grand_total
+                ?.seconds ??
+            0,
+        )
+
+    return (
+        (
+            Number.isFinite(hours)
+                ? hours
+                : 0
+        ) *
+        3600 +
+        (
+            Number.isFinite(minutes)
+                ? minutes
+                : 0
+        ) *
+        60 +
+        (
+            Number.isFinite(seconds)
+                ? seconds
+                : 0
+        )
+    )
+}
+
+
+function getDayHours(
+    day,
+) {
+    return (
+        getDaySeconds(
+            day,
+        ) /
+        3600
+    )
+}
+
+
+/* === ATIVIDADE DIÁRIA === */
+function getDailyActivity(
+    timeline,
+) {
+    return timeline
+        .slice(-7)
+        .map(
+            (
+                day,
+            ) => {
+                const date =
+                    getDayDate(
+                        day,
+                    )
+
+                return {
+                    label:
+                        date
+                            ? date
+                                .toLocaleDateString(
+                                    'pt-BR',
+                                    {
+                                        weekday:
+                                            'short',
+                                    },
+                                )
+                                .replace(
+                                    '.',
+                                    '',
+                                )
+                            : '--',
+
+                    value:
+                        getDayHours(
+                            day,
+                        ),
+                }
+            },
+        )
+}
+
+
+/* === ATIVIDADE SEMANAL === */
+function getWeeklyActivity(
+    timeline,
+) {
+    const recentDays =
+        timeline.slice(
+            -28,
+        )
+
+    const weeks =
+        []
+
+    for (
+        let index = 0;
+        index <
+        recentDays.length;
+        index += 7
+    ) {
+        const weekDays =
+            recentDays.slice(
+                index,
+                index + 7,
+            )
+
+        if (
+            weekDays.length ===
+            0
+        ) {
+            continue
+        }
+
+        const totalHours =
+            weekDays.reduce(
+                (
+                    total,
+                    day,
+                ) =>
+                    total +
+                    getDayHours(
+                        day,
+                    ),
+                0,
+            )
+
+        const startDate =
+            getDayDate(
+                weekDays[0],
+            )
+
+        const endDate =
+            getDayDate(
+                weekDays[
+                weekDays.length - 1
+                ],
+            )
+
+        const label =
+            startDate &&
+                endDate
+                ? `${startDate.toLocaleDateString(
+                    'pt-BR',
+                    {
+                        day:
+                            '2-digit',
+
+                        month:
+                            '2-digit',
+                    },
+                )}–${endDate.toLocaleDateString(
+                    'pt-BR',
+                    {
+                        day:
+                            '2-digit',
+
+                        month:
+                            '2-digit',
+                    },
+                )}`
+                : `Sem ${weeks.length + 1}`
+
+        weeks.push({
+            label,
+
+            value:
+                totalHours,
+        })
+    }
+
+    return weeks
+}
+
+
+/* === ATIVIDADE ANUAL === */
+function getAnnualActivity(
+    timeline,
+) {
+    const months =
+        new Map()
+
+    timeline.forEach(
+        (
+            day,
+        ) => {
+            const date =
+                getDayDate(
+                    day,
+                )
+
+            if (
+                !date
+            ) {
+                return
+            }
+
+            const key =
+                `${date.getFullYear()}-${date.getMonth()}`
+
+            const existing =
+                months.get(
+                    key,
+                )
+
+            if (
+                existing
+            ) {
+                existing.value +=
+                    getDayHours(
+                        day,
+                    )
+
+                return
+            }
+
+            months.set(
+                key,
+                {
+                    date,
+
+                    value:
+                        getDayHours(
+                            day,
+                        ),
+                },
+            )
+        },
+    )
+
+    return Array
+        .from(
+            months.values(),
+        )
+        .sort(
+            (
+                first,
+                second,
+            ) =>
+                first.date -
+                second.date,
+        )
+        .slice(-12)
+        .map(
+            (
+                month,
+            ) => ({
+                label:
+                    month.date
+                        .toLocaleDateString(
+                            'pt-BR',
+                            {
+                                month:
+                                    'short',
+                            },
+                        )
+                        .replace(
+                            '.',
+                            '',
+                        ),
+
+                value:
+                    month.value,
+            }),
+        )
+}
+
+
+/* === TÍTULO DA ATIVIDADE === */
+function getActivityTitle(
+    period,
+) {
+    switch (
+    period
+    ) {
+        case 'daily':
+            return 'Média diária'
+
+        case 'weekly':
+            return 'Média semanal'
+
+        default:
+            return 'Média mensal'
+    }
 }
 
 
 function Stats() {
-    /* === GITHUB === */
 
+    /* === GITHUB === */
     const [
         githubData,
         setGithubData,
@@ -149,7 +556,6 @@ function Stats() {
 
 
     /* === WAKATIME === */
-
     const [
         wakatimeActivity,
         setWakatimeActivity,
@@ -177,11 +583,9 @@ function Stats() {
 
 
     /* === CARREGAR GITHUB === */
-
     useEffect(() => {
-        let active =
-            true
-
+        const controller =
+            new AbortController()
 
         const loadGithubData =
             async () => {
@@ -190,93 +594,97 @@ function Stats() {
                         'loading',
                     )
 
-
                     const [
                         userResponse,
-                        reposResponse,
+                        repositoriesResponse,
                     ] =
                         await Promise.all([
                             fetch(
-                                `https://api.github.com/users/${githubUsername}`,
+                                GITHUB_USER_URL,
+                                {
+                                    signal:
+                                        controller.signal,
+
+                                    headers: {
+                                        Accept:
+                                            'application/vnd.github+json',
+                                    },
+                                },
                             ),
 
                             fetch(
-                                `https://api.github.com/users/${githubUsername}/repos?per_page=100&sort=updated`,
+                                GITHUB_REPOSITORIES_URL,
+                                {
+                                    signal:
+                                        controller.signal,
+
+                                    headers: {
+                                        Accept:
+                                            'application/vnd.github+json',
+                                    },
+                                },
                             ),
                         ])
 
-
                     if (
                         !userResponse.ok ||
-                        !reposResponse.ok
+                        !repositoriesResponse.ok
                     ) {
                         throw new Error(
-                            'Erro ao carregar GitHub',
+                            'Não foi possível carregar os dados do GitHub.',
                         )
                     }
 
-
-                    const userData =
-                        await userResponse.json()
-
-                    const reposData =
-                        await reposResponse.json()
-
-
-                    if (
-                        !active
-                    ) {
-                        return
-                    }
-
+                    const [
+                        userData,
+                        repositoriesData,
+                    ] =
+                        await Promise.all([
+                            userResponse.json(),
+                            repositoriesResponse.json(),
+                        ])
 
                     setGithubData(
                         userData,
                     )
 
                     setRepositories(
-                        reposData,
+                        Array.isArray(
+                            repositoriesData,
+                        )
+                            ? repositoriesData
+                            : [],
                     )
 
                     setGithubStatus(
                         'success',
                     )
-                } catch (
-                error
-                ) {
-                    console.error(
-                        'Erro GitHub:',
-                        error,
-                    )
-
-
+                } catch (error) {
                     if (
-                        active
+                        error.name ===
+                        'AbortError'
                     ) {
-                        setGithubStatus(
-                            'error',
-                        )
+                        return
                     }
+
+                    setGithubStatus(
+                        'error',
+                    )
                 }
             }
 
-
         loadGithubData()
 
-
         return () => {
-            active =
-                false
+            controller.abort()
         }
     }, [])
 
 
     /* === CARREGAR WAKATIME === */
-
     useEffect(() => {
-        let active =
-            true
-
+        const controller =
+            new AbortController()
 
         const loadWakatimeData =
             async () => {
@@ -285,7 +693,6 @@ function Stats() {
                         'loading',
                     )
 
-
                     const [
                         activityResponse,
                         languagesResponse,
@@ -293,18 +700,29 @@ function Stats() {
                     ] =
                         await Promise.all([
                             fetch(
-                                wakatimeActivityUrl,
+                                WAKATIME_ACTIVITY_URL,
+                                {
+                                    signal:
+                                        controller.signal,
+                                },
                             ),
 
                             fetch(
-                                wakatimeLanguagesUrl,
+                                WAKATIME_LANGUAGES_URL,
+                                {
+                                    signal:
+                                        controller.signal,
+                                },
                             ),
 
                             fetch(
-                                wakatimeTimelineUrl,
+                                WAKATIME_TIMELINE_URL,
+                                {
+                                    signal:
+                                        controller.signal,
+                                },
                             ),
                         ])
-
 
                     if (
                         !activityResponse.ok ||
@@ -312,36 +730,29 @@ function Stats() {
                         !timelineResponse.ok
                     ) {
                         throw new Error(
-                            'Erro ao carregar WakaTime',
+                            'Não foi possível carregar os dados do WakaTime.',
                         )
                     }
 
-
-                    const activityData =
-                        await activityResponse.json()
-
-                    const languagesData =
-                        await languagesResponse.json()
-
-                    const timelineData =
-                        await timelineResponse.json()
-
-
-                    if (
-                        !active
-                    ) {
-                        return
-                    }
-
+                    const [
+                        activityData,
+                        languagesData,
+                        timelineData,
+                    ] =
+                        await Promise.all([
+                            activityResponse.json(),
+                            languagesResponse.json(),
+                            timelineResponse.json(),
+                        ])
 
                     setWakatimeActivity(
-                        activityData.data ??
+                        activityData?.data ??
                         null,
                     )
 
                     setWakatimeLanguages(
                         Array.isArray(
-                            languagesData.data,
+                            languagesData?.data,
                         )
                             ? languagesData.data
                             : [],
@@ -356,647 +767,243 @@ function Stats() {
                     setWakatimeStatus(
                         'success',
                     )
-                } catch (
-                error
-                ) {
-                    console.error(
-                        'Erro WakaTime:',
-                        error,
-                    )
-
-
+                } catch (error) {
                     if (
-                        active
+                        error.name ===
+                        'AbortError'
                     ) {
-                        setWakatimeStatus(
-                            'error',
-                        )
+                        return
                     }
+
+                    setWakatimeStatus(
+                        'error',
+                    )
                 }
             }
 
-
         loadWakatimeData()
 
-
         return () => {
-            active =
-                false
+            controller.abort()
         }
     }, [])
 
 
     /* === GITHUB: LINGUAGEM PRINCIPAL === */
+    const mainGithubLanguage =
+        useMemo(
+            () => {
+                const languages =
+                    new Map()
 
-    const getMainLanguage =
-        () => {
-            const languages =
-                {}
-
-
-            repositories.forEach(
-                (
-                    repository,
-                ) => {
-                    if (
-                        !repository.language
-                    ) {
-                        return
-                    }
-
-
-                    languages[
-                        repository.language
-                    ] =
-                        (
-                            languages[
-                            repository.language
-                            ] ??
-                            0
-                        ) +
-                        1
-                },
-            )
-
-
-            const sortedLanguages =
-                Object
-                    .entries(
-                        languages,
-                    )
-                    .sort(
-                        (
-                            first,
-                            second,
-                        ) =>
-                            second[1] -
-                            first[1],
-                    )
-
-
-            return (
-                sortedLanguages[0]
-                ?.[0] ??
-                '--'
-            )
-        }
-
-
-    /* === GITHUB: ESTRELAS === */
-
-    const getTotalStars =
-        () =>
-            repositories.reduce(
-                (
-                    total,
-                    repository,
-                ) =>
-                    total +
+                repositories.forEach(
                     (
-                        repository
-                            .stargazers_count ??
-                        0
-                    ),
-                0,
-            )
-
-
-    /* === GITHUB: ANO === */
-
-    const getAccountYear =
-        () => {
-            if (
-                !githubData
-                    ?.created_at
-            ) {
-                return '--'
-            }
-
-
-            return new Date(
-                githubData
-                    .created_at,
-            ).getFullYear()
-        }
-
-
-    /* === WAKATIME: TOTAL === */
-
-    const getWakatimeTotal =
-        () => {
-            const grandTotal =
-                wakatimeActivity
-                    ?.grand_total
-
-
-            if (
-                !grandTotal
-            ) {
-                return '--'
-            }
-
-
-            if (
-                grandTotal.text
-            ) {
-                return grandTotal.text
-            }
-
-
-            if (
-                grandTotal.digital
-            ) {
-                return grandTotal.digital
-            }
-
-
-            const totalSeconds =
-                grandTotal
-                    .total_seconds ??
-                grandTotal
-                    .seconds
-
-
-            if (
-                !totalSeconds
-            ) {
-                return '--'
-            }
-
-
-            return formatSeconds(
-                totalSeconds,
-            )
-        }
-
-
-    /* === WAKATIME: LINGUAGEM === */
-
-    const getWakatimeMainLanguage =
-        () =>
-            wakatimeLanguages[0]
-                ?.name ??
-            '--'
-
-
-    /* === DATA DO DIA === */
-
-    const getDayDate =
-        (
-            day,
-        ) => {
-            const dateValue =
-                day.date ??
-                day.range?.date ??
-                day.range?.start ??
-                day.start
-
-
-            if (
-                !dateValue
-            ) {
-                return null
-            }
-
-
-            if (
-                typeof dateValue ===
-                'string' &&
-                /^\d{4}-\d{2}-\d{2}$/.test(
-                    dateValue,
-                )
-            ) {
-                const [
-                    year,
-                    month,
-                    dayNumber,
-                ] =
-                    dateValue
-                        .split(
-                            '-',
-                        )
-                        .map(
-                            Number,
-                        )
-
-
-                return new Date(
-                    year,
-                    month -
-                    1,
-                    dayNumber,
-                )
-            }
-
-
-            const date =
-                new Date(
-                    dateValue,
-                )
-
-
-            if (
-                Number.isNaN(
-                    date.getTime(),
-                )
-            ) {
-                return null
-            }
-
-
-            return date
-        }
-
-
-    /* === SEGUNDOS DO DIA === */
-
-    const getDaySeconds =
-        (
-            day,
-        ) => {
-            const directValue =
-                day.grand_total
-                    ?.total_seconds ??
-                day.total_seconds ??
-                day.seconds ??
-                day.duration ??
-                day.total ??
-                day.value
-
-
-            if (
-                directValue !==
-                undefined &&
-                directValue !==
-                null
-            ) {
-                return (
-                    Number(
-                        directValue,
-                    ) ||
-                    0
-                )
-            }
-
-
-            const hours =
-                Number(
-                    day.grand_total
-                        ?.hours ??
-                    0,
-                )
-
-            const minutes =
-                Number(
-                    day.grand_total
-                        ?.minutes ??
-                    0,
-                )
-
-            const seconds =
-                Number(
-                    day.grand_total
-                        ?.seconds ??
-                    0,
-                )
-
-
-            return (
-                hours *
-                3600 +
-                minutes *
-                60 +
-                seconds
-            )
-        }
-
-
-    const getDayHours =
-        (
-            day,
-        ) =>
-            getDaySeconds(
-                day,
-            ) /
-            3600
-
-
-    /* === ATIVIDADE DIÁRIA === */
-
-    const getDailyActivity =
-        () =>
-            wakatimeTimeline
-                .slice(
-                    -7,
-                )
-                .map(
-                    (
-                        day,
+                        repository,
                     ) => {
-                        const date =
-                            getDayDate(
-                                day,
-                            )
-
-
-                        return {
-                            label:
-                                date
-                                    ? date
-                                        .toLocaleDateString(
-                                            'pt-BR',
-                                            {
-                                                weekday:
-                                                    'short',
-                                            },
-                                        )
-                                        .replace(
-                                            '.',
-                                            '',
-                                        )
-                                    : '--',
-
-                            value:
-                                getDayHours(
-                                    day,
-                                ),
+                        if (
+                            !repository.language
+                        ) {
+                            return
                         }
+
+                        languages.set(
+                            repository.language,
+                            (
+                                languages.get(
+                                    repository.language,
+                                ) ??
+                                0
+                            ) +
+                            1,
+                        )
                     },
                 )
 
+                const sortedLanguages =
+                    Array
+                        .from(
+                            languages.entries(),
+                        )
+                        .sort(
+                            (
+                                first,
+                                second,
+                            ) =>
+                                second[1] -
+                                first[1],
+                        )
 
-    /* === ATIVIDADE SEMANAL === */
-
-    const getWeeklyActivity =
-        () => {
-            const recentDays =
-                wakatimeTimeline.slice(
-                    -28,
+                return (
+                    sortedLanguages[0]?.[0] ??
+                    '--'
                 )
-
-            const weeks =
-                []
-
-
-            for (
-                let index =
-                    0;
-                index <
-                recentDays.length;
-                index +=
-                7
-            ) {
-                const weekDays =
-                    recentDays.slice(
-                        index,
-                        index +
-                        7,
-                    )
+            },
+            [
+                repositories,
+            ],
+        )
 
 
+    /* === GITHUB: ESTRELAS === */
+    const totalStars =
+        useMemo(
+            () =>
+                repositories.reduce(
+                    (
+                        total,
+                        repository,
+                    ) =>
+                        total +
+                        (
+                            Number(
+                                repository.stargazers_count,
+                            ) ||
+                            0
+                        ),
+                    0,
+                ),
+            [
+                repositories,
+            ],
+        )
+
+
+    /* === GITHUB: ANO === */
+    const accountYear =
+        useMemo(
+            () => {
                 if (
-                    weekDays.length ===
-                    0
+                    !githubData?.created_at
                 ) {
-                    continue
+                    return '--'
                 }
 
-
-                const totalHours =
-                    weekDays.reduce(
-                        (
-                            total,
-                            day,
-                        ) =>
-                            total +
-                            getDayHours(
-                                day,
-                            ),
-                        0,
+                const date =
+                    new Date(
+                        githubData.created_at,
                     )
 
+                return Number.isNaN(
+                    date.getTime(),
+                )
+                    ? '--'
+                    : date.getFullYear()
+            },
+            [
+                githubData,
+            ],
+        )
 
-                const startDate =
-                    getDayDate(
-                        weekDays[0],
+
+    /* === WAKATIME: TOTAL === */
+    const wakatimeTotal =
+        useMemo(
+            () => {
+                const grandTotal =
+                    wakatimeActivity
+                        ?.grand_total
+
+                if (
+                    !grandTotal
+                ) {
+                    return '--'
+                }
+
+                if (
+                    grandTotal.text
+                ) {
+                    return grandTotal.text
+                }
+
+                if (
+                    grandTotal.digital
+                ) {
+                    return grandTotal.digital
+                }
+
+                const totalSeconds =
+                    grandTotal
+                        .total_seconds ??
+                    grandTotal
+                        .seconds
+
+                return totalSeconds
+                    ? formatSeconds(
+                        totalSeconds,
                     )
-
-                const endDate =
-                    getDayDate(
-                        weekDays[
-                        weekDays.length -
-                        1
-                        ],
-                    )
+                    : '--'
+            },
+            [
+                wakatimeActivity,
+            ],
+        )
 
 
-                const label =
-                    startDate &&
-                        endDate
-                        ? `${startDate.toLocaleDateString(
-                            'pt-BR',
-                            {
-                                day:
-                                    '2-digit',
-
-                                month:
-                                    '2-digit',
-                            },
-                        )}–${endDate.toLocaleDateString(
-                            'pt-BR',
-                            {
-                                day:
-                                    '2-digit',
-
-                                month:
-                                    '2-digit',
-                            },
-                        )}`
-                        : `Sem ${weeks.length + 1}`
-
-
-                weeks.push({
-                    label,
-
-                    value:
-                        totalHours,
-                })
-            }
-
-
-            return weeks
-        }
-
-
-    /* === ATIVIDADE ANUAL === */
-
-    const getAnnualActivity =
-        () => {
-            const months =
-                new Map()
-
-
-            wakatimeTimeline.forEach(
-                (
-                    day,
-                ) => {
-                    const date =
-                        getDayDate(
-                            day,
-                        )
-
-
-                    if (
-                        !date
-                    ) {
-                        return
-                    }
-
-
-                    const key =
-                        `${date.getFullYear()}-${date.getMonth()}`
-
-                    const existing =
-                        months.get(
-                            key,
-                        )
-
-
-                    if (
-                        existing
-                    ) {
-                        existing.value +=
-                            getDayHours(
-                                day,
-                            )
-
-                        return
-                    }
-
-
-                    months.set(
-                        key,
-                        {
-                            date,
-
-                            value:
-                                getDayHours(
-                                    day,
-                                ),
-                        },
-                    )
-                },
-            )
-
-
-            return Array
-                .from(
-                    months.values(),
-                )
-                .sort(
-                    (
-                        first,
-                        second,
-                    ) =>
-                        first.date -
-                        second.date,
-                )
-                .slice(
-                    -12,
-                )
-                .map(
-                    (
-                        month,
-                    ) => ({
-                        label:
-                            month.date
-                                .toLocaleDateString(
-                                    'pt-BR',
-                                    {
-                                        month:
-                                            'short',
-                                    },
-                                )
-                                .replace(
-                                    '.',
-                                    '',
-                                ),
-
-                        value:
-                            month.value,
-                    }),
-                )
-        }
+    /* === WAKATIME: LINGUAGEM PRINCIPAL === */
+    const wakatimeMainLanguage =
+        wakatimeLanguages[0]
+            ?.name ??
+        '--'
 
 
     /* === DADOS DA ATIVIDADE === */
-
-    const getActivityData =
-        () => {
-            if (
-                !Array.isArray(
-                    wakatimeTimeline,
-                ) ||
-                wakatimeTimeline.length ===
-                0
-            ) {
-                return []
-            }
-
-
-            if (
-                activityPeriod ===
-                'daily'
-            ) {
-                return getDailyActivity()
-            }
-
-
-            if (
-                activityPeriod ===
-                'weekly'
-            ) {
-                return getWeeklyActivity()
-            }
-
-
-            return getAnnualActivity()
-        }
-
-
-    const getActivityTitle =
-        () => {
-            switch (
-            activityPeriod
-            ) {
-                case 'daily':
-                    return 'Média diária'
-
-                case 'weekly':
-                    return 'Média semanal'
-
-                default:
-                    return 'Média mensal'
-            }
-        }
-
-
     const activityData =
-        getActivityData()
+        useMemo(
+            () => {
+                if (
+                    !Array.isArray(
+                        wakatimeTimeline,
+                    ) ||
+                    wakatimeTimeline.length ===
+                    0
+                ) {
+                    return []
+                }
+
+                if (
+                    activityPeriod ===
+                    'daily'
+                ) {
+                    return getDailyActivity(
+                        wakatimeTimeline,
+                    )
+                }
+
+                if (
+                    activityPeriod ===
+                    'weekly'
+                ) {
+                    return getWeeklyActivity(
+                        wakatimeTimeline,
+                    )
+                }
+
+                return getAnnualActivity(
+                    wakatimeTimeline,
+                )
+            },
+            [
+                activityPeriod,
+                wakatimeTimeline,
+            ],
+        )
 
 
+    /* === RESUMO DA ATIVIDADE === */
     const activityMax =
         Math.max(
             ...activityData.map(
                 (
                     item,
                 ) =>
-                    item.value,
+                    Number.isFinite(
+                        item.value,
+                    )
+                        ? item.value
+                        : 0,
             ),
-
             1,
         )
-
 
     const activityTotal =
         activityData.reduce(
@@ -1005,24 +1012,28 @@ function Stats() {
                 item,
             ) =>
                 total +
-                item.value,
+                (
+                    Number.isFinite(
+                        item.value,
+                    )
+                        ? item.value
+                        : 0
+                ),
             0,
         )
 
-
     const activityAverage =
-        activityData.length >
-            0
+        activityData.length > 0
             ? activityTotal /
             activityData.length
             : 0
 
 
+    /* === RENDERIZAÇÃO === */
     return (
         <div className="stats">
 
             {/* === CABEÇALHO === */}
-
             <header className="stats-header">
                 <div className="stats-header-content">
                     <span className="stats-label">
@@ -1039,25 +1050,33 @@ function Stats() {
                     </p>
                 </div>
 
-
-                <div className="stats-status">
+                <div
+                    className="stats-status"
+                    aria-live="polite"
+                >
                     <span
-                        className={`stats-status-item stats-status-${githubStatus}`}
+                        className={
+                            `stats-status-item stats-status-${githubStatus}`
+                        }
                     >
                         <GitBranch
                             size={12}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
 
                         GitHub
                     </span>
 
                     <span
-                        className={`stats-status-item stats-status-${wakatimeStatus}`}
+                        className={
+                            `stats-status-item stats-status-${wakatimeStatus}`
+                        }
                     >
                         <Code2
                             size={12}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
 
                         WakaTime
@@ -1067,14 +1086,13 @@ function Stats() {
 
 
             {/* === RESUMO === */}
-
             <section className="stats-summary">
-
                 <article className="stats-card">
                     <span className="stats-card-icon">
                         <Clock
                             size={19}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
                     </span>
 
@@ -1084,10 +1102,12 @@ function Stats() {
                         </span>
 
                         <strong>
-                            {wakatimeStatus ===
-                                'success'
-                                ? getWakatimeTotal()
-                                : '--'}
+                            {
+                                wakatimeStatus ===
+                                    'success'
+                                    ? wakatimeTotal
+                                    : '--'
+                            }
                         </strong>
 
                         <small>
@@ -1096,12 +1116,12 @@ function Stats() {
                     </div>
                 </article>
 
-
                 <article className="stats-card">
                     <span className="stats-card-icon">
                         <Code2
                             size={19}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
                     </span>
 
@@ -1111,10 +1131,12 @@ function Stats() {
                         </span>
 
                         <strong>
-                            {wakatimeStatus ===
-                                'success'
-                                ? getWakatimeMainLanguage()
-                                : '--'}
+                            {
+                                wakatimeStatus ===
+                                    'success'
+                                    ? wakatimeMainLanguage
+                                    : '--'
+                            }
                         </strong>
 
                         <small>
@@ -1123,12 +1145,12 @@ function Stats() {
                     </div>
                 </article>
 
-
                 <article className="stats-card">
                     <span className="stats-card-icon">
                         <GitBranch
                             size={19}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
                     </span>
 
@@ -1138,11 +1160,14 @@ function Stats() {
                         </span>
 
                         <strong>
-                            {githubStatus ===
-                                'success'
-                                ? githubData
-                                    ?.public_repos
-                                : '--'}
+                            {
+                                githubStatus ===
+                                    'success'
+                                    ? githubData
+                                        ?.public_repos ??
+                                    0
+                                    : '--'
+                            }
                         </strong>
 
                         <small>
@@ -1150,12 +1175,10 @@ function Stats() {
                         </small>
                     </div>
                 </article>
-
             </section>
 
 
             {/* === WAKATIME === */}
-
             <section className="stats-section">
                 <div className="stats-section-header">
                     <div className="stats-section-heading">
@@ -1163,6 +1186,7 @@ function Stats() {
                             <Code2
                                 size={16}
                                 strokeWidth={1.8}
+                                aria-hidden="true"
                             />
                         </span>
 
@@ -1204,7 +1228,6 @@ function Stats() {
                     'success' && (
                         <>
                             {/* === LINGUAGENS === */}
-
                             <div className="wakatime-languages">
                                 {wakatimeLanguages
                                     .slice(
@@ -1214,49 +1237,72 @@ function Stats() {
                                     .map(
                                         (
                                             language,
-                                        ) => (
-                                            <div
-                                                className="wakatime-language"
-                                                key={
-                                                    language.name
-                                                }
-                                            >
-                                                <div className="wakatime-language-header">
-                                                    <span>
-                                                        {
-                                                            language.name
-                                                        }
-                                                    </span>
-
-                                                    <strong>
-                                                        {Number(
+                                        ) => {
+                                            const percentage =
+                                                Math.min(
+                                                    Math.max(
+                                                        Number(
                                                             language.percent,
-                                                        ).toFixed(
-                                                            1,
-                                                        )}
-                                                        %
-                                                    </strong>
-                                                </div>
+                                                        ) ||
+                                                        0,
+                                                        0,
+                                                    ),
+                                                    100,
+                                                )
 
-                                                <div className="wakatime-language-bar">
-                                                    <span
-                                                        className="wakatime-language-progress"
-                                                        style={{
-                                                            width:
-                                                                `${language.percent}%`,
-                                                        }}
-                                                    />
+                                            return (
+                                                <div
+                                                    className="wakatime-language"
+                                                    key={
+                                                        language.name
+                                                    }
+                                                >
+                                                    <div className="wakatime-language-header">
+                                                        <span>
+                                                            {
+                                                                language.name
+                                                            }
+                                                        </span>
+
+                                                        <strong>
+                                                            {
+                                                                percentage.toFixed(
+                                                                    1,
+                                                                )
+                                                            }
+                                                            %
+                                                        </strong>
+                                                    </div>
+
+                                                    <div
+                                                        className="wakatime-language-bar"
+                                                        role="progressbar"
+                                                        aria-label={
+                                                            `${language.name}: ${percentage.toFixed(1)}%`
+                                                        }
+                                                        aria-valuemin="0"
+                                                        aria-valuemax="100"
+                                                        aria-valuenow={
+                                                            percentage
+                                                        }
+                                                    >
+                                                        <span
+                                                            className="wakatime-language-progress"
+                                                            style={{
+                                                                width:
+                                                                    `${percentage}%`,
+                                                            }}
+                                                        />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ),
+                                            )
+                                        },
                                     )}
                             </div>
 
 
                             {/* === ATIVIDADE === */}
-
                             <div className="wakatime-activity">
-
                                 <div className="wakatime-activity-header">
                                     <div className="wakatime-activity-info">
                                         <span>
@@ -1265,49 +1311,66 @@ function Stats() {
 
                                         <h3>
                                             {
-                                                getActivityTitle()
+                                                getActivityTitle(
+                                                    activityPeriod,
+                                                )
                                             }
                                         </h3>
 
                                         <strong>
-                                            {activityData.length >
-                                                0
-                                                ? formatHours(
-                                                    activityAverage,
-                                                )
-                                                : '--'}
+                                            {
+                                                activityData.length >
+                                                    0
+                                                    ? formatHours(
+                                                        activityAverage,
+                                                    )
+                                                    : '--'
+                                            }
                                         </strong>
                                     </div>
 
-
-                                    <div className="wakatime-period-selector">
+                                    <div
+                                        className="wakatime-period-selector"
+                                        aria-label="Período da atividade"
+                                    >
                                         {activityOptions.map(
                                             (
                                                 option,
-                                            ) => (
-                                                <button
-                                                    key={
-                                                        option.id
-                                                    }
-                                                    type="button"
-                                                    className={
-                                                        activityPeriod ===
+                                            ) => {
+                                                const isActive =
+                                                    activityPeriod ===
+                                                    option.id
+
+                                                return (
+                                                    <button
+                                                        key={
                                                             option.id
-                                                            ? 'wakatime-period-button active'
-                                                            : 'wakatime-period-button'
-                                                    }
-                                                    onClick={
-                                                        () =>
+                                                        }
+                                                        type="button"
+                                                        className={[
+                                                            'wakatime-period-button',
+
+                                                            isActive
+                                                                ? 'active'
+                                                                : '',
+                                                        ]
+                                                            .filter(Boolean)
+                                                            .join(' ')}
+                                                        onClick={() =>
                                                             setActivityPeriod(
                                                                 option.id,
                                                             )
-                                                    }
-                                                >
-                                                    {
-                                                        option.label
-                                                    }
-                                                </button>
-                                            ),
+                                                        }
+                                                        aria-pressed={
+                                                            isActive
+                                                        }
+                                                    >
+                                                        {
+                                                            option.label
+                                                        }
+                                                    </button>
+                                                )
+                                            },
                                         )}
                                     </div>
                                 </div>
@@ -1315,48 +1378,77 @@ function Stats() {
 
                                 {activityData.length >
                                     0 ? (
-                                    <div className="wakatime-chart">
+                                    <div
+                                        className="wakatime-chart"
+                                        aria-label="Gráfico de atividade do WakaTime"
+                                    >
                                         {activityData.map(
                                             (
                                                 item,
                                                 index,
-                                            ) => (
-                                                <div
-                                                    className="wakatime-chart-item"
-                                                    key={`${item.label}-${index}`}
-                                                >
-                                                    <div className="wakatime-chart-column">
-                                                        <span className="wakatime-chart-tooltip">
+                                            ) => {
+                                                const value =
+                                                    Number.isFinite(
+                                                        item.value,
+                                                    )
+                                                        ? Math.max(
+                                                            item.value,
+                                                            0,
+                                                        )
+                                                        : 0
+
+                                                const height =
+                                                    Math.max(
+                                                        (
+                                                            value /
+                                                            activityMax
+                                                        ) *
+                                                        100,
+                                                        3,
+                                                    )
+
+                                                return (
+                                                    <div
+                                                        className="wakatime-chart-item"
+                                                        key={
+                                                            `${item.label}-${index}`
+                                                        }
+                                                    >
+                                                        <div
+                                                            className="wakatime-chart-column"
+                                                            aria-label={
+                                                                `${item.label}: ${formatHours(value)}`
+                                                            }
+                                                        >
+                                                            <span
+                                                                className="wakatime-chart-tooltip"
+                                                                aria-hidden="true"
+                                                            >
+                                                                {
+                                                                    formatHours(
+                                                                        value,
+                                                                    )
+                                                                }
+                                                            </span>
+
+                                                            <span
+                                                                className="wakatime-chart-bar"
+                                                                style={{
+                                                                    height:
+                                                                        `${height}%`,
+                                                                }}
+                                                                aria-hidden="true"
+                                                            />
+                                                        </div>
+
+                                                        <span className="wakatime-chart-label">
                                                             {
-                                                                formatHours(
-                                                                    item.value,
-                                                                )
+                                                                item.label
                                                             }
                                                         </span>
-
-                                                        <span
-                                                            className="wakatime-chart-bar"
-                                                            style={{
-                                                                height:
-                                                                    `${Math.max(
-                                                                        (
-                                                                            item.value /
-                                                                            activityMax
-                                                                        ) *
-                                                                        100,
-                                                                        3,
-                                                                    )}%`,
-                                                            }}
-                                                        />
                                                     </div>
-
-                                                    <span className="wakatime-chart-label">
-                                                        {
-                                                            item.label
-                                                        }
-                                                    </span>
-                                                </div>
-                                            ),
+                                                )
+                                            },
                                         )}
                                     </div>
                                 ) : (
@@ -1371,7 +1463,6 @@ function Stats() {
 
 
             {/* === GITHUB === */}
-
             <section className="stats-section">
                 <div className="stats-section-header">
                     <div className="stats-section-heading">
@@ -1379,6 +1470,7 @@ function Stats() {
                             <GitBranch
                                 size={16}
                                 strokeWidth={1.8}
+                                aria-hidden="true"
                             />
                         </span>
 
@@ -1419,7 +1511,6 @@ function Stats() {
                 {githubStatus ===
                     'success' && (
                         <div className="github-stats-grid">
-
                             <div className="github-stat">
                                 <span>
                                     Repositórios
@@ -1428,11 +1519,11 @@ function Stats() {
                                 <strong>
                                     {
                                         githubData
-                                            ?.public_repos
+                                            ?.public_repos ??
+                                        0
                                     }
                                 </strong>
                             </div>
-
 
                             <div className="github-stat">
                                 <span>
@@ -1441,11 +1532,10 @@ function Stats() {
 
                                 <strong>
                                     {
-                                        getMainLanguage()
+                                        mainGithubLanguage
                                     }
                                 </strong>
                             </div>
-
 
                             <div className="github-stat">
                                 <span>
@@ -1455,11 +1545,11 @@ function Stats() {
                                 <strong>
                                     {
                                         githubData
-                                            ?.followers
+                                            ?.followers ??
+                                        0
                                     }
                                 </strong>
                             </div>
-
 
                             <div className="github-stat">
                                 <span>
@@ -1469,11 +1559,11 @@ function Stats() {
                                 <strong>
                                     {
                                         githubData
-                                            ?.following
+                                            ?.following ??
+                                        0
                                     }
                                 </strong>
                             </div>
-
 
                             <div className="github-stat">
                                 <span>
@@ -1482,11 +1572,10 @@ function Stats() {
 
                                 <strong>
                                     {
-                                        getTotalStars()
+                                        totalStars
                                     }
                                 </strong>
                             </div>
-
 
                             <div className="github-stat">
                                 <span>
@@ -1495,15 +1584,13 @@ function Stats() {
 
                                 <strong>
                                     {
-                                        getAccountYear()
+                                        accountYear
                                     }
                                 </strong>
                             </div>
-
                         </div>
                     )}
             </section>
-
         </div>
     )
 }

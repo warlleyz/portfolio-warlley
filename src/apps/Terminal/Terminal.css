@@ -1,6 +1,11 @@
 /* === TERMINAL WS OS === */
-
 .portfolio-terminal-shell {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
     width:
         100%;
 
@@ -9,12 +14,6 @@
 
     min-height:
         0;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
 
     gap:
         8px;
@@ -28,7 +27,6 @@
 
 
 /* === CABEÇALHO === */
-
 .portfolio-terminal-header {
     display:
         flex;
@@ -39,14 +37,14 @@
     justify-content:
         space-between;
 
+    flex-shrink:
+        0;
+
     gap:
         12px;
 
     padding:
         9px 11px;
-
-    flex-shrink:
-        0;
 
     border:
         1px solid var(--glass-border);
@@ -62,31 +60,29 @@
 
 
 /* === IDENTIFICAÇÃO === */
-
 .portfolio-terminal-header-info {
-    min-width:
-        0;
-
     display:
         flex;
 
     align-items:
         center;
 
+    min-width:
+        0;
+
     gap:
         8px;
 }
 
-
 .portfolio-terminal-status {
+    flex-shrink:
+        0;
+
     width:
         7px;
 
     height:
         7px;
-
-    flex-shrink:
-        0;
 
     border-radius:
         50%;
@@ -101,21 +97,19 @@
             0.35);
 }
 
-
 .portfolio-terminal-header-info>div {
-    min-width:
-        0;
-
     display:
         flex;
 
     flex-direction:
         column;
 
+    min-width:
+        0;
+
     gap:
         1px;
 }
-
 
 .portfolio-terminal-header-info strong {
     color:
@@ -128,7 +122,6 @@
         650;
 }
 
-
 .portfolio-terminal-header-info span:last-child {
     color:
         var(--text-muted);
@@ -139,7 +132,6 @@
 
 
 /* === AÇÕES === */
-
 .portfolio-terminal-actions {
     display:
         flex;
@@ -151,14 +143,7 @@
         5px;
 }
 
-
 .portfolio-terminal-actions button {
-    width:
-        28px;
-
-    height:
-        28px;
-
     display:
         flex;
 
@@ -167,6 +152,12 @@
 
     justify-content:
         center;
+
+    width:
+        28px;
+
+    height:
+        28px;
 
     padding:
         0;
@@ -186,6 +177,7 @@
             transparent);
 
     cursor:
+        var(--cursor-pointer),
         pointer;
 
     transition:
@@ -194,7 +186,6 @@
         border-color var(--transition-fast),
         transform var(--transition-fast);
 }
-
 
 .portfolio-terminal-actions button:hover {
     color:
@@ -209,7 +200,6 @@
         var(--accent-soft);
 }
 
-
 .portfolio-terminal-actions button:active {
     transform:
         scale(0.95);
@@ -217,16 +207,15 @@
 
 
 /* === TERMINAL === */
-
 .portfolio-terminal {
+    flex:
+        1;
+
     width:
         100%;
 
     min-height:
         0;
-
-    flex:
-        1;
 
     padding:
         16px;
@@ -260,6 +249,7 @@
         1.6;
 
     cursor:
+        var(--cursor-text),
         text;
 
     scrollbar-width:
@@ -274,22 +264,22 @@
 
 
 /* === SCROLLBAR === */
-
 .portfolio-terminal::-webkit-scrollbar {
     width:
         6px;
-}
 
+    height:
+        6px;
+}
 
 .portfolio-terminal::-webkit-scrollbar-track {
     background:
         transparent;
 }
 
-
 .portfolio-terminal::-webkit-scrollbar-thumb {
     border-radius:
-        999px;
+        var(--radius-full);
 
     background:
         rgba(148,
@@ -298,9 +288,16 @@
             0.22);
 }
 
+.portfolio-terminal::-webkit-scrollbar-thumb:hover {
+    background:
+        rgba(148,
+            163,
+            184,
+            0.38);
+}
+
 
 /* === APRESENTAÇÃO === */
-
 .portfolio-terminal-welcome {
     display:
         flex;
@@ -318,7 +315,6 @@
         #94a3b8;
 }
 
-
 .portfolio-terminal-welcome strong {
     margin-bottom:
         2px;
@@ -333,12 +329,10 @@
         650;
 }
 
-
 .portfolio-terminal-welcome span {
     font-size:
         10px;
 }
-
 
 .portfolio-terminal-welcome b {
     color:
@@ -347,7 +341,6 @@
     font-weight:
         650;
 }
-
 
 .portfolio-terminal-shortcuts {
     margin-top:
@@ -359,7 +352,6 @@
 
 
 /* === LINHA === */
-
 .portfolio-terminal-line {
     display:
         flex;
@@ -370,16 +362,15 @@
     flex-wrap:
         wrap;
 
-    gap:
-        3px;
-
     min-height:
         19px;
+
+    gap:
+        3px;
 }
 
 
 /* === PROMPT === */
-
 .portfolio-terminal-user {
     color:
         #22c55e;
@@ -387,7 +378,6 @@
     font-weight:
         600;
 }
-
 
 .portfolio-terminal-host {
     color:
@@ -397,18 +387,15 @@
         600;
 }
 
-
 .portfolio-terminal-separator {
     color:
         #64748b;
 }
 
-
 .portfolio-terminal-path {
     color:
         #60a5fa;
 }
-
 
 .portfolio-terminal-symbol {
     margin-right:
@@ -418,7 +405,6 @@
         #94a3b8;
 }
 
-
 .portfolio-terminal-command {
     color:
         #f8fafc;
@@ -426,6 +412,10 @@
 
 
 /* === HISTÓRICO === */
+.portfolio-terminal-history-list {
+    display:
+        contents;
+}
 
 .portfolio-terminal-history {
     margin-bottom:
@@ -434,7 +424,6 @@
 
 
 /* === SAÍDA === */
-
 .portfolio-terminal-output {
     margin:
         7px 0 0;
@@ -455,7 +444,6 @@
         inherit;
 }
 
-
 .portfolio-terminal-output-system {
     color:
         #94a3b8;
@@ -463,7 +451,6 @@
 
 
 /* === LINHA ATUAL === */
-
 .portfolio-terminal-current {
     min-height:
         22px;
@@ -471,13 +458,12 @@
 
 
 /* === ENTRADA === */
-
 .portfolio-terminal-input {
-    min-width:
-        120px;
-
     flex:
         1;
+
+    min-width:
+        120px;
 
     padding:
         0;
@@ -502,11 +488,23 @@
 
     caret-color:
         #f8fafc;
+
+    cursor:
+        var(--cursor-text),
+        text;
+}
+
+.portfolio-terminal-input:focus,
+.portfolio-terminal-input:focus-visible {
+    outline:
+        none;
+
+    box-shadow:
+        none;
 }
 
 
 /* === SELEÇÃO === */
-
 .portfolio-terminal ::selection {
     color:
         #ffffff;
@@ -520,13 +518,11 @@
 
 
 /* === RESPONSIVIDADE === */
-
 @media (max-width: 600px) {
     .portfolio-terminal-shell {
         padding:
             8px;
     }
-
 
     .portfolio-terminal {
         padding:
@@ -536,12 +532,10 @@
             10px;
     }
 
-
     .portfolio-terminal-header {
         padding:
             8px 9px;
     }
-
 
     .portfolio-terminal-line {
         gap:
@@ -556,12 +550,25 @@
             none;
     }
 
-
     .portfolio-terminal {
         padding:
             10px;
 
         font-size:
             9.5px;
+    }
+
+    .portfolio-terminal-input {
+        min-width:
+            80px;
+    }
+}
+
+
+/* === ACESSIBILIDADE === */
+@media (prefers-reduced-motion: reduce) {
+    .portfolio-terminal-actions button {
+        transition:
+            none;
     }
 }

@@ -9,6 +9,8 @@ import './WebDemo.css'
 function WebDemo({
     project,
 }) {
+    
+    /* === CONFIGURAÇÃO === */
     const demoUrl =
         project.demo?.url
 
@@ -16,7 +18,9 @@ function WebDemo({
     /* === ABRIR EM NOVA ABA === */
     const openDemo =
         () => {
-            if (!demoUrl) {
+            if (
+                !demoUrl
+            ) {
                 return
             }
 
@@ -29,13 +33,16 @@ function WebDemo({
 
 
     /* === SEM DEMONSTRAÇÃO === */
-    if (!demoUrl) {
+    if (
+        !demoUrl
+    ) {
         return (
             <div className="web-demo web-demo-empty">
                 <div className="web-demo-empty-icon">
                     <MonitorPlay
                         size={22}
                         strokeWidth={1.8}
+                        aria-hidden="true"
                     />
                 </div>
 
@@ -55,6 +62,7 @@ function WebDemo({
     }
 
 
+    /* === RENDERIZAÇÃO === */
     return (
         <div className="web-demo">
 
@@ -65,6 +73,7 @@ function WebDemo({
                         <MonitorPlay
                             size={17}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
                     </span>
 
@@ -81,20 +90,25 @@ function WebDemo({
                     </div>
                 </div>
 
-
                 <button
                     type="button"
                     className="web-demo-open"
                     onClick={
                         openDemo
                     }
+                    aria-label={
+                        `Abrir ${project.title} em nova aba`
+                    }
                 >
                     <ExternalLink
                         size={14}
                         strokeWidth={1.8}
+                        aria-hidden="true"
                     />
 
-                    Abrir
+                    <span>
+                        Abrir
+                    </span>
                 </button>
             </header>
 
@@ -106,7 +120,10 @@ function WebDemo({
                     src={
                         demoUrl
                     }
-                    title={`Demonstração de ${project.title}`}
+                    title={
+                        `Demonstração de ${project.title}`
+                    }
+                    loading="lazy"
                 />
             </div>
         </div>
