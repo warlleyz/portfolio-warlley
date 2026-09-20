@@ -7,11 +7,15 @@ import {
 import './Resume.css'
 
 
+/* === CONFIGURAÇÃO === */
+const BASE_URL =
+    import.meta.env.BASE_URL
+
+const RESUME_URL =
+    `${BASE_URL}documents/curriculo-warlley.pdf`
+
+
 function Resume() {
-    const resumeUrl =
-        `${import.meta.env.BASE_URL}files/curriculo-warlley.pdf`
-
-
     return (
         <div className="resume">
 
@@ -22,6 +26,7 @@ function Resume() {
                         <FileText
                             size={16}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
                     </span>
 
@@ -41,14 +46,16 @@ function Resume() {
                     <a
                         className="resume-action"
                         href={
-                            resumeUrl
+                            RESUME_URL
                         }
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
+                        aria-label="Abrir currículo em nova aba"
                     >
                         <ExternalLink
                             size={15}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
 
                         Abrir
@@ -57,13 +64,15 @@ function Resume() {
                     <a
                         className="resume-action resume-action-primary"
                         href={
-                            resumeUrl
+                            RESUME_URL
                         }
                         download="curriculo-warlley.pdf"
+                        aria-label="Baixar currículo em PDF"
                     >
                         <Download
                             size={15}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
 
                         Baixar
@@ -73,30 +82,39 @@ function Resume() {
 
 
             {/* === VISUALIZADOR === */}
-            <section className="resume-viewer">
+            <section
+                className="resume-viewer"
+                aria-label="Visualização do currículo"
+            >
                 <object
                     className="resume-pdf"
                     data={
-                        resumeUrl
+                        RESUME_URL
                     }
                     type="application/pdf"
+                    aria-label="Currículo de Warlley Silva"
                 >
                     <div className="resume-fallback">
                         <FileText
                             size={28}
                             strokeWidth={1.7}
+                            aria-hidden="true"
                         />
 
                         <strong>
                             Não foi possível exibir o PDF.
                         </strong>
 
+                        <span>
+                            Abra o arquivo diretamente no navegador.
+                        </span>
+
                         <a
                             href={
-                                resumeUrl
+                                RESUME_URL
                             }
                             target="_blank"
-                            rel="noreferrer"
+                            rel="noopener noreferrer"
                         >
                             Abrir arquivo
                         </a>

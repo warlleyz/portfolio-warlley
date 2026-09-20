@@ -5,11 +5,25 @@ import {
 
 import './WeatherWidget.css'
 
+
+/* === CONFIGURAÇÃO === */
+const WEATHER_REFRESH_INTERVAL =
+    10 * 60 * 1000
+
+const GEOLOCATION_TIMEOUT =
+    10 * 1000
+
+
+/* === ÍCONE DO CLIMA === */
 const getWeatherEmoji = (
     code,
     cloudCover,
 ) => {
-    if ([95, 96, 99].includes(code)) {
+    if (
+        [95, 96, 99].includes(
+            code,
+        )
+    ) {
         return '⛈️'
     }
 
@@ -41,7 +55,11 @@ const getWeatherEmoji = (
         return '🌨️'
     }
 
-    if ([45, 48].includes(code)) {
+    if (
+        [45, 48].includes(
+            code,
+        )
+    ) {
         return '🌫️'
     }
 
@@ -57,28 +75,38 @@ const getWeatherEmoji = (
         return '🌦️'
     }
 
-    if (cloudCover >= 80) {
+    if (
+        cloudCover >= 80
+    ) {
         return '☁️'
     }
 
-    if (cloudCover >= 50) {
+    if (
+        cloudCover >= 50
+    ) {
         return '🌥️'
     }
 
-    if (cloudCover >= 20) {
+    if (
+        cloudCover >= 20
+    ) {
         return '🌤️'
     }
 
     return '☀️'
 }
 
+
 function WeatherWidget() {
     const geolocationSupported =
-        typeof navigator !== 'undefined' &&
+        typeof navigator !==
+        'undefined' &&
         Boolean(
             navigator.geolocation,
         )
 
+
+    /* === ESTADO === */
     const [
         temperature,
         setTemperature,
@@ -92,14 +120,16 @@ function WeatherWidget() {
     const [
         cloudCover,
         setCloudCover,
-    ] = useState(null)
+    ] = useState(0)
 
-    const [status, setStatus] =
-        useState(
-            geolocationSupported
-                ? 'loading'
-                : 'error',
-        )
+    const [
+        status,
+        setStatus,
+    ] = useState(
+        geolocationSupported
+            ? 'loading'
+            : 'error',
+    )
 
     const [
         errorMessage,
@@ -110,28 +140,52 @@ function WeatherWidget() {
             : 'Geolocalização não suportada',
     )
 
+
+    /* === CARREGAMENTO DO CLIMA === */
     useEffect(() => {
-        if (!geolocationSupported) {
+        if (
+            !geolocationSupported
+        ) {
             return
         }
 
-        let interval = null
-        let cancelled = false
+        let cancelled =
+            false
+
+        let refreshInterval =
+            null
+
+        let requestController =
+            null
+
 
         const loadWeather = async (
             latitude,
             longitude,
         ) => {
+            requestController?.abort()
+
+            requestController =
+                new AbortController()
+
             try {
                 const url =
                     `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,cloud_cover&timezone=auto`
 
                 const response =
-                    await fetch(url)
+                    await fetch(
+                        url,
+                        {
+                            signal:
+                                requestController.signal,
+                        },
+                    )
 
-                if (!response.ok) {
+                if (
+                    !response.ok
+                ) {
                     throw new Error(
-                        'Erro ao carregar clima',
+                        `Erro HTTP ${response.status}`,
                     )
                 }
 
@@ -151,7 +205,9 @@ function WeatherWidget() {
                     )
                 }
 
-                if (cancelled) {
+                if (
+                    cancelled
+                ) {
                     return
                 }
 
@@ -170,54 +226,76 @@ function WeatherWidget() {
                     0,
                 )
 
-                setErrorMessage('')
-                setStatus('success')
+                setErrorMessage(
+                    '',
+                )
+
+                setStatus(
+                    'success',
+                )
             } catch (error) {
-                if (cancelled) {
+                if (
+                    cancelled ||
+                    error.name ===
+                    'AbortError'
+                ) {
                     return
                 }
-
-                console.error(
-                    'Erro ao carregar clima:',
-                    error,
-                )
 
                 setErrorMessage(
                     'Clima indisponível',
                 )
 
-                setStatus('error')
+                setStatus(
+                    'error',
+                )
             }
         }
 
+
+        /* ----- LOCALIZAÇÃO ----- */
         navigator.geolocation
             .getCurrentPosition(
                 (position) => {
+                    if (
+                        cancelled
+                    ) {
+                        return
+                    }
+
                     const {
                         latitude,
                         longitude,
-                    } = position.coords
+                    } =
+                        position.coords
 
                     loadWeather(
                         latitude,
                         longitude,
                     )
 
-                    interval =
-                        setInterval(() => {
-                            loadWeather(
-                                latitude,
-                                longitude,
-                            )
-                        }, 10 * 60 * 1000)
+                    refreshInterval =
+                        setInterval(
+                            () => {
+                                loadWeather(
+                                    latitude,
+                                    longitude,
+                                )
+                            },
+                            WEATHER_REFRESH_INTERVAL,
+                        )
                 },
 
                 (error) => {
-                    if (cancelled) {
+                    if (
+                        cancelled
+                    ) {
                         return
                     }
 
-                    switch (error.code) {
+                    switch (
+                    error.code
+                    ) {
                         case error.PERMISSION_DENIED:
                             setErrorMessage(
                                 'Localização bloqueada',
@@ -242,7 +320,9 @@ function WeatherWidget() {
                             )
                     }
 
-                    setStatus('error')
+                    setStatus(
+                        'error',
+                    )
                 },
 
                 {
@@ -250,58 +330,102 @@ function WeatherWidget() {
                         false,
 
                     timeout:
-                        10000,
+                        GEOLOCATION_TIMEOUT,
 
                     maximumAge:
-                        10 * 60 * 1000,
+                        WEATHER_REFRESH_INTERVAL,
                 },
             )
 
-        return () => {
-            cancelled = true
 
-            if (interval) {
+        /* ----- LIMPEZA ----- */
+        return () => {
+            cancelled =
+                true
+
+            requestController?.abort()
+
+            if (
+                refreshInterval
+            ) {
                 clearInterval(
-                    interval,
+                    refreshInterval,
                 )
             }
         }
-    }, [geolocationSupported])
+    }, [
+        geolocationSupported,
+    ])
 
-    if (status === 'loading') {
+
+    /* === RENDERIZAÇÃO === */
+    if (
+        status === 'loading'
+    ) {
         return (
             <div
                 className="weather-widget"
                 title="Carregando clima..."
+                aria-label="Carregando clima"
             >
-                <span>🌡️</span>
-                <span>--°</span>
+                <span
+                    aria-hidden="true"
+                >
+                    🌡️
+                </span>
+
+                <span>
+                    --°
+                </span>
             </div>
         )
     }
 
-    if (status === 'error') {
+    if (
+        status === 'error'
+    ) {
         return (
             <div
                 className="weather-widget"
-                title={errorMessage}
+                title={
+                    errorMessage
+                }
+                aria-label={
+                    errorMessage
+                }
             >
-                <span>🌡️</span>
-                <span>--°</span>
+                <span
+                    aria-hidden="true"
+                >
+                    🌡️
+                </span>
+
+                <span>
+                    --°
+                </span>
             </div>
         )
     }
+
+    const weatherEmoji =
+        getWeatherEmoji(
+            weatherCode,
+            cloudCover,
+        )
 
     return (
         <div
             className="weather-widget"
             title="Clima da sua localização"
+            aria-label={
+                `Temperatura atual: ${temperature} graus Celsius`
+            }
         >
-            <span className="weather-widget-emoji">
-                {getWeatherEmoji(
-                    weatherCode,
-                    cloudCover,
-                )}
+            <span
+                className="weather-widget-emoji"
+                aria-hidden="true"
+            >
+                {weatherEmoji}
             </span>
 
             <span className="weather-widget-temperature">

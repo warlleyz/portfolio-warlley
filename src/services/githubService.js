@@ -8,14 +8,29 @@ const GITHUB_API =
 
 /* === BUSCAR REPOSITÓRIOS === */
 async function getGithubRepositories() {
-    const response =
-        await fetch(
-            `${GITHUB_API}/users/${GITHUB_USERNAME}/repos?sort=updated&direction=desc&per_page=100`,
-        )
+    let response
 
-    if (!response.ok) {
+    try {
+        response = await fetch(
+            `${GITHUB_API}/users/${GITHUB_USERNAME}/repos?sort=updated&direction=desc&per_page=100`,
+            {
+                headers: {
+                    Accept:
+                        'application/vnd.github+json',
+                },
+            },
+        )
+    } catch {
         throw new Error(
-            'Não foi possível carregar os repositórios do GitHub.',
+            'Não foi possível conectar ao GitHub.',
+        )
+    }
+
+    if (
+        !response.ok
+    ) {
+        throw new Error(
+            `Não foi possível carregar os repositórios do GitHub. Status: ${response.status}.`,
         )
     }
 

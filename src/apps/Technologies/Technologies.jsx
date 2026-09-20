@@ -131,7 +131,6 @@ function Technologies() {
                     </div>
                 </div>
 
-
                 <div className="technologies-featured-list">
                     {featuredTechnologies.map(
                         (technology) => (
@@ -169,6 +168,7 @@ function Technologies() {
                                         <Icon
                                             size={18}
                                             strokeWidth={1.8}
+                                            aria-hidden="true"
                                         />
                                     </span>
 
@@ -186,7 +186,6 @@ function Technologies() {
                                         </p>
                                     </div>
                                 </div>
-
 
                                 <div className="technology-items">
                                     {group.items.map(

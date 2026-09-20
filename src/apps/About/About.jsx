@@ -13,6 +13,14 @@ import {
 import './About.css'
 
 
+/* === CONFIGURAÇÃO === */
+const BASE_URL =
+    import.meta.env.BASE_URL
+
+const PROFILE_IMAGE =
+    `${BASE_URL}assets/profile/profile.jpg`
+
+
 /* === TECNOLOGIAS EM ESTUDO === */
 const studying = [
     'Java',
@@ -93,10 +101,6 @@ const knowledgeGroups = [
 
 
 function About() {
-    const profileImage =
-        `${import.meta.env.BASE_URL}images/profile.jpg`
-
-
     return (
         <div className="about">
 
@@ -106,12 +110,11 @@ function About() {
                     <img
                         className="about-photo"
                         src={
-                            profileImage
+                            PROFILE_IMAGE
                         }
                         alt="Foto de Warlley Silva"
                     />
                 </div>
-
 
                 <div className="about-profile-content">
                     <span className="about-eyebrow">
@@ -130,12 +133,12 @@ function About() {
                         e inteligência artificial.
                     </p>
 
-
                     <div className="about-profile-meta">
                         <span>
                             <GraduationCap
                                 size={14}
                                 strokeWidth={1.8}
+                                aria-hidden="true"
                             />
 
                             PUC Minas
@@ -145,6 +148,7 @@ function About() {
                             <MapPin
                                 size={14}
                                 strokeWidth={1.8}
+                                aria-hidden="true"
                             />
 
                             Minas Gerais
@@ -163,6 +167,7 @@ function About() {
                         <BookOpen
                             size={18}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
 
                         <div>
@@ -175,7 +180,6 @@ function About() {
                             </h2>
                         </div>
                     </div>
-
 
                     <div className="about-text">
                         <p>
@@ -213,6 +217,7 @@ function About() {
                         <Rocket
                             size={18}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
 
                         <div>
@@ -226,12 +231,10 @@ function About() {
                         </div>
                     </div>
 
-
                     <p className="about-learning-description">
                         Tecnologias e conceitos que fazem
                         parte dos meus estudos e projetos atuais.
                     </p>
-
 
                     <div className="about-tags">
                         {studying.map(
@@ -258,6 +261,7 @@ function About() {
                     <GitBranch
                         size={18}
                         strokeWidth={1.8}
+                        aria-hidden="true"
                     />
 
                     <div>
@@ -270,7 +274,6 @@ function About() {
                         </h2>
                     </div>
                 </div>
-
 
                 <div className="about-knowledge-grid">
                     {knowledgeGroups.map(
@@ -290,6 +293,7 @@ function About() {
                                             <Icon
                                                 size={17}
                                                 strokeWidth={1.8}
+                                                aria-hidden="true"
                                             />
                                         </span>
 
@@ -329,6 +333,7 @@ function About() {
                     <Rocket
                         size={18}
                         strokeWidth={1.8}
+                        aria-hidden="true"
                     />
 
                     <div>
@@ -341,7 +346,6 @@ function About() {
                         </h2>
                     </div>
                 </div>
-
 
                 <div className="about-goals-grid">
                     <p>

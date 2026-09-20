@@ -1,13 +1,13 @@
 /* === SOBRE MIM === */
 .about {
-    width:
-        100%;
-
     display:
         flex;
 
     flex-direction:
         column;
+
+    width:
+        100%;
 
     gap:
         14px;
@@ -99,7 +99,7 @@
         center 18%;
 
     transition:
-        transform var(--transition-normal);
+        transform var(--transition-default);
 }
 
 .about-photo-wrapper:hover .about-photo {
@@ -110,9 +110,6 @@
 
 /* === CONTEÚDO DO PERFIL === */
 .about-profile-content {
-    min-width:
-        0;
-
     display:
         flex;
 
@@ -121,6 +118,9 @@
 
     align-items:
         flex-start;
+
+    min-width:
+        0;
 
     gap:
         7px;
@@ -542,12 +542,6 @@
 }
 
 .about-knowledge-icon {
-    width:
-        30px;
-
-    height:
-        30px;
-
     display:
         flex;
 
@@ -559,6 +553,12 @@
 
     flex-shrink:
         0;
+
+    width:
+        30px;
+
+    height:
+        30px;
 
     border-radius:
         8px;
@@ -759,5 +759,18 @@
     .about-knowledge-grid {
         grid-template-columns:
             1fr;
+    }
+}
+
+
+/* === ACESSIBILIDADE === */
+@media (prefers-reduced-motion: reduce) {
+
+    .about-photo,
+    .about-section,
+    .about-tags span,
+    .about-knowledge-card {
+        transition:
+            none;
     }
 }

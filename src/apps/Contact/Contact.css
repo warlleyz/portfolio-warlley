@@ -1,13 +1,13 @@
 /* === CONTATO === */
 .contact {
-    width:
-        100%;
-
     display:
         flex;
 
     flex-direction:
         column;
+
+    width:
+        100%;
 
     gap:
         12px;
@@ -26,8 +26,7 @@
         grid;
 
     grid-template-columns:
-        40px minmax(0,
-            1fr);
+        40px minmax(0, 1fr);
 
     align-items:
         center;
@@ -69,12 +68,6 @@
 
 /* ----- ÍCONE ----- */
 .contact-intro-icon {
-    width:
-        40px;
-
-    height:
-        40px;
-
     display:
         flex;
 
@@ -86,6 +79,12 @@
 
     flex-shrink:
         0;
+
+    width:
+        40px;
+
+    height:
+        40px;
 
     border-radius:
         10px;
@@ -100,14 +99,14 @@
 
 /* ----- CONTEÚDO ----- */
 .contact-intro-content {
-    min-width:
-        0;
-
     display:
         flex;
 
     flex-direction:
         column;
+
+    min-width:
+        0;
 
     gap:
         4px;
@@ -161,7 +160,7 @@
             var(--border-subtle));
 
     border-radius:
-        999px;
+        var(--radius-full);
 
     color:
         var(--text-secondary);
@@ -182,14 +181,14 @@
 }
 
 .contact-status {
+    flex-shrink:
+        0;
+
     width:
         6px;
 
     height:
         6px;
-
-    flex-shrink:
-        0;
 
     border-radius:
         50%;
@@ -230,8 +229,7 @@
         grid;
 
     grid-template-columns:
-        42px minmax(0,
-            1fr) auto;
+        42px minmax(0, 1fr) auto;
 
     align-items:
         center;
@@ -275,12 +273,6 @@
 
 /* ----- ÍCONE ----- */
 .contact-email-icon {
-    width:
-        42px;
-
-    height:
-        42px;
-
     display:
         flex;
 
@@ -292,6 +284,12 @@
 
     flex-shrink:
         0;
+
+    width:
+        42px;
+
+    height:
+        42px;
 
     border-radius:
         11px;
@@ -306,14 +304,14 @@
 
 /* ----- CONTEÚDO ----- */
 .contact-email-content {
-    min-width:
-        0;
-
     display:
         flex;
 
     flex-direction:
         column;
+
+    min-width:
+        0;
 
     gap:
         2px;
@@ -374,9 +372,6 @@
 
 /* === COPIAR E-MAIL === */
 .contact-copy-button {
-    min-height:
-        31px;
-
     display:
         inline-flex;
 
@@ -385,6 +380,9 @@
 
     justify-content:
         center;
+
+    min-height:
+        31px;
 
     gap:
         6px;
@@ -416,6 +414,7 @@
         nowrap;
 
     cursor:
+        var(--cursor-pointer),
         pointer;
 
     transition:
@@ -478,14 +477,14 @@
 
 /* === CARD === */
 .contact-card {
-    min-width:
-        0;
-
     display:
         flex;
 
     flex-direction:
         column;
+
+    min-width:
+        0;
 
     gap:
         13px;
@@ -509,6 +508,10 @@
 
     text-decoration:
         none;
+
+    cursor:
+        var(--cursor-pointer),
+        pointer;
 
     transition:
         transform var(--transition-fast),
@@ -545,12 +548,6 @@
 }
 
 .contact-card-icon {
-    width:
-        34px;
-
-    height:
-        34px;
-
     display:
         flex;
 
@@ -562,6 +559,12 @@
 
     flex-shrink:
         0;
+
+    width:
+        34px;
+
+    height:
+        34px;
 
     border-radius:
         9px;
@@ -596,14 +599,14 @@
 
 /* === CONTEÚDO DO CARD === */
 .contact-card-content {
-    min-width:
-        0;
-
     display:
         flex;
 
     flex-direction:
         column;
+
+    min-width:
+        0;
 
     gap:
         3px;
@@ -659,8 +662,7 @@
 
     .contact-email {
         grid-template-columns:
-            42px minmax(0,
-                1fr);
+            42px minmax(0, 1fr);
     }
 
     .contact-copy-button {
@@ -682,5 +684,19 @@
     .contact-socials {
         grid-template-columns:
             1fr;
+    }
+}
+
+
+/* === ACESSIBILIDADE === */
+@media (prefers-reduced-motion: reduce) {
+
+    .contact-intro,
+    .contact-email,
+    .contact-copy-button,
+    .contact-card,
+    .contact-external {
+        transition:
+            none;
     }
 }

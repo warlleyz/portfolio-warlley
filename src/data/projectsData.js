@@ -6,16 +6,15 @@ import {
 } from 'lucide-react'
 
 
+const BASE_URL =
+    import.meta.env.BASE_URL
+
+
 const projectsData = [
     {
-        repository:
-            'API-Clima',
-
-        id:
-            'api-clima',
-
-        title:
-            'API Clima',
+        repository: 'API-Clima',
+        id: 'api-clima',
+        title: 'API Clima',
 
         technologies: [
             'Java',
@@ -23,18 +22,13 @@ const projectsData = [
             'API REST',
         ],
 
-        demoType:
-            'terminal',
+        demoType: 'terminal',
 
         demo: {
-            mode:
-                'simple',
+            mode: 'simple',
+            command: 'curl GET /clima',
 
-            command:
-                'curl GET /clima',
-
-            output:
-                `HTTP/1.1 200 OK
+            output: `HTTP/1.1 200 OK
 
 {
     "cidade": "Belo Horizonte",
@@ -47,55 +41,35 @@ const projectsData = [
 }`,
         },
 
-        icon:
-            CloudSun,
-
-        featured:
-            true,
+        icon: CloudSun,
+        featured: true,
     },
 
     {
-        repository:
-            'Carrinho-Compras-POO',
-
-        id:
-            'carrinho-compras',
-
-        title:
-            'Carrinho de Compras',
+        repository: 'Carrinho-Compras-POO',
+        id: 'carrinho-compras',
+        title: 'Carrinho de Compras',
 
         technologies: [
             'Java',
             'POO',
         ],
 
-        demoType:
-            'terminal',
+        demoType: 'terminal',
 
         demo: {
-            mode:
-                'cart',
-
-            command:
-                'java Main',
+            mode: 'cart',
+            command: 'java Main',
         },
 
-        icon:
-            ShoppingCart,
-
-        featured:
-            true,
+        icon: ShoppingCart,
+        featured: true,
     },
 
     {
-        repository:
-            'Login-PUC',
-
-        id:
-            'login-puc',
-
-        title:
-            'Login PUC',
+        repository: 'Login-PUC',
+        id: 'login-puc',
+        title: 'Login PUC',
 
         technologies: [
             'Java',
@@ -104,30 +78,21 @@ const projectsData = [
             'CSS',
         ],
 
-        demoType:
-            'web',
+        demoType: 'web',
 
         demo: {
             url:
-                `${import.meta.env.BASE_URL}projects/web/login-puc/index.html`,
+                `${BASE_URL}projects/web/login-puc/index.html`,
         },
 
-        icon:
-            LogIn,
-
-        featured:
-            true,
+        icon: LogIn,
+        featured: true,
     },
 
     {
-        repository:
-            'SnakePy',
-
-        id:
-            'snakepy',
-
-        title:
-            'SnakePy',
+        repository: 'SnakePy',
+        id: 'snakepy',
+        title: 'SnakePy',
 
         technologies: [
             'Python',
@@ -135,32 +100,30 @@ const projectsData = [
             'Pytest',
         ],
 
-        demoType:
-            'media',
+        demoType: 'media',
 
         demo: {
             video:
-                `${import.meta.env.BASE_URL}projects/media/snakepy/demo.mp4`,
+                `${BASE_URL}projects/media/snakepy/demo.mp4`,
 
             images: [
-                `${import.meta.env.BASE_URL}projects/media/snakepy/images/menu.png`,
-                `${import.meta.env.BASE_URL}projects/media/snakepy/images/game.png`,
+                `${BASE_URL}projects/media/snakepy/images/menu.png`,
+                `${BASE_URL}projects/media/snakepy/images/game.png`,
             ],
         },
 
-        icon:
-            Gamepad2,
-
-        featured:
-            true,
+        icon: Gamepad2,
+        featured: true,
     },
 ]
+
 
 /* === REPOSITÓRIOS OCULTOS === */
 const hiddenGithubRepositories = [
     'warlleyz',
     'Ambiente-de-Teste',
 ]
+
 
 export {
     hiddenGithubRepositories,

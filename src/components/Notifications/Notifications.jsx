@@ -18,6 +18,8 @@ function Notifications({
     onClear,
     onOpenNotification,
 }) {
+    
+    /* === REFERÊNCIAS === */
     const panelRef =
         useRef(null)
 
@@ -46,7 +48,9 @@ function Notifications({
                 handleKeyDown,
             )
         }
-    }, [onClose])
+    }, [
+        onClose,
+    ])
 
 
     /* === FECHAR AO CLICAR FORA === */
@@ -83,7 +87,9 @@ function Notifications({
                 handleMouseDown,
             )
         }
-    }, [onClose])
+    }, [
+        onClose,
+    ])
 
 
     /* === RENDERIZAÇÃO === */
@@ -107,8 +113,6 @@ function Notifications({
                     </h2>
                 </div>
 
-
-                {/* ----- LIMPAR ----- */}
                 {notifications.length > 0 && (
                     <button
                         className="notifications-clear"
@@ -122,6 +126,7 @@ function Notifications({
                         <Trash2
                             size={15}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
                     </button>
                 )}
@@ -130,134 +135,131 @@ function Notifications({
 
             {/* === CONTEÚDO === */}
             <div className="notifications-content">
-                {notifications.length > 0
-                    ? (
-                        notifications.map(
-                            (
-                                notification,
-                            ) => {
-                                const Icon =
-                                    notification.icon ??
-                                    Bell
+                {
+                    notifications.length > 0
+                        ? (
+                            notifications.map(
+                                (
+                                    notification,
+                                ) => {
+                                    const Icon =
+                                        notification.icon ??
+                                        Bell
 
-                                const isActionable =
-                                    Boolean(
-                                        notification.appId,
-                                    )
+                                    const isActionable =
+                                        Boolean(
+                                            notification.appId,
+                                        )
 
-                                const className = [
-                                    'notification-item',
+                                    const className = [
+                                        'notification-item',
 
-                                    notification.read
-                                        ? 'notification-read'
-                                        : 'notification-unread',
+                                        notification.read
+                                            ? 'notification-read'
+                                            : 'notification-unread',
 
-                                    isActionable
-                                        ? 'notification-action'
-                                        : '',
-                                ]
-                                    .filter(
-                                        Boolean,
-                                    )
-                                    .join(
-                                        ' ',
-                                    )
+                                        isActionable
+                                            ? 'notification-action'
+                                            : '',
+                                    ]
+                                        .filter(Boolean)
+                                        .join(' ')
 
-
-                                return (
-                                    <button
-                                        key={
-                                            notification.id
-                                        }
-                                        className={
-                                            className
-                                        }
-                                        type="button"
-                                        onClick={() => {
-                                            if (
-                                                !isActionable
-                                            ) {
-                                                return
+                                    return (
+                                        <button
+                                            key={
+                                                notification.id
                                             }
+                                            className={
+                                                className
+                                            }
+                                            type="button"
+                                            onClick={() => {
+                                                if (
+                                                    !isActionable
+                                                ) {
+                                                    return
+                                                }
 
-                                            onOpenNotification(
-                                                notification,
-                                            )
-                                        }}
-                                        disabled={
-                                            !isActionable
-                                        }
-                                        aria-label={
-                                            isActionable
-                                                ? `Abrir ${notification.title}`
-                                                : notification.title
-                                        }
-                                    >
-                                        {/* ----- ÍCONE ----- */}
-                                        <div className="notification-icon">
-                                            <Icon
-                                                size={17}
-                                                strokeWidth={1.8}
-                                            />
-                                        </div>
-
-
-                                        {/* ----- TEXTO ----- */}
-                                        <div className="notification-text">
-                                            <div className="notification-title-row">
-                                                <strong>
-                                                    {
-                                                        notification.title
-                                                    }
-                                                </strong>
-
-                                                {!notification.read && (
-                                                    <span
-                                                        className="notification-unread-dot"
-                                                        aria-label="Não lida"
-                                                    />
-                                                )}
+                                                onOpenNotification(
+                                                    notification,
+                                                )
+                                            }}
+                                            disabled={
+                                                !isActionable
+                                            }
+                                            aria-label={
+                                                isActionable
+                                                    ? `Abrir ${notification.title}`
+                                                    : notification.title
+                                            }
+                                        >
+                                            {/* ----- ÍCONE ----- */}
+                                            <div className="notification-icon">
+                                                <Icon
+                                                    size={17}
+                                                    strokeWidth={1.8}
+                                                    aria-hidden="true"
+                                                />
                                             </div>
 
 
-                                            <span>
-                                                {
-                                                    notification.description
-                                                }
-                                            </span>
+                                            {/* ----- TEXTO ----- */}
+                                            <div className="notification-text">
+                                                <div className="notification-title-row">
+                                                    <strong>
+                                                        {
+                                                            notification.title
+                                                        }
+                                                    </strong>
 
+                                                    {!notification.read && (
+                                                        <span
+                                                            className="notification-unread-dot"
+                                                            aria-hidden="true"
+                                                        />
+                                                    )}
+                                                </div>
 
-                                            {notification.time && (
-                                                <small>
+                                                <span>
                                                     {
-                                                        notification.time
+                                                        notification.description
                                                     }
-                                                </small>
-                                            )}
-                                        </div>
-                                    </button>
-                                )
-                            },
+                                                </span>
+
+                                                {notification.time && (
+                                                    <small>
+                                                        {
+                                                            notification.time
+                                                        }
+                                                    </small>
+                                                )}
+                                            </div>
+                                        </button>
+                                    )
+                                },
+                            )
                         )
-                    )
-                    : (
-                        <div className="notifications-empty">
-                            <span className="notifications-empty-icon">
-                                <CheckCheck
-                                    size={22}
-                                    strokeWidth={1.7}
-                                />
-                            </span>
+                        : (
+                            <div className="notifications-empty">
+                                <span className="notifications-empty-icon">
+                                    <CheckCheck
+                                        size={22}
+                                        strokeWidth={1.7}
+                                        aria-hidden="true"
+                                    />
+                                </span>
 
-                            <strong>
-                                Tudo em dia
-                            </strong>
+                                <strong>
+                                    Tudo em dia
+                                </strong>
 
-                            <span>
-                                Nenhuma notificação no momento.
-                            </span>
-                        </div>
-                    )}
+                                <span>
+                                    Nenhuma notificação no momento.
+                                </span>
+                            </div>
+                        )
+                }
             </div>
         </aside>
     )

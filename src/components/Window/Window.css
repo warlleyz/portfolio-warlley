@@ -1,14 +1,22 @@
 /* === JANELA === */
 .window {
-    position: absolute;
+    position:
+        absolute;
 
-    display: flex;
-    flex-direction: column;
+    display:
+        flex;
 
-    min-width: 360px;
-    min-height: 260px;
+    flex-direction:
+        column;
 
-    overflow: hidden;
+    min-width:
+        360px;
+
+    min-height:
+        260px;
+
+    overflow:
+        hidden;
 
     border:
         1px solid var(--glass-border);
@@ -18,9 +26,9 @@
             16px);
 
     background:
-            color-mix(in srgb,
-                var(--glass-background-strong) var(--runtime-glass-opacity, 78%),
-                transparent);
+        color-mix(in srgb,
+            var(--glass-background-strong) var(--runtime-glass-opacity, 78%),
+            transparent);
 
     color:
         var(--text-primary);
@@ -67,7 +75,6 @@
 
 
 /* === ESTADOS === */
-
 /* ----- ATIVA ----- */
 .window-active {
     border-color:
@@ -98,9 +105,9 @@
 /* ----- ARRASTANDO ----- */
 .window-dragging {
     background:
-            color-mix(in srgb,
-                var(--glass-background-strong) 62%,
-                transparent);
+        color-mix(in srgb,
+            var(--glass-background-strong) 62%,
+            transparent);
 
     box-shadow:
         var(--shadow-medium);
@@ -117,9 +124,9 @@
 /* ----- REDIMENSIONANDO ----- */
 .window-resizing {
     background:
-            color-mix(in srgb,
-                var(--glass-background-strong) 62%,
-                transparent);
+        color-mix(in srgb,
+            var(--glass-background-strong) 62%,
+            transparent);
 
     box-shadow:
         var(--shadow-medium);
@@ -174,17 +181,26 @@
 
 /* === CABEÇALHO === */
 .window-header {
-    position: relative;
+    position:
+        relative;
 
-    z-index: 2;
+    z-index:
+        2;
 
-    min-height: 48px;
+    display:
+        flex;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items:
+        center;
 
-    flex-shrink: 0;
+    justify-content:
+        space-between;
+
+    flex-shrink:
+        0;
+
+    min-height:
+        48px;
 
     padding:
         0 8px 0 16px;
@@ -218,12 +234,17 @@
 
 /* === TÍTULO === */
 .window-title {
-    min-width: 0;
+    display:
+        flex;
 
-    display: flex;
-    align-items: center;
+    align-items:
+        center;
 
-    gap: 9px;
+    min-width:
+        0;
+
+    gap:
+        9px;
 
     pointer-events:
         none;
@@ -232,10 +253,14 @@
 
 /* ----- INDICADOR ----- */
 .window-title-dot {
-    width: 7px;
-    height: 7px;
+    flex-shrink:
+        0;
 
-    flex-shrink: 0;
+    width:
+        7px;
+
+    height:
+        7px;
 
     border-radius:
         50%;
@@ -259,13 +284,17 @@
 
 /* ----- TEXTO ----- */
 .window-title-text {
-    overflow: hidden;
+    overflow:
+        hidden;
 
     color:
         var(--text-secondary);
 
-    font-size: 13px;
-    font-weight: 550;
+    font-size:
+        13px;
+
+    font-weight:
+        550;
 
     text-overflow:
         ellipsis;
@@ -285,10 +314,14 @@
 
 /* === CONTROLES === */
 .window-controls {
-    display: flex;
-    align-items: center;
+    display:
+        flex;
 
-    gap: 2px;
+    align-items:
+        center;
+
+    gap:
+        2px;
 
     margin-left:
         16px;
@@ -297,14 +330,23 @@
 
 /* ----- BOTÃO ----- */
 .window-control {
-    width: 34px;
-    height: 34px;
+    display:
+        flex;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items:
+        center;
 
-    flex-shrink: 0;
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
+    width:
+        34px;
+
+    height:
+        34px;
 
     border-radius:
         8px;
@@ -347,14 +389,20 @@
 
 /* === CONTEÚDO === */
 .window-content {
-    position: relative;
+    position:
+        relative;
 
-    z-index: 1;
+    z-index:
+        1;
 
-    flex: 1;
+    flex:
+        1;
 
-    min-width: 0;
-    min-height: 0;
+    min-width:
+        0;
+
+    min-height:
+        0;
 
     overflow:
         auto;
@@ -370,11 +418,48 @@
 
     transition:
         opacity 140ms ease;
+
+    scrollbar-width:
+        thin;
+
+    scrollbar-color:
+        var(--border-default) transparent;
+}
+
+
+/* === SCROLLBAR === */
+.window-content::-webkit-scrollbar {
+    width:
+        6px;
+
+    height:
+        6px;
+}
+
+.window-content::-webkit-scrollbar-track {
+    background:
+        transparent;
+}
+
+.window-content::-webkit-scrollbar-thumb {
+    border:
+        none;
+
+    border-radius:
+        var(--radius-full,
+            9999px);
+
+    background:
+        var(--border-default);
+}
+
+.window-content::-webkit-scrollbar-thumb:hover {
+    background:
+        var(--text-muted);
 }
 
 
 /* === REDIMENSIONAMENTO === */
-
 .window-resize {
     position:
         absolute;
@@ -385,7 +470,6 @@
 
 
 /* ----- LATERAIS ----- */
-
 .window-resize-top {
     top:
         0;
@@ -460,7 +544,6 @@
 
 
 /* ----- CANTOS ----- */
-
 .window-resize-top-left {
     top:
         0;
@@ -535,18 +618,19 @@
 
 
 /* === ANIMAÇÕES === */
-
 /* ----- ABRIR ----- */
 @keyframes window-open {
     from {
-        opacity: 0;
+        opacity:
+            0;
 
         transform:
             scale(0.97) translateY(5px);
     }
 
     to {
-        opacity: 1;
+        opacity:
+            1;
 
         transform:
             scale(1) translateY(0);
@@ -557,14 +641,16 @@
 /* ----- MINIMIZAR ----- */
 @keyframes window-minimize {
     from {
-        opacity: 1;
+        opacity:
+            1;
 
         transform:
             scale(1) translateY(0);
     }
 
     to {
-        opacity: 0;
+        opacity:
+            0;
 
         transform:
             scale(0.82) translateY(40px);
@@ -575,14 +661,16 @@
 /* ----- FECHAR ----- */
 @keyframes window-close {
     from {
-        opacity: 1;
+        opacity:
+            1;
 
         transform:
             scale(1);
     }
 
     to {
-        opacity: 0;
+        opacity:
+            0;
 
         transform:
             scale(0.96);
@@ -590,55 +678,23 @@
 }
 
 
-/* === SCROLLBAR === */
-.window-content {
-    scrollbar-width:
-        thin;
-
-    scrollbar-color:
-        var(--border-default) transparent;
-}
-
-.window-content::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-.window-content::-webkit-scrollbar-track {
-    background:
-        transparent;
-}
-
-.window-content::-webkit-scrollbar-thumb {
-    border:
-        none;
-
-    border-radius:
-        var(--radius-full,
-            9999px);
-
-    background:
-        var(--border-default);
-}
-
-.window-content::-webkit-scrollbar-thumb:hover {
-    background:
-        var(--text-muted);
-}
-
-
 /* === RESPONSIVIDADE === */
-
 /* ----- TELAS ESTREITAS ----- */
 @media (max-width: 700px) {
     .window {
-        min-width: 0;
-        min-height: 0;
+        min-width:
+            0;
+
+        min-height:
+            0;
     }
 
     .window:not(.window-maximized) {
         max-width:
             calc(100vw - 16px);
+
+        max-height:
+            calc(100vh - 16px);
     }
 
     .window-maximized {
@@ -655,14 +711,16 @@
     }
 
     .window-control {
-        width: 32px;
-        height: 32px;
+        width:
+            32px;
+
+        height:
+            32px;
     }
 }
 
 
 /* === ACESSIBILIDADE === */
-
 /* ----- MOVIMENTO REDUZIDO ----- */
 @media (prefers-reduced-motion: reduce) {
 

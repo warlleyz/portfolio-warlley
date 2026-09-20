@@ -1,12 +1,16 @@
 /* === CONTROLES RÁPIDOS === */
-
 .quick-controls {
-    position: absolute;
+    position:
+        absolute;
 
-    bottom: 74px;
-    left: 50%;
+    bottom:
+        74px;
 
-    z-index: 500;
+    left:
+        50%;
+
+    z-index:
+        500;
 
     width:
         min(285px,
@@ -54,7 +58,6 @@
 
 
 /* === CABEÇALHO === */
-
 .quick-controls-header {
     padding:
         11px 13px 9px;
@@ -65,7 +68,6 @@
 
 
 /* ----- IDENTIFICAÇÃO ----- */
-
 .quick-controls-label {
     display:
         block;
@@ -91,7 +93,6 @@
 
 
 /* ----- TÍTULO ----- */
-
 .quick-controls-title {
     margin:
         0;
@@ -111,10 +112,12 @@
 
 
 /* === CONTEÚDO === */
-
 .quick-controls-content {
-    display: flex;
-    flex-direction: column;
+    display:
+        flex;
+
+    flex-direction:
+        column;
 
     gap:
         7px;
@@ -125,13 +128,15 @@
 
 
 /* === TEMA === */
-
 .quick-control-theme {
+    display:
+        flex;
+
+    align-items:
+        center;
+
     width:
         100%;
-
-    display: flex;
-    align-items: center;
 
     gap:
         9px;
@@ -181,20 +186,24 @@
 
 
 /* ----- ÍCONE ----- */
-
 .quick-control-theme-icon {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
     width:
         32px;
 
     height:
         32px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    flex-shrink:
-        0;
 
     border-radius:
         8px;
@@ -211,7 +220,6 @@
 
 
 /* ----- TEXTO ----- */
-
 .quick-control-theme-text {
     display:
         flex;
@@ -253,7 +261,6 @@
 
 
 /* === GRUPO === */
-
 .quick-control-group {
     padding:
         9px 10px;
@@ -276,11 +283,15 @@
 
 
 /* === CABEÇALHO DO CONTROLE === */
-
 .quick-control-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
 
     gap:
         9px;
@@ -299,7 +310,6 @@
 
 
 /* ----- TÍTULO DO CONTROLE ----- */
-
 .quick-control-heading strong {
     color:
         var(--text-primary);
@@ -316,7 +326,6 @@
 
 
 /* ----- DESCRIÇÃO ----- */
-
 .quick-control-heading span {
     margin-top:
         2px;
@@ -333,7 +342,6 @@
 
 
 /* ----- VALOR ----- */
-
 .quick-control-value {
     margin:
         0 !important;
@@ -353,7 +361,6 @@
 
 
 /* === RANGE === */
-
 .quick-control-range {
     width:
         100%;
@@ -371,7 +378,7 @@
         none;
 
     border-radius:
-        999px;
+        var(--radius-full);
 
     outline:
         none;
@@ -390,13 +397,12 @@
 
 
 /* ----- TRILHO WEBKIT ----- */
-
 .quick-control-range::-webkit-slider-runnable-track {
     height:
         4px;
 
     border-radius:
-        999px;
+        var(--radius-full);
 
     background:
         transparent;
@@ -408,7 +414,6 @@
 
 
 /* ----- BOTÃO WEBKIT ----- */
-
 .quick-control-range::-webkit-slider-thumb {
     width:
         15px;
@@ -455,13 +460,12 @@
 
 
 /* ----- FIREFOX ----- */
-
 .quick-control-range::-moz-range-track {
     height:
         4px;
 
     border-radius:
-        999px;
+        var(--radius-full);
 
     background:
         transparent;
@@ -476,7 +480,7 @@
         4px;
 
     border-radius:
-        999px;
+        var(--radius-full);
 
     background:
         var(--accent-primary);
@@ -511,9 +515,7 @@
 
 
 /* === ANIMAÇÃO === */
-
 @keyframes quick-controls-open {
-
     from {
         opacity:
             0;
@@ -533,9 +535,7 @@
 
 
 /* === RESPONSIVIDADE === */
-
 @media (max-width: 600px) {
-
     .quick-controls {
         bottom:
             68px;
@@ -548,7 +548,6 @@
 
 
 /* === ACESSIBILIDADE === */
-
 @media (prefers-reduced-motion: reduce) {
 
     .quick-controls,

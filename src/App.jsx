@@ -6,47 +6,59 @@ import {
 import BootScreen from './components/BootScreen/BootScreen'
 import Desktop from './components/Desktop/Desktop'
 
+
+/* === CONFIGURAÇÃO === */
 const BOOT_MINIMUM_TIME = 1200
 const BOOT_EXIT_TIME = 420
 
 const BASE_URL =
   import.meta.env.BASE_URL
 
+const CURSORS_URL =
+  `${BASE_URL}assets/cursors/`
+
+const WALLPAPERS_URL =
+  `${BASE_URL}assets/wallpapers/`
+
+
+/* === ASSETS GLOBAIS === */
 const globalAssets = {
   cursorDefault:
-    `${BASE_URL}cursor-default.svg`,
+    `${CURSORS_URL}cursor-default.svg`,
 
   cursorPointer:
-    `${BASE_URL}cursor-pointer.svg`,
+    `${CURSORS_URL}cursor-pointer.svg`,
 
   cursorGrab:
-    `${BASE_URL}cursor-grab.svg`,
+    `${CURSORS_URL}cursor-grab.svg`,
 
   cursorGrabbing:
-    `${BASE_URL}cursor-grabbing.svg`,
+    `${CURSORS_URL}cursor-grabbing.svg`,
 
   cursorText:
-    `${BASE_URL}cursor-text.svg`,
+    `${CURSORS_URL}cursor-text.svg`,
 
   cursorResizeHorizontal:
-    `${BASE_URL}cursor-resize-horizontal.svg`,
+    `${CURSORS_URL}cursor-resize-horizontal.svg`,
 
   cursorResizeVertical:
-    `${BASE_URL}cursor-resize-vertical.svg`,
+    `${CURSORS_URL}cursor-resize-vertical.svg`,
 
   cursorResizeDiagonal1:
-    `${BASE_URL}cursor-resize-diagonal-1.svg`,
+    `${CURSORS_URL}cursor-resize-diagonal-1.svg`,
 
   cursorResizeDiagonal2:
-    `${BASE_URL}cursor-resize-diagonal-2.svg`,
+    `${CURSORS_URL}cursor-resize-diagonal-2.svg`,
 
   cursorMove:
-    `${BASE_URL}cursor-move.svg`,
+    `${CURSORS_URL}cursor-move.svg`,
 
   cursorNotAllowed:
-    `${BASE_URL}cursor-not-allowed.svg`,
+    `${CURSORS_URL}cursor-not-allowed.svg`,
 }
 
+
+/* === TEMA INICIAL === */
 const getInitialTheme = () => {
   const savedTheme =
     localStorage.getItem('theme')
@@ -68,6 +80,7 @@ const getInitialTheme = () => {
     : 'light'
 }
 
+
 function App() {
   const [
     bootState,
@@ -85,16 +98,14 @@ function App() {
     const root =
       document.documentElement
 
-
     root.setAttribute(
       'data-theme',
       theme,
     )
 
-
     root.style.setProperty(
       '--wallpaper-image',
-      `url("${BASE_URL}wallpapers/ws-${theme}.png")`,
+      `url("${WALLPAPERS_URL}ws-${theme}.png")`,
     )
 
     root.style.setProperty(
@@ -159,7 +170,7 @@ function App() {
   }, [theme])
 
 
-  /* === INICIALIZAÇÃO === */
+  /* === INICIALIZAÇÃO DO SISTEMA === */
   useEffect(() => {
     const startTime =
       Date.now()
@@ -244,10 +255,11 @@ function App() {
 
   /* === AÇÕES === */
   const toggleTheme = () => {
-    setTheme((currentTheme) =>
-      currentTheme === 'dark'
-        ? 'light'
-        : 'dark',
+    setTheme(
+      (currentTheme) =>
+        currentTheme === 'dark'
+          ? 'light'
+          : 'dark',
     )
   }
 

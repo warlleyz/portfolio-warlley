@@ -5,15 +5,19 @@ import {
 
 import './BootScreen.css'
 
+
+/* === CONFIGURAÇÃO === */
 const BOOT_STEPS = [
     {
         status: 'Inicializando sistema',
         progress: 28,
     },
+
     {
         status: 'Carregando interface',
         progress: 64,
     },
+
     {
         status: 'Preparando ambiente',
         progress: 92,
@@ -21,6 +25,13 @@ const BOOT_STEPS = [
 ]
 
 const STEP_INTERVAL = 380
+
+const BASE_URL =
+    import.meta.env.BASE_URL
+
+const BRANDING_URL =
+    `${BASE_URL}assets/branding/`
+
 
 function BootScreen({
     theme,
@@ -36,25 +47,25 @@ function BootScreen({
                     '(prefers-reduced-motion: reduce)',
                 ).matches
 
-
             return reducedMotion
                 ? BOOT_STEPS.length - 1
                 : 0
         },
     )
 
-    const baseUrl =
-        import.meta.env.BASE_URL
 
-
+    /* === ASSETS === */
     const logoSource =
         theme === 'dark'
-            ? `${baseUrl}images/branding/ws-os-dark.png`
-            : `${baseUrl}images/branding/ws-os-light.png`
+            ? `${BRANDING_URL}ws-os-dark.png`
+            : `${BRANDING_URL}ws-os-light.png`
 
+
+    /* === ESTADO VISUAL === */
     const screenClassName = [
         'boot-screen',
         `boot-screen-${theme}`,
+
         leaving
             ? 'boot-screen-leaving'
             : '',
@@ -65,6 +76,8 @@ function BootScreen({
     const currentBootStep =
         BOOT_STEPS[currentStep]
 
+
+    /* === PROGRESSO DA INICIALIZAÇÃO === */
     useEffect(() => {
         const reducedMotion =
             window.matchMedia(
@@ -80,12 +93,13 @@ function BootScreen({
         const timers =
             BOOT_STEPS
                 .slice(1)
-                .map((_, index) =>
-                    setTimeout(() => {
-                        setCurrentStep(
-                            index + 1,
-                        )
-                    }, STEP_INTERVAL * (index + 1)),
+                .map(
+                    (_, index) =>
+                        setTimeout(() => {
+                            setCurrentStep(
+                                index + 1,
+                            )
+                        }, STEP_INTERVAL * (index + 1)),
                 )
 
         return () => {
@@ -95,24 +109,30 @@ function BootScreen({
         }
     }, [])
 
+
+    /* === RENDERIZAÇÃO === */
     return (
         <div
-            className={screenClassName}
+            className={
+                screenClassName
+            }
             aria-live="polite"
-            aria-busy={!leaving}
+            aria-busy={
+                !leaving
+            }
         >
             <main className="boot-content">
                 <img
-                    src={logoSource}
+                    src={
+                        logoSource
+                    }
                     alt="WS OS"
                     className="boot-logo"
                     draggable="false"
                 />
 
                 <div className="boot-loading">
-                    <span
-                        className="boot-status"
-                    >
+                    <span className="boot-status">
                         {
                             currentBootStep.status
                         }

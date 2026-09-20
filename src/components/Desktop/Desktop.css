@@ -1,11 +1,16 @@
 /* === DESKTOP === */
 .desktop {
-    position: relative;
+    position:
+        relative;
 
-    width: 100%;
-    height: 100%;
+    width:
+        100%;
 
-    overflow: hidden;
+    height:
+        100%;
+
+    overflow:
+        hidden;
 
     color:
         var(--text-primary);
@@ -29,21 +34,27 @@
         background-color 300ms ease,
         color 300ms ease;
 
-    user-select: none;
+    user-select:
+        none;
 }
 
 
 /* === CAMADA DO WALLPAPER === */
 .desktop::before {
-    content: '';
+    content:
+        '';
 
-    position: absolute;
+    position:
+        absolute;
 
-    inset: 0;
+    inset:
+        0;
 
-    z-index: 0;
+    z-index:
+        0;
 
-    pointer-events: none;
+    pointer-events:
+        none;
 
     background:
         linear-gradient(180deg,
@@ -54,17 +65,26 @@
 
 /* === ATALHOS === */
 .desktop-shortcuts {
-    position: absolute;
+    position:
+        absolute;
 
-    top: 22px;
-    left: 20px;
-    bottom: 96px;
+    top:
+        22px;
 
-    z-index: 1;
+    left:
+        20px;
 
-    display: grid;
+    bottom:
+        96px;
 
-    grid-auto-flow: column;
+    z-index:
+        1;
+
+    display:
+        grid;
+
+    grid-auto-flow:
+        column;
 
     grid-template-rows:
         repeat(auto-fill,
@@ -73,7 +93,8 @@
     grid-auto-columns:
         84px;
 
-    align-content: start;
+    align-content:
+        start;
 
     gap:
         6px 8px;
@@ -82,17 +103,29 @@
 
 /* === ATALHO === */
 .shortcut {
-    position: relative;
+    position:
+        relative;
 
-    width: 82px;
-    height: 82px;
+    display:
+        flex;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    flex-direction:
+        column;
 
-    gap: 7px;
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        82px;
+
+    height:
+        82px;
+
+    gap:
+        7px;
 
     padding:
         6px 4px;
@@ -164,16 +197,26 @@
 
 /* === ÍCONE === */
 .shortcut-icon {
-    position: relative;
+    position:
+        relative;
 
-    width: 46px;
-    height: 46px;
+    display:
+        flex;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items:
+        center;
 
-    flex-shrink: 0;
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
+    width:
+        46px;
+
+    height:
+        46px;
 
     border:
         1px solid var(--glass-border,
@@ -243,13 +286,20 @@
 
 /* === ESTADO DO APP === */
 .shortcut-state {
-    position: absolute;
+    position:
+        absolute;
 
-    right: -2px;
-    bottom: -2px;
+    right:
+        -2px;
 
-    width: 8px;
-    height: 8px;
+    bottom:
+        -2px;
+
+    width:
+        8px;
+
+    height:
+        8px;
 
     border:
         2px solid var(--surface-primary,
@@ -261,7 +311,8 @@
     background:
         transparent;
 
-    opacity: 0;
+    opacity:
+        0;
 
     transform:
         scale(0.7);
@@ -278,7 +329,8 @@
 
 /* ----- APP ABERTO ----- */
 .shortcut-open .shortcut-state {
-    opacity: 1;
+    opacity:
+        1;
 
     transform:
         scale(1);
@@ -299,24 +351,33 @@
 
 /* === NOME DO ATALHO === */
 .shortcut-name {
-    width: 100%;
+    width:
+        100%;
 
-    overflow: hidden;
+    overflow:
+        hidden;
 
     color:
         var(--text-primary,
             #f4f8fc);
 
-    font-size: 11px;
-    font-weight: 450;
+    font-size:
+        11px;
 
-    line-height: 1.2;
+    font-weight:
+        450;
 
-    text-align: center;
+    line-height:
+        1.2;
 
-    text-overflow: ellipsis;
+    text-align:
+        center;
 
-    white-space: nowrap;
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
 
     text-shadow:
         0 1px 4px rgba(0, 0, 0, 0.18);
@@ -327,9 +388,14 @@
 /* ----- TELAS BAIXAS ----- */
 @media (max-height: 760px) {
     .desktop-shortcuts {
-        top: 14px;
-        left: 14px;
-        bottom: 88px;
+        top:
+            14px;
+
+        left:
+            14px;
+
+        bottom:
+            88px;
 
         grid-template-rows:
             repeat(auto-fill,
@@ -340,17 +406,24 @@
     }
 
     .shortcut {
-        width: 76px;
-        height: 76px;
+        width:
+            76px;
+
+        height:
+            76px;
     }
 
     .shortcut-icon {
-        width: 42px;
-        height: 42px;
+        width:
+            42px;
+
+        height:
+            42px;
     }
 
     .shortcut-name {
-        font-size: 10px;
+        font-size:
+            10px;
     }
 }
 
@@ -358,9 +431,11 @@
 /* ----- TELAS ESTREITAS ----- */
 @media (max-width: 700px) {
     .desktop-shortcuts {
-        right: 14px;
+        right:
+            14px;
 
-        grid-auto-flow: row;
+        grid-auto-flow:
+            row;
 
         grid-template-columns:
             repeat(auto-fill,
@@ -370,9 +445,11 @@
         grid-template-rows:
             none;
 
-        height: auto;
+        height:
+            auto;
 
-        overflow-y: auto;
+        overflow-y:
+            auto;
     }
 }
 
@@ -385,6 +462,7 @@
     .shortcut,
     .shortcut-icon,
     .shortcut-state {
-        transition: none;
+        transition:
+            none;
     }
 }

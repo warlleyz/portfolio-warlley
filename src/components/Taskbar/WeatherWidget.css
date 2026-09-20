@@ -1,28 +1,47 @@
 /* === CLIMA === */
 .weather-widget {
-    height: 36px;
+    display:
+        flex;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items:
+        center;
 
-    gap: 5px;
+    justify-content:
+        center;
+
+    min-height:
+        34px;
+
+    height:
+        36px;
+
+    gap:
+        5px;
 
     padding:
         0 9px;
 
-    border-radius: 9px;
+    border-radius:
+        9px;
 
     color:
         var(--text-primary);
 
-    font-size: 12px;
-    font-weight: 500;
+    font-size:
+        12px;
 
-    user-select: none;
+    font-weight:
+        500;
+
+    user-select:
+        none;
+
+    cursor:
+        var(--cursor-default),
+        default;
 
     transition:
-        background 160ms ease;
+        background var(--transition-fast);
 }
 
 .weather-widget:hover {
@@ -30,21 +49,31 @@
         var(--hover-background);
 }
 
+
+/* === ÍCONE === */
 .weather-widget-emoji {
-    font-size: 15px;
+    font-size:
+        15px;
 
-    line-height: 1;
+    line-height:
+        1;
 }
 
+
+/* === TEMPERATURA === */
 .weather-widget-temperature {
-    min-width: 26px;
+    min-width:
+        26px;
 
-    text-align: center;
+    text-align:
+        center;
 }
 
-/* === REDUÇÃO DE MOVIMENTO === */
+
+/* === ACESSIBILIDADE === */
 @media (prefers-reduced-motion: reduce) {
     .weather-widget {
-        transition: none;
+        transition:
+            none;
     }
 }

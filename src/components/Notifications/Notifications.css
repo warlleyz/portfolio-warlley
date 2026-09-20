@@ -1,12 +1,16 @@
 /* === NOTIFICAÇÕES === */
-
 .notifications-panel {
-    position: absolute;
+    position:
+        absolute;
 
-    bottom: 74px;
-    left: 50%;
+    bottom:
+        74px;
 
-    z-index: 500;
+    left:
+        50%;
+
+    z-index:
+        500;
 
     width:
         min(300px,
@@ -54,11 +58,15 @@
 
 
 /* === CABEÇALHO === */
-
 .notifications-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
 
     gap:
         10px;
@@ -72,7 +80,6 @@
 
 
 /* ----- IDENTIFICAÇÃO ----- */
-
 .notifications-label {
     display:
         block;
@@ -98,7 +105,6 @@
 
 
 /* ----- TÍTULO ----- */
-
 .notifications-title {
     margin:
         0;
@@ -118,20 +124,24 @@
 
 
 /* === LIMPAR === */
-
 .notifications-clear {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
     width:
         30px;
 
     height:
         30px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    flex-shrink:
-        0;
 
     border:
         0;
@@ -170,10 +180,12 @@
 
 
 /* === CONTEÚDO === */
-
 .notifications-content {
-    display: flex;
-    flex-direction: column;
+    display:
+        flex;
+
+    flex-direction:
+        column;
 
     gap:
         6px;
@@ -194,13 +206,15 @@
 
 
 /* === NOTIFICAÇÃO === */
-
 .notification-item {
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
     width:
         100%;
-
-    display: flex;
-    align-items: flex-start;
 
     gap:
         9px;
@@ -243,7 +257,6 @@
 
 
 /* === NOTIFICAÇÃO INTERATIVA === */
-
 .notification-action {
     cursor:
         var(--cursor-pointer),
@@ -268,7 +281,6 @@
 
 
 /* ----- NÃO LIDA ----- */
-
 .notification-unread {
     border-color:
         color-mix(in srgb,
@@ -283,7 +295,6 @@
 
 
 /* ----- LIDA ----- */
-
 .notification-read {
     opacity:
         0.76;
@@ -296,20 +307,24 @@
 
 
 /* === ÍCONE === */
-
 .notification-icon {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
     width:
         30px;
 
     height:
         30px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    flex-shrink:
-        0;
 
     border-radius:
         8px;
@@ -326,16 +341,18 @@
 
 
 /* === TEXTO === */
-
 .notification-text {
-    min-width:
-        0;
+    display:
+        flex;
 
     flex:
         1;
 
-    display: flex;
-    flex-direction: column;
+    flex-direction:
+        column;
+
+    min-width:
+        0;
 
     pointer-events:
         none;
@@ -343,10 +360,12 @@
 
 
 /* ----- LINHA DO TÍTULO ----- */
-
 .notification-title-row {
-    display: flex;
-    align-items: center;
+    display:
+        flex;
+
+    align-items:
+        center;
 
     gap:
         6px;
@@ -380,16 +399,15 @@
 
 
 /* ----- INDICADOR NÃO LIDO ----- */
-
 .notification-unread-dot {
+    flex-shrink:
+        0;
+
     width:
         5px;
 
     height:
         5px;
-
-    flex-shrink:
-        0;
 
     border-radius:
         50%;
@@ -403,7 +421,6 @@
 
 
 /* ----- DESCRIÇÃO ----- */
-
 .notification-text>span {
     margin-top:
         3px;
@@ -420,7 +437,6 @@
 
 
 /* ----- HORÁRIO ----- */
-
 .notification-text small {
     margin-top:
         5px;
@@ -437,15 +453,21 @@
 
 
 /* === SEM NOTIFICAÇÕES === */
-
 .notifications-empty {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
     min-height:
         135px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
 
     padding:
         18px;
@@ -462,15 +484,20 @@
 }
 
 .notifications-empty-icon {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
     width:
         40px;
 
     height:
         40px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
     margin-bottom:
         9px;
@@ -509,7 +536,6 @@
 
 
 /* === SCROLL === */
-
 .notifications-content::-webkit-scrollbar {
     width:
         5px;
@@ -522,7 +548,7 @@
 
 .notifications-content::-webkit-scrollbar-thumb {
     border-radius:
-        999px;
+        var(--radius-full);
 
     background:
         var(--border-default);
@@ -539,9 +565,7 @@
 
 
 /* === ANIMAÇÃO === */
-
 @keyframes notifications-open {
-
     from {
         opacity:
             0;
@@ -561,9 +585,7 @@
 
 
 /* === RESPONSIVIDADE === */
-
 @media (max-width: 600px) {
-
     .notifications-panel {
         bottom:
             68px;
@@ -581,7 +603,6 @@
 
 
 /* === ACESSIBILIDADE === */
-
 @media (prefers-reduced-motion: reduce) {
 
     .notifications-panel,

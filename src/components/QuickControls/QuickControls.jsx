@@ -11,6 +11,31 @@ import {
 import './QuickControls.css'
 
 
+/* === CONFIGURAÇÃO === */
+const BRIGHTNESS_MIN = 75
+const BRIGHTNESS_MAX = 105
+
+const GLASS_MIN = 35
+const GLASS_MAX = 95
+
+
+/* === UTILITÁRIOS === */
+const getRangeProgress = (
+    value,
+    min,
+    max,
+) => {
+    return (
+        (
+            value - min
+        ) /
+        (
+            max - min
+        )
+    ) * 100
+}
+
+
 function QuickControls({
     theme,
     toggleTheme,
@@ -20,41 +45,25 @@ function QuickControls({
     setGlassOpacity,
     onClose,
 }) {
+
+    /* === REFERÊNCIAS === */
     const panelRef =
         useRef(null)
 
+
     /* === PREENCHIMENTO DOS SLIDERS === */
-    const getRangeProgress = (
-        value,
-        min,
-        max,
-    ) => {
-        return (
-            (
-                value -
-                min
-            ) /
-            (
-                max -
-                min
-            )
-        ) * 100
-    }
-
-
     const brightnessProgress =
         getRangeProgress(
             brightness,
-            75,
-            105,
+            BRIGHTNESS_MIN,
+            BRIGHTNESS_MAX,
         )
-
 
     const glassProgress =
         getRangeProgress(
             glassOpacity,
-            35,
-            95,
+            GLASS_MIN,
+            GLASS_MAX,
         )
 
 
@@ -81,7 +90,9 @@ function QuickControls({
                 handleKeyDown,
             )
         }
-    }, [onClose])
+    }, [
+        onClose,
+    ])
 
 
     /* === FECHAR AO CLICAR FORA === */
@@ -118,12 +129,17 @@ function QuickControls({
                 handleMouseDown,
             )
         }
-    }, [onClose])
+    }, [
+        onClose,
+    ])
 
 
+    /* === RENDERIZAÇÃO === */
     return (
         <aside
-            ref={panelRef}
+            ref={
+                panelRef
+            }
             className="quick-controls"
             aria-label="Controles rápidos"
         >
@@ -141,9 +157,12 @@ function QuickControls({
 
 
             <div className="quick-controls-content">
+
+                {/* === TEMA === */}
                 <button
                     className={[
                         'quick-control-theme',
+
                         theme === 'dark'
                             ? 'quick-control-theme-dark'
                             : '',
@@ -154,6 +173,11 @@ function QuickControls({
                     onClick={
                         toggleTheme
                     }
+                    aria-label={
+                        theme === 'dark'
+                            ? 'Alterar para tema claro'
+                            : 'Alterar para tema escuro'
+                    }
                 >
                     <span className="quick-control-theme-icon">
                         {
@@ -162,12 +186,14 @@ function QuickControls({
                                     <Moon
                                         size={19}
                                         strokeWidth={1.8}
+                                        aria-hidden="true"
                                     />
                                 )
                                 : (
                                     <Sun
                                         size={19}
                                         strokeWidth={1.8}
+                                        aria-hidden="true"
                                     />
                                 )
                         }
@@ -189,6 +215,7 @@ function QuickControls({
                 </button>
 
 
+                {/* === BRILHO === */}
                 <div className="quick-control-group">
                     <div className="quick-control-heading">
                         <div>
@@ -209,31 +236,37 @@ function QuickControls({
                     <input
                         className="quick-control-range"
                         type="range"
-                        min="75"
-                        max="105"
+                        min={
+                            BRIGHTNESS_MIN
+                        }
+                        max={
+                            BRIGHTNESS_MAX
+                        }
+                        value={
+                            brightness
+                        }
                         style={{
                             '--range-progress':
                                 `${brightnessProgress}%`,
                         }}
-                        value={
-                            brightness
-                        }
                         onChange={(
                             event,
                         ) =>
                             setBrightness(
                                 Number(
-                                    event
-                                        .target
-                                        .value,
+                                    event.target.value,
                                 ),
                             )
                         }
                         aria-label="Brilho da interface"
+                        aria-valuetext={
+                            `${brightness}%`
+                        }
                     />
                 </div>
 
 
+                {/* === TRANSPARÊNCIA === */}
                 <div className="quick-control-group">
                     <div className="quick-control-heading">
                         <div>
@@ -254,27 +287,32 @@ function QuickControls({
                     <input
                         className="quick-control-range"
                         type="range"
-                        min="35"
-                        max="95"
+                        min={
+                            GLASS_MIN
+                        }
+                        max={
+                            GLASS_MAX
+                        }
+                        value={
+                            glassOpacity
+                        }
                         style={{
                             '--range-progress':
                                 `${glassProgress}%`,
                         }}
-                        value={
-                            glassOpacity
-                        }
                         onChange={(
                             event,
                         ) =>
                             setGlassOpacity(
                                 Number(
-                                    event
-                                        .target
-                                        .value,
+                                    event.target.value,
                                 ),
                             )
                         }
                         aria-label="Opacidade do glass"
+                        aria-valuetext={
+                            `${glassOpacity}%`
+                        }
                     />
                 </div>
             </div>

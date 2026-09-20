@@ -9,6 +9,8 @@ import {
 } from 'lucide-react'
 
 import {
+    useEffect,
+    useRef,
     useState,
 } from 'react'
 
@@ -58,10 +60,59 @@ const contactLinks = [
 
 
 function Contact() {
+
+    /* === ESTADO === */
     const [
         copied,
         setCopied,
     ] = useState(false)
+
+    const copyFeedbackTimer =
+        useRef(null)
+
+
+    /* === LIMPEZA === */
+    useEffect(() => {
+        return () => {
+            if (
+                copyFeedbackTimer.current
+            ) {
+                clearTimeout(
+                    copyFeedbackTimer.current,
+                )
+            }
+        }
+    }, [])
+
+
+    /* === FEEDBACK DE CÓPIA === */
+    const showCopiedFeedback =
+        () => {
+            setCopied(
+                true,
+            )
+
+            if (
+                copyFeedbackTimer.current
+            ) {
+                clearTimeout(
+                    copyFeedbackTimer.current,
+                )
+            }
+
+            copyFeedbackTimer.current =
+                setTimeout(
+                    () => {
+                        setCopied(
+                            false,
+                        )
+
+                        copyFeedbackTimer.current =
+                            null
+                    },
+                    1800,
+                )
+        }
 
 
     /* === COPIAR E-MAIL === */
@@ -75,11 +126,19 @@ function Contact() {
             textarea.value =
                 EMAIL
 
+            textarea.setAttribute(
+                'readonly',
+                '',
+            )
+
             textarea.style.position =
                 'fixed'
 
             textarea.style.opacity =
                 '0'
+
+            textarea.style.pointerEvents =
+                'none'
 
             document.body.appendChild(
                 textarea,
@@ -113,37 +172,22 @@ function Contact() {
                     copyEmailFallback()
                 }
 
-                setCopied(
-                    true,
-                )
-
-                window.setTimeout(
-                    () => {
-                        setCopied(
-                            false,
-                        )
-                    },
-                    1800,
-                )
+                showCopiedFeedback()
             } catch {
-                copyEmailFallback()
+                try {
+                    copyEmailFallback()
 
-                setCopied(
-                    true,
-                )
-
-                window.setTimeout(
-                    () => {
-                        setCopied(
-                            false,
-                        )
-                    },
-                    1800,
-                )
+                    showCopiedFeedback()
+                } catch {
+                    setCopied(
+                        false,
+                    )
+                }
             }
         }
 
 
+    /* === RENDERIZAÇÃO === */
     return (
         <div className="contact">
 
@@ -153,9 +197,9 @@ function Contact() {
                     <MessageCircle
                         size={19}
                         strokeWidth={1.8}
+                        aria-hidden="true"
                     />
                 </span>
-
 
                 <div className="contact-intro-content">
                     <div className="contact-intro-heading">
@@ -188,9 +232,9 @@ function Contact() {
                     <Mail
                         size={21}
                         strokeWidth={1.8}
+                        aria-hidden="true"
                     />
                 </span>
-
 
                 <div className="contact-email-content">
                     <span className="contact-type">
@@ -205,7 +249,6 @@ function Contact() {
                         Melhor canal para contato direto.
                     </p>
                 </div>
-
 
                 <button
                     className={[
@@ -227,27 +270,31 @@ function Contact() {
                             : 'Copiar endereço de e-mail'
                     }
                 >
-                    {copied
-                        ? (
-                            <>
-                                <Check
-                                    size={15}
-                                    strokeWidth={1.8}
-                                />
+                    {
+                        copied
+                            ? (
+                                <>
+                                    <Check
+                                        size={15}
+                                        strokeWidth={1.8}
+                                        aria-hidden="true"
+                                    />
 
-                                Copiado
-                            </>
-                        )
-                        : (
-                            <>
-                                <Copy
-                                    size={15}
-                                    strokeWidth={1.8}
-                                />
+                                    Copiado
+                                </>
+                            )
+                            : (
+                                <>
+                                    <Copy
+                                        size={15}
+                                        strokeWidth={1.8}
+                                        aria-hidden="true"
+                                    />
 
-                                Copiar e-mail
-                            </>
-                        )}
+                                    Copiar e-mail
+                                </>
+                            )
+                    }
                 </button>
             </section>
 
@@ -270,12 +317,16 @@ function Contact() {
                                 }
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                aria-label={
+                                    `Abrir ${contact.label} em nova aba`
+                                }
                             >
                                 <div className="contact-card-header">
                                     <span className="contact-card-icon">
                                         <Icon
                                             size={18}
                                             strokeWidth={1.8}
+                                            aria-hidden="true"
                                         />
                                     </span>
 
@@ -283,9 +334,9 @@ function Contact() {
                                         className="contact-external"
                                         size={14}
                                         strokeWidth={1.7}
+                                        aria-hidden="true"
                                     />
                                 </div>
-
 
                                 <div className="contact-card-content">
                                     <span className="contact-type">

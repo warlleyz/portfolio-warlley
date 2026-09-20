@@ -1,26 +1,40 @@
 /* === TELA === */
 .boot-screen {
-    position: fixed;
-    inset: 0;
+    position:
+        fixed;
 
-    z-index: 9999;
+    inset:
+        0;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    z-index:
+        9999;
 
-    overflow: hidden;
+    display:
+        flex;
 
-    color: var(--text-primary);
+    align-items:
+        center;
 
-    opacity: 1;
+    justify-content:
+        center;
+
+    overflow:
+        hidden;
+
+    color:
+        var(--text-primary);
+
+    opacity:
+        1;
 
     transition:
         opacity 420ms ease;
 
-    user-select: none;
+    user-select:
+        none;
 
-    pointer-events: all;
+    pointer-events:
+        all;
 }
 
 
@@ -52,11 +66,17 @@
 
 /* === CONTEÚDO === */
 .boot-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display:
+        flex;
 
-    width: min(340px,
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    width:
+        min(340px,
             calc(100vw - 48px));
 
     animation:
@@ -66,43 +86,64 @@
 
 /* ----- LOGO ----- */
 .boot-logo {
-    display: block;
+    display:
+        block;
 
-    width: 156px;
-    height: 156px;
+    width:
+        156px;
 
-    object-fit: contain;
+    height:
+        156px;
 
-    user-select: none;
+    object-fit:
+        contain;
 
-    -webkit-user-drag: none;
+    user-select:
+        none;
+
+    -webkit-user-drag:
+        none;
 }
 
 
 /* === CARREGAMENTO === */
 .boot-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display:
+        flex;
 
-    width: 100%;
+    flex-direction:
+        column;
 
-    gap: 14px;
+    align-items:
+        center;
 
-    margin-top: 22px;
+    width:
+        100%;
+
+    gap:
+        14px;
+
+    margin-top:
+        22px;
 }
 
 
 /* ----- STATUS ----- */
 .boot-status {
-    min-height: 17px;
+    min-height:
+        17px;
 
-    font-size: 12px;
-    font-weight: 400;
+    font-size:
+        12px;
 
-    letter-spacing: 0.03em;
+    font-weight:
+        400;
 
-    color: var(--text-secondary);
+    letter-spacing:
+        0.03em;
+
+    color:
+        var(--text-secondary);
 
     transition:
         opacity var(--transition-default);
@@ -111,12 +152,17 @@
 
 /* ----- PROGRESSO ----- */
 .boot-progress {
-    position: relative;
+    position:
+        relative;
 
-    width: 180px;
-    height: 3px;
+    width:
+        180px;
 
-    overflow: hidden;
+    height:
+        3px;
+
+    overflow:
+        hidden;
 
     border-radius:
         var(--radius-full);
@@ -126,13 +172,17 @@
 }
 
 .boot-progress-bar {
-    position: absolute;
+    position:
+        absolute;
+
     inset:
         0 auto 0 0;
 
-    display: block;
+    display:
+        block;
 
-    height: 100%;
+    height:
+        100%;
 
     border-radius:
         inherit;
@@ -147,35 +197,51 @@
 
 /* === RODAPÉ === */
 .boot-footer {
-    position: absolute;
+    position:
+        absolute;
 
-    bottom: 24px;
-    left: 50%;
+    bottom:
+        24px;
 
-    display: flex;
-    align-items: center;
+    left:
+        50%;
 
-    gap: 7px;
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
 
     transform:
         translateX(-50%);
 
-    font-size: 10px;
-    font-weight: 500;
+    font-size:
+        10px;
 
-    letter-spacing: 0.12em;
+    font-weight:
+        500;
 
-    color: var(--text-muted);
+    letter-spacing:
+        0.12em;
 
-    opacity: 0.55;
+    color:
+        var(--text-muted);
+
+    opacity:
+        0.55;
 }
 
 
 /* === SAÍDA === */
 .boot-screen-leaving {
-    opacity: 0;
+    opacity:
+        0;
 
-    pointer-events: none;
+    pointer-events:
+        none;
 }
 
 
@@ -183,14 +249,16 @@
 /* ----- ENTRADA ----- */
 @keyframes boot-enter {
     from {
-        opacity: 0;
+        opacity:
+            0;
 
         transform:
             translateY(5px) scale(0.985);
     }
 
     to {
-        opacity: 1;
+        opacity:
+            1;
 
         transform:
             translateY(0) scale(1);
@@ -201,20 +269,26 @@
 /* === RESPONSIVIDADE === */
 @media (max-width: 600px) {
     .boot-logo {
-        width: 132px;
-        height: 132px;
+        width:
+            132px;
+
+        height:
+            132px;
     }
 
     .boot-loading {
-        margin-top: 18px;
+        margin-top:
+            18px;
     }
 
     .boot-progress {
-        width: 160px;
+        width:
+            160px;
     }
 
     .boot-footer {
-        bottom: 18px;
+        bottom:
+            18px;
     }
 }
 
@@ -223,14 +297,17 @@
 /* ----- MOVIMENTO REDUZIDO ----- */
 @media (prefers-reduced-motion: reduce) {
     .boot-screen {
-        transition: none;
+        transition:
+            none;
     }
 
     .boot-content {
-        animation: none;
+        animation:
+            none;
     }
 
     .boot-progress-bar {
-        transition: none;
+        transition:
+            none;
     }
 }

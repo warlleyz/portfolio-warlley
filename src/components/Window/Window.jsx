@@ -49,12 +49,16 @@ function Window({
     onPositionChange,
     onSizeChange,
 }) {
+
+    /* === REFERÊNCIAS === */
     const dragState =
         useRef(null)
 
     const resizeState =
         useRef(null)
 
+
+    /* === ESTADO === */
     const [
         dragging,
         setDragging,
@@ -77,24 +81,51 @@ function Window({
     })
 
 
-    /* === DIMENSÕES === */
+    /* === LIMITES MÍNIMOS === */
+    const minimumWidth =
+        Math.min(
+            MIN_WIDTH,
+            Math.max(
+                viewport.width -
+                DESKTOP_PADDING * 2,
+                0,
+            ),
+        )
 
+    const minimumHeight =
+        Math.min(
+            MIN_HEIGHT,
+            Math.max(
+                viewport.height -
+                DESKTOP_PADDING * 2,
+                0,
+            ),
+        )
+
+
+    /* === DIMENSÕES === */
     /* ----- TAMANHO ----- */
     const currentSize = {
         width:
             size?.width ??
             Math.min(
                 DEFAULT_WIDTH,
-                viewport.width -
-                DESKTOP_PADDING * 2,
+                Math.max(
+                    viewport.width -
+                    DESKTOP_PADDING * 2,
+                    0,
+                ),
             ),
 
         height:
             size?.height ??
             Math.min(
                 DEFAULT_HEIGHT,
-                viewport.height -
-                DESKTOP_PADDING * 2,
+                Math.max(
+                    viewport.height -
+                    DESKTOP_PADDING * 2,
+                    0,
+                ),
             ),
     }
 
@@ -126,7 +157,6 @@ function Window({
 
 
     /* === LIMITES === */
-
     /* ----- POSIÇÃO ----- */
     const constrainPosition = (
         x,
@@ -184,25 +214,31 @@ function Window({
             currentPosition.y,
     ) => {
         const availableWidth =
-            viewport.width -
-            x -
-            DESKTOP_PADDING
+            Math.max(
+                viewport.width -
+                x -
+                DESKTOP_PADDING,
+                0,
+            )
 
         const availableHeight =
-            viewport.height -
-            y -
-            DESKTOP_PADDING
+            Math.max(
+                viewport.height -
+                y -
+                DESKTOP_PADDING,
+                0,
+            )
 
         return {
             width:
                 Math.min(
                     Math.max(
                         width,
-                        MIN_WIDTH,
+                        minimumWidth,
                     ),
                     Math.max(
                         availableWidth,
-                        MIN_WIDTH,
+                        minimumWidth,
                     ),
                 ),
 
@@ -210,11 +246,11 @@ function Window({
                 Math.min(
                     Math.max(
                         height,
-                        MIN_HEIGHT,
+                        minimumHeight,
                     ),
                     Math.max(
                         availableHeight,
-                        MIN_HEIGHT,
+                        minimumHeight,
                     ),
                 ),
         }
@@ -222,13 +258,13 @@ function Window({
 
 
     /* === FOCO === */
-    const handleFocus = () => {
-        onFocus?.()
-    }
+    const handleFocus =
+        () => {
+            onFocus?.()
+        }
 
 
     /* === ARRASTAR === */
-
     /* ----- INICIAR ----- */
     const handleDragStart = (
         event,
@@ -266,12 +302,29 @@ function Window({
                 currentPosition.y,
         }
 
-        setDragging(true)
+        setDragging(
+            true,
+        )
+    }
+
+
+    /* ----- DUPLO CLIQUE ----- */
+    const handleHeaderDoubleClick = (
+        event,
+    ) => {
+        if (
+            event.target.closest(
+                '.window-controls',
+            )
+        ) {
+            return
+        }
+
+        onMaximize?.()
     }
 
 
     /* === REDIMENSIONAR === */
-
     /* ----- INICIAR ----- */
     const handleResizeStart = (
         event,
@@ -311,7 +364,9 @@ function Window({
                 currentSize.height,
         }
 
-        setResizing(true)
+        setResizing(
+            true,
+        )
     }
 
 
@@ -410,15 +465,15 @@ function Window({
 
                     if (
                         nextWidth <
-                        MIN_WIDTH
+                        minimumWidth
                     ) {
                         nextWidth =
-                            MIN_WIDTH
+                            minimumWidth
 
                         nextX =
                             state.startX +
                             state.startWidth -
-                            MIN_WIDTH
+                            minimumWidth
                     }
 
                     if (
@@ -463,15 +518,15 @@ function Window({
 
                     if (
                         nextHeight <
-                        MIN_HEIGHT
+                        minimumHeight
                     ) {
                         nextHeight =
-                            MIN_HEIGHT
+                            minimumHeight
 
                         nextY =
                             state.startY +
                             state.startHeight -
-                            MIN_HEIGHT
+                            minimumHeight
                     }
 
                     if (
@@ -486,7 +541,6 @@ function Window({
                             DESKTOP_PADDING
                     }
                 }
-
 
                 const nextSize =
                     constrainSize(
@@ -515,16 +569,22 @@ function Window({
         }
 
 
-        const handleMouseUp = () => {
-            dragState.current =
-                null
+        const handleMouseUp =
+            () => {
+                dragState.current =
+                    null
 
-            resizeState.current =
-                null
+                resizeState.current =
+                    null
 
-            setDragging(false)
-            setResizing(false)
-        }
+                setDragging(
+                    false,
+                )
+
+                setResizing(
+                    false,
+                )
+            }
 
 
         window.addEventListener(
@@ -536,7 +596,6 @@ function Window({
             'mouseup',
             handleMouseUp,
         )
-
 
         return () => {
             window.removeEventListener(
@@ -568,43 +627,55 @@ function Window({
                     nextViewport,
                 )
 
-                if (maximized) {
+                if (
+                    maximized
+                ) {
                     return
                 }
 
-                const nextWidth =
-                    Math.min(
-                        currentSize.width,
+                const availableWidth =
+                    Math.max(
                         nextViewport.width -
                         DESKTOP_PADDING * 2,
+                        0,
                     )
 
-                const nextHeight =
-                    Math.min(
-                        currentSize.height,
+                const availableHeight =
+                    Math.max(
                         nextViewport.height -
                         DESKTOP_PADDING * 2,
+                        0,
+                    )
+
+                const nextMinimumWidth =
+                    Math.min(
+                        MIN_WIDTH,
+                        availableWidth,
+                    )
+
+                const nextMinimumHeight =
+                    Math.min(
+                        MIN_HEIGHT,
+                        availableHeight,
                     )
 
                 const nextSize = {
                     width:
                         Math.max(
-                            nextWidth,
                             Math.min(
-                                MIN_WIDTH,
-                                nextViewport.width -
-                                DESKTOP_PADDING * 2,
+                                currentSize.width,
+                                availableWidth,
                             ),
+                            nextMinimumWidth,
                         ),
 
                     height:
                         Math.max(
-                            nextHeight,
                             Math.min(
-                                MIN_HEIGHT,
-                                nextViewport.height -
-                                DESKTOP_PADDING * 2,
+                                currentSize.height,
+                                availableHeight,
                             ),
+                            nextMinimumHeight,
                         ),
                 }
 
@@ -653,12 +724,10 @@ function Window({
                 )
             }
 
-
         window.addEventListener(
             'resize',
             handleViewportResize,
         )
-
 
         return () => {
             window.removeEventListener(
@@ -702,7 +771,6 @@ function Window({
 
 
     /* === ESTILO === */
-
     /* ----- MAXIMIZADA ----- */
     const maximizedStyle = {
         left:
@@ -749,7 +817,6 @@ function Window({
             zIndex + 100,
     }
 
-
     const style =
         maximized
             ? maximizedStyle
@@ -763,7 +830,6 @@ function Window({
     ) {
         return null
     }
-
 
     return (
         <section
@@ -787,12 +853,13 @@ function Window({
                     handleDragStart
                 }
                 onDoubleClick={
-                    onMaximize
+                    handleHeaderDoubleClick
                 }
             >
                 <div className="window-title">
                     <span
                         className="window-title-dot"
+                        aria-hidden="true"
                     />
 
                     <span className="window-title-text">
@@ -818,6 +885,7 @@ function Window({
                         <Minus
                             size={16}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
                     </button>
 
@@ -844,12 +912,14 @@ function Window({
                                     <Minimize2
                                         size={14}
                                         strokeWidth={1.8}
+                                        aria-hidden="true"
                                     />
                                 )
                                 : (
                                     <Maximize2
                                         size={14}
                                         strokeWidth={1.8}
+                                        aria-hidden="true"
                                     />
                                 )
                         }
@@ -869,6 +939,7 @@ function Window({
                         <X
                             size={17}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
                     </button>
                 </div>
@@ -882,6 +953,7 @@ function Window({
                 <>
                     <div
                         className="window-resize window-resize-top"
+                        aria-hidden="true"
                         onMouseDown={(
                             event,
                         ) =>
@@ -894,6 +966,7 @@ function Window({
 
                     <div
                         className="window-resize window-resize-right"
+                        aria-hidden="true"
                         onMouseDown={(
                             event,
                         ) =>
@@ -906,6 +979,7 @@ function Window({
 
                     <div
                         className="window-resize window-resize-bottom"
+                        aria-hidden="true"
                         onMouseDown={(
                             event,
                         ) =>
@@ -918,6 +992,7 @@ function Window({
 
                     <div
                         className="window-resize window-resize-left"
+                        aria-hidden="true"
                         onMouseDown={(
                             event,
                         ) =>
@@ -930,6 +1005,7 @@ function Window({
 
                     <div
                         className="window-resize window-resize-top-left"
+                        aria-hidden="true"
                         onMouseDown={(
                             event,
                         ) =>
@@ -942,6 +1018,7 @@ function Window({
 
                     <div
                         className="window-resize window-resize-top-right"
+                        aria-hidden="true"
                         onMouseDown={(
                             event,
                         ) =>
@@ -954,6 +1031,7 @@ function Window({
 
                     <div
                         className="window-resize window-resize-bottom-left"
+                        aria-hidden="true"
                         onMouseDown={(
                             event,
                         ) =>
@@ -966,6 +1044,7 @@ function Window({
 
                     <div
                         className="window-resize window-resize-bottom-right"
+                        aria-hidden="true"
                         onMouseDown={(
                             event,
                         ) =>

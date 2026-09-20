@@ -24,19 +24,20 @@ function WSMenu({
     onOpenApp,
     onClose,
 }) {
+    /* === REFERÊNCIAS === */
     const menuRef =
         useRef(null)
 
     const searchRef =
         useRef(null)
 
+
+    /* === ESTADO === */
     const [
         search,
         setSearch,
     ] = useState('')
 
-
-    /* === ESTADO DA BUSCA === */
     const searching =
         search.trim().length > 0
 
@@ -44,9 +45,12 @@ function WSMenu({
     /* === FOCO INICIAL === */
     useEffect(() => {
         const timeout =
-            setTimeout(() => {
-                searchRef.current?.focus()
-            }, 120)
+            setTimeout(
+                () => {
+                    searchRef.current?.focus()
+                },
+                120,
+            )
 
         return () => {
             clearTimeout(
@@ -79,7 +83,9 @@ function WSMenu({
                 handleKeyDown,
             )
         }
-    }, [onClose])
+    }, [
+        onClose,
+    ])
 
 
     /* === FECHAR AO CLICAR FORA === */
@@ -116,7 +122,9 @@ function WSMenu({
                 handleMouseDown,
             )
         }
-    }, [onClose])
+    }, [
+        onClose,
+    ])
 
 
     /* === RESULTADOS === */
@@ -176,7 +184,9 @@ function WSMenu({
     /* === RENDERIZAÇÃO === */
     return (
         <aside
-            ref={menuRef}
+            ref={
+                menuRef
+            }
             className="ws-menu"
             aria-label="WS Menu"
         >
@@ -210,7 +220,9 @@ function WSMenu({
                     />
 
                     <input
-                        ref={searchRef}
+                        ref={
+                            searchRef
+                        }
                         type="search"
                         value={
                             search
@@ -219,9 +231,7 @@ function WSMenu({
                             event,
                         ) =>
                             setSearch(
-                                event
-                                    .target
-                                    .value,
+                                event.target.value,
                             )
                         }
                         placeholder="Pesquisar no WS OS"
@@ -287,13 +297,14 @@ function WSMenu({
                     className="ws-menu-github"
                     href="https://github.com/warlleyz"
                     target="_blank"
-                    rel="noreferrer"
-                    aria-label="Abrir GitHub"
+                    rel="noopener noreferrer"
+                    aria-label="Abrir GitHub em nova aba"
                     title="GitHub"
                 >
                     <Code2
                         size={17}
                         strokeWidth={1.8}
+                        aria-hidden="true"
                     />
 
                     <span>
@@ -315,83 +326,84 @@ function AppsGrid({
 }) {
     return (
         <div className="ws-menu-grid">
-            {apps.map((app) => {
-                const Icon =
-                    app.icon
+            {apps.map(
+                (app) => {
+                    const Icon =
+                        app.icon
 
-                const windowState =
-                    windows[
-                    app.id
+                    const windowState =
+                        windows[
+                        app.id
+                        ]
+
+                    const isOpen =
+                        Boolean(
+                            windowState?.open,
+                        )
+
+                    const isActive =
+                        activeAppId ===
+                        app.id
+
+                    const className = [
+                        'ws-menu-app',
+
+                        isOpen
+                            ? 'ws-menu-app-open'
+                            : '',
+
+                        isActive
+                            ? 'ws-menu-app-active'
+                            : '',
                     ]
+                        .filter(Boolean)
+                        .join(' ')
 
-                const isOpen =
-                    Boolean(
-                        windowState?.open,
-                    )
+                    return (
+                        <button
+                            key={
+                                app.id
+                            }
+                            type="button"
+                            className={
+                                className
+                            }
+                            onClick={() =>
+                                onOpenApp(
+                                    app.id,
+                                )
+                            }
+                            aria-label={
+                                `Abrir ${app.name}`
+                            }
+                            title={
+                                app.name
+                            }
+                        >
+                            <span className="ws-menu-app-icon">
+                                <Icon
+                                    size={25}
+                                    strokeWidth={1.65}
+                                    aria-hidden="true"
+                                />
 
-                const isActive =
-                    activeAppId ===
-                    app.id
-
-                const className = [
-                    'ws-menu-app',
-
-                    isOpen
-                        ? 'ws-menu-app-open'
-                        : '',
-
-                    isActive
-                        ? 'ws-menu-app-active'
-                        : '',
-                ]
-                    .filter(Boolean)
-                    .join(' ')
-
-                return (
-                    <button
-                        key={
-                            app.id
-                        }
-                        type="button"
-                        className={
-                            className
-                        }
-                        onClick={() =>
-                            onOpenApp(
-                                app.id,
-                            )
-                        }
-                        aria-label={
-                            `Abrir ${app.name}`
-                        }
-                        title={
-                            app.name
-                        }
-                    >
-                        <span className="ws-menu-app-icon">
-                            <Icon
-                                size={25}
-                                strokeWidth={1.65}
-                            />
-
-                            {
-                                isOpen && (
+                                {isOpen && (
                                     <span
                                         className="ws-menu-app-state"
                                         aria-hidden="true"
                                     />
-                                )
-                            }
-                        </span>
+                                )}
+                            </span>
 
-                        <span className="ws-menu-app-name">
-                            {
-                                app.name
-                            }
-                        </span>
-                    </button>
-                )
-            })}
+                            <span className="ws-menu-app-name">
+                                {
+                                    app.name
+                                }
+                            </span>
+                        </button>
+                    )
+                },
+            )}
         </div>
     )
 }
@@ -410,6 +422,7 @@ function SearchResults({
                 <Search
                     size={24}
                     strokeWidth={1.5}
+                    aria-hidden="true"
                 />
 
                 <strong>
@@ -448,11 +461,15 @@ function SearchResults({
                                         result,
                                     )
                                 }
+                                aria-label={
+                                    `Abrir ${result.title}`
+                                }
                             >
                                 <span className="ws-search-result-icon">
                                     <Icon
                                         size={20}
                                         strokeWidth={1.7}
+                                        aria-hidden="true"
                                     />
                                 </span>
 

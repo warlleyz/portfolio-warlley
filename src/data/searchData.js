@@ -53,7 +53,6 @@ const appKeywords = {
         'linguagens',
         'frameworks',
         'ferramentas',
-
         'java',
         'javascript',
         'typescript',
@@ -81,7 +80,6 @@ const appKeywords = {
 
     resume: [
         'curriculo',
-        'currículo',
         'resume',
         'cv',
         'experiencia',
@@ -101,7 +99,6 @@ const appKeywords = {
 
     stats: [
         'estatisticas',
-        'estatísticas',
         'stats',
         'dados',
         'github',
@@ -119,7 +116,6 @@ const appKeywords = {
 
 
 /* === UTILITÁRIOS === */
-
 /* ----- TRANSFORMAR VALOR EM TEXTO ----- */
 const valueToText = (
     value,
@@ -135,21 +131,16 @@ const valueToText = (
         Array.isArray(value)
     ) {
         return value
-            .map(
-                valueToText,
-            )
+            .map(valueToText)
             .join(' ')
     }
 
     if (
-        typeof value ===
-        'object'
+        typeof value === 'object'
     ) {
         return Object
             .values(value)
-            .map(
-                valueToText,
-            )
+            .map(valueToText)
             .join(' ')
     }
 
@@ -157,7 +148,7 @@ const valueToText = (
 }
 
 
-/* ----- PALAVRAS DO PROJETO ----- */
+/* ----- TEXTO PESQUISÁVEL DO PROJETO ----- */
 const getProjectSearchText = (
     project,
 ) => {
@@ -180,9 +171,7 @@ const getProjectSearchText = (
     ]
 
     return searchableValues
-        .map(
-            valueToText,
-        )
+        .map(valueToText)
         .join(' ')
 }
 
@@ -196,9 +185,12 @@ const appSearchItems =
         )
         .map((app) => {
             const keywords =
-                appKeywords[
-                app.id
-                ] ?? []
+                appKeywords[app.id] ?? []
+
+            const searchableText = [
+                app.name,
+                ...keywords,
+            ].join(' ')
 
             return {
                 id:
@@ -223,10 +215,7 @@ const appSearchItems =
 
                 searchText:
                     normalizeSearchText(
-                        [
-                            app.name,
-                            ...keywords,
-                        ].join(' '),
+                        searchableText,
                     ),
             }
         })
@@ -257,7 +246,8 @@ const projectSearchItems =
             icon:
                 project.icon,
 
-            keywords: [],
+            keywords:
+                [],
 
             searchText:
                 normalizeSearchText(
@@ -270,6 +260,14 @@ const projectSearchItems =
 
 
 /* === LINKS EXTERNOS === */
+const githubKeywords = [
+    'github',
+    'git',
+    'repositorios',
+    'codigo',
+    'warlleyz',
+]
+
 const externalSearchItems = [
     {
         id:
@@ -290,22 +288,14 @@ const externalSearchItems = [
         href:
             'https://github.com/warlleyz',
 
-        keywords: [
-            'github',
-            'git',
-            'repositorios',
-            'codigo',
-            'warlleyz',
-        ],
+        keywords:
+            githubKeywords,
 
         searchText:
             normalizeSearchText(
                 [
                     'GitHub',
-                    'git',
-                    'repositorios',
-                    'codigo',
-                    'warlleyz',
+                    ...githubKeywords,
                 ].join(' '),
             ),
     },
@@ -323,14 +313,11 @@ export const searchIndex = [
 /* === PONTUAÇÃO === */
 const calculateSearchScore = (
     item,
-    query,
+    normalizedQuery,
 ) => {
-    const normalizedQuery =
-        normalizeSearchText(
-            query,
-        )
-
-    if (!normalizedQuery) {
+    if (
+        !normalizedQuery
+    ) {
         return 0
     }
 
@@ -347,8 +334,7 @@ const calculateSearchScore = (
 
     /* ----- NOME EXATO ----- */
     if (
-        title ===
-        normalizedQuery
+        title === normalizedQuery
     ) {
         score += 100
     }
@@ -399,11 +385,10 @@ const calculateSearchScore = (
         )
 
     score +=
-        matchedWords.length *
-        10
+        matchedWords.length * 10
 
 
-    /* ----- PRIORIDADE ----- */
+    /* ----- PRIORIDADE DOS APPS ----- */
     if (
         item.type === 'app'
     ) {
@@ -423,7 +408,9 @@ export const searchWS = (
             query,
         )
 
-    if (!normalizedQuery) {
+    if (
+        !normalizedQuery
+    ) {
         return []
     }
 

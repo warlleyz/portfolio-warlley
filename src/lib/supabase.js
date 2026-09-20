@@ -1,21 +1,27 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl =
+
+/* === CONFIGURAÇÃO === */
+const SUPABASE_URL =
     import.meta.env.VITE_SUPABASE_URL
 
-const supabaseAnonKey =
+const SUPABASE_ANON_KEY =
     import.meta.env.VITE_SUPABASE_ANON_KEY
 
+
+/* === STATUS === */
 export const isSupabaseConfigured =
     Boolean(
-        supabaseUrl &&
-        supabaseAnonKey,
+        SUPABASE_URL &&
+        SUPABASE_ANON_KEY,
     )
 
+
+/* === CLIENTE === */
 export const supabase =
     isSupabaseConfigured
         ? createClient(
-            supabaseUrl,
-            supabaseAnonKey,
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY,
         )
         : null

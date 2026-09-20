@@ -1,4 +1,5 @@
 import {
+    useEffect,
     useMemo,
     useRef,
     useState,
@@ -12,28 +13,31 @@ import {
 } from 'lucide-react'
 
 import About from '../../apps/About/About'
-import Projects from '../../apps/Projects/Projects'
-import Technologies from '../../apps/Technologies/Technologies'
 import Contact from '../../apps/Contact/Contact'
-import Resume from '../../apps/Resume/Resume'
-import Terminal from '../../apps/Terminal/Terminal'
-import Stats from '../../apps/Stats/Stats'
 import Game from '../../apps/Game/Game'
 import ProjectDemo from '../../apps/Projects/ProjectDemo'
+import Projects from '../../apps/Projects/Projects'
+import Resume from '../../apps/Resume/Resume'
+import Stats from '../../apps/Stats/Stats'
+import Technologies from '../../apps/Technologies/Technologies'
+import Terminal from '../../apps/Terminal/Terminal'
 
 import appsData from '../../data/appsData'
 import projectsData from '../../data/projectsData'
 
+import Notifications from '../Notifications/Notifications'
+import QuickControls from '../QuickControls/QuickControls'
 import Taskbar from '../Taskbar/Taskbar'
 import Window from '../Window/Window'
 import WSMenu from '../WSMenu/WSMenu'
-import QuickControls from '../QuickControls/QuickControls'
-import Notifications from '../Notifications/Notifications'
 
 import './Desktop.css'
 
 
-/* === APLICATIVOS === */
+/* === CONFIGURAÇÃO === */
+const WINDOW_ANIMATION_TIME =
+    200
+
 const apps =
     appsData
 
@@ -47,6 +51,12 @@ function Desktop({
         windows,
         setWindows,
     ] = useState({})
+
+    const topZIndex =
+        useRef(10)
+
+    const animationTimers =
+        useRef(new Map())
 
 
     /* === PROJETOS DINÂMICOS === */
@@ -91,26 +101,14 @@ function Desktop({
         setNotifications,
     ] = useState([
         {
-            id:
-                'welcome',
-
-            icon:
-                Bell,
-
-            title:
-                'Bem-vindo ao WS OS',
-
+            id: 'welcome',
+            icon: Bell,
+            title: 'Bem-vindo ao WS OS',
             description:
                 'Explore meus projetos, tecnologias e experiências pelo sistema.',
-
-            appId:
-                null,
-
-            time:
-                'Agora',
-
-            read:
-                false,
+            appId: null,
+            time: 'Agora',
+            read: false,
         },
     ])
 
@@ -121,8 +119,20 @@ function Desktop({
         setSelectedShortcut,
     ] = useState(null)
 
-    const topZIndex =
-        useRef(10)
+
+    /* === LIMPEZA === */
+    useEffect(() => {
+        const timers =
+            animationTimers.current
+
+        return () => {
+            timers.forEach(
+                clearTimeout,
+            )
+
+            timers.clear()
+        }
+    }, [])
 
 
     /* === TODOS OS PROJETOS === */
@@ -132,21 +142,16 @@ function Desktop({
                 const staticIds =
                     new Set(
                         projectsData.map(
-                            (
-                                project,
-                            ) =>
+                            (project) =>
                                 project.id,
                         ),
                     )
-
 
                 return [
                     ...projectsData,
 
                     ...runtimeProjects.filter(
-                        (
-                            project,
-                        ) =>
+                        (project) =>
                             !staticIds.has(
                                 project.id,
                             ),
@@ -164,9 +169,7 @@ function Desktop({
         useMemo(
             () =>
                 allProjects.map(
-                    (
-                        project,
-                    ) => ({
+                    (project) => ({
                         id:
                             `project-${project.id}`,
 
@@ -199,8 +202,58 @@ function Desktop({
         )
 
 
-    /* === GERENCIAMENTO DE NOTIFICAÇÕES === */
+    /* === TIMERS DAS JANELAS === */
+    const clearWindowTimer = (
+        appId,
+    ) => {
+        const timer =
+            animationTimers.current.get(
+                appId,
+            )
 
+        if (
+            !timer
+        ) {
+            return
+        }
+
+        clearTimeout(
+            timer,
+        )
+
+        animationTimers.current.delete(
+            appId,
+        )
+    }
+
+    const scheduleWindowUpdate = (
+        appId,
+        callback,
+    ) => {
+        clearWindowTimer(
+            appId,
+        )
+
+        const timer =
+            setTimeout(
+                () => {
+                    animationTimers.current.delete(
+                        appId,
+                    )
+
+                    callback()
+                },
+                WINDOW_ANIMATION_TIME,
+            )
+
+        animationTimers.current.set(
+            appId,
+            timer,
+        )
+    }
+
+
+    /* === GERENCIAMENTO DE NOTIFICAÇÕES === */
     /* ----- ADICIONAR ----- */
     const addNotification = ({
         id,
@@ -210,16 +263,11 @@ function Desktop({
         appId = null,
     }) => {
         setNotifications(
-            (
-                previous,
-            ) => {
+            (previous) => {
                 const alreadyExists =
                     previous.some(
-                        (
-                            notification,
-                        ) =>
-                            notification.id ===
-                            id,
+                        (notification) =>
+                            notification.id === id,
                     )
 
                 if (
@@ -227,7 +275,6 @@ function Desktop({
                 ) {
                     return previous
                 }
-
 
                 const currentTime =
                     new Date()
@@ -242,7 +289,6 @@ function Desktop({
                             },
                         )
 
-
                 return [
                     {
                         id,
@@ -250,12 +296,8 @@ function Desktop({
                         title,
                         description,
                         appId,
-
-                        time:
-                            currentTime,
-
-                        read:
-                            false,
+                        time: currentTime,
+                        read: false,
                     },
 
                     ...previous,
@@ -277,24 +319,19 @@ function Desktop({
     /* ----- NÃO LIDAS ----- */
     const unreadNotifications =
         notifications.filter(
-            (
-                notification,
-            ) =>
+            (notification) =>
                 !notification.read,
         ).length
 
 
     /* === JANELAS === */
-
     /* ----- PRÓXIMO Z-INDEX ----- */
     const getNextZIndex =
         () => {
             topZIndex.current +=
                 1
 
-            return (
-                topZIndex.current
-            )
+            return topZIndex.current
         }
 
 
@@ -305,22 +342,28 @@ function Desktop({
         const nextZIndex =
             getNextZIndex()
 
-
         setWindows(
-            (
-                previous,
-            ) => ({
-                ...previous,
+            (previous) => {
+                const currentWindow =
+                    previous[appId]
 
-                [appId]: {
-                    ...previous[
-                    appId
-                    ],
+                if (
+                    !currentWindow
+                ) {
+                    return previous
+                }
 
-                    zIndex:
-                        nextZIndex,
-                },
-            }),
+                return {
+                    ...previous,
+
+                    [appId]: {
+                        ...currentWindow,
+
+                        zIndex:
+                            nextZIndex,
+                    },
+                }
+            },
         )
     }
 
@@ -329,66 +372,49 @@ function Desktop({
     const openApp = (
         appId,
     ) => {
+        clearWindowTimer(
+            appId,
+        )
+
         const nextZIndex =
             getNextZIndex()
 
-
         setWindows(
-            (
-                previous,
-            ) => {
+            (previous) => {
                 const currentWindow =
-                    previous[
-                    appId
-                    ]
+                    previous[appId]
 
                 const app =
                     appsData.find(
-                        (
-                            item,
-                        ) =>
-                            item.id ===
-                            appId,
+                        (item) =>
+                            item.id === appId,
                     )
 
-
                 let initialSize =
-                    currentWindow
-                        ?.size ??
+                    currentWindow?.size ??
                     null
 
                 let initialPosition =
-                    currentWindow
-                        ?.position ??
+                    currentWindow?.position ??
                     null
 
 
                 /* ----- CONFIGURAÇÃO PERSONALIZADA ----- */
                 if (
                     app?.window &&
-                    !currentWindow
-                        ?.size
+                    !currentWindow?.size
                 ) {
                     const width =
                         Math.min(
-                            app.window
-                                .width,
-
-                            window
-                                .innerWidth -
-                            80,
+                            app.window.width,
+                            window.innerWidth - 80,
                         )
 
                     const height =
                         Math.min(
-                            app.window
-                                .height,
-
-                            window
-                                .innerHeight -
-                            80,
+                            app.window.height,
+                            window.innerHeight - 80,
                         )
-
 
                     initialSize = {
                         width,
@@ -398,15 +424,13 @@ function Desktop({
 
                     /* ----- CENTRALIZAR ----- */
                     if (
-                        app.window
-                            .centered
+                        app.window.centered
                     ) {
                         initialPosition = {
                             x:
                                 Math.max(
                                     (
-                                        window
-                                            .innerWidth -
+                                        window.innerWidth -
                                         width
                                     ) / 2,
                                     8,
@@ -415,8 +439,7 @@ function Desktop({
                             y:
                                 Math.max(
                                     (
-                                        window
-                                            .innerHeight -
+                                        window.innerHeight -
                                         height
                                     ) / 2,
                                     8,
@@ -424,7 +447,6 @@ function Desktop({
                         }
                     }
                 }
-
 
                 return {
                     ...previous,
@@ -464,11 +486,9 @@ function Desktop({
 
 
         /* === NOTIFICAÇÕES DE APPS === */
-
         /* ----- CURRÍCULO ----- */
         if (
-            appId ===
-            'resume'
+            appId === 'resume'
         ) {
             addNotification({
                 id:
@@ -491,8 +511,7 @@ function Desktop({
 
         /* ----- CONTATO ----- */
         if (
-            appId ===
-            'contact'
+            appId === 'contact'
         ) {
             addNotification({
                 id:
@@ -520,11 +539,8 @@ function Desktop({
     ) => {
         const isStaticProject =
             projectsData.some(
-                (
-                    item,
-                ) =>
-                    item.id ===
-                    project.id,
+                (item) =>
+                    item.id === project.id,
             )
 
 
@@ -533,25 +549,19 @@ function Desktop({
             !isStaticProject
         ) {
             setRuntimeProjects(
-                (
-                    previous,
-                ) => {
+                (previous) => {
                     const alreadyExists =
                         previous.some(
-                            (
-                                item,
-                            ) =>
+                            (item) =>
                                 item.id ===
                                 project.id,
                         )
-
 
                     if (
                         alreadyExists
                     ) {
                         return previous
                     }
-
 
                     return [
                         ...previous,
@@ -561,15 +571,12 @@ function Desktop({
             )
         }
 
-
         const appId =
             `project-${project.id}`
-
 
         openApp(
             appId,
         )
-
 
         addNotification({
             id:
@@ -595,15 +602,11 @@ function Desktop({
         position,
     ) => {
         setWindows(
-            (
-                previous,
-            ) => ({
+            (previous) => ({
                 ...previous,
 
                 [appId]: {
-                    ...previous[
-                    appId
-                    ],
+                    ...previous[appId],
 
                     position,
                 },
@@ -618,15 +621,11 @@ function Desktop({
         size,
     ) => {
         setWindows(
-            (
-                previous,
-            ) => ({
+            (previous) => ({
                 ...previous,
 
                 [appId]: {
-                    ...previous[
-                    appId
-                    ],
+                    ...previous[appId],
 
                     size,
                 },
@@ -639,36 +638,35 @@ function Desktop({
     const minimizeApp = (
         appId,
     ) => {
+        clearWindowTimer(
+            appId,
+        )
+
         setWindows(
-            (
-                previous,
-            ) => ({
+            (previous) => ({
                 ...previous,
 
                 [appId]: {
-                    ...previous[
-                    appId
-                    ],
+                    ...previous[appId],
 
                     minimizing:
                         true,
+
+                    closing:
+                        false,
                 },
             }),
         )
 
-
-        setTimeout(
+        scheduleWindowUpdate(
+            appId,
             () => {
                 setWindows(
-                    (
-                        previous,
-                    ) => ({
+                    (previous) => ({
                         ...previous,
 
                         [appId]: {
-                            ...previous[
-                            appId
-                            ],
+                            ...previous[appId],
 
                             minimized:
                                 true,
@@ -679,7 +677,6 @@ function Desktop({
                     }),
                 )
             },
-            200,
         )
     }
 
@@ -688,22 +685,27 @@ function Desktop({
     const restoreApp = (
         appId,
     ) => {
+        clearWindowTimer(
+            appId,
+        )
+
         const nextZIndex =
             getNextZIndex()
 
-
         setWindows(
-            (
-                previous,
-            ) => ({
+            (previous) => ({
                 ...previous,
 
                 [appId]: {
-                    ...previous[
-                    appId
-                    ],
+                    ...previous[appId],
 
                     minimized:
+                        false,
+
+                    minimizing:
+                        false,
+
+                    closing:
                         false,
 
                     zIndex:
@@ -721,17 +723,12 @@ function Desktop({
         const nextZIndex =
             getNextZIndex()
 
-
         setWindows(
-            (
-                previous,
-            ) => ({
+            (previous) => ({
                 ...previous,
 
                 [appId]: {
-                    ...previous[
-                    appId
-                    ],
+                    ...previous[appId],
 
                     maximized:
                         !previous[
@@ -750,36 +747,35 @@ function Desktop({
     const closeApp = (
         appId,
     ) => {
+        clearWindowTimer(
+            appId,
+        )
+
         setWindows(
-            (
-                previous,
-            ) => ({
+            (previous) => ({
                 ...previous,
 
                 [appId]: {
-                    ...previous[
-                    appId
-                    ],
+                    ...previous[appId],
 
                     closing:
                         true,
+
+                    minimizing:
+                        false,
                 },
             }),
         )
 
-
-        setTimeout(
+        scheduleWindowUpdate(
+            appId,
             () => {
                 setWindows(
-                    (
-                        previous,
-                    ) => ({
+                    (previous) => ({
                         ...previous,
 
                         [appId]: {
-                            ...previous[
-                            appId
-                            ],
+                            ...previous[appId],
 
                             open:
                                 false,
@@ -799,13 +795,11 @@ function Desktop({
                     }),
                 )
             },
-            200,
         )
     }
 
 
     /* === ESTADO DO DESKTOP === */
-
     /* ----- APP ATIVO ----- */
     const activeZIndex =
         Math.max(
@@ -814,24 +808,17 @@ function Desktop({
                     windows,
                 )
                 .filter(
-                    (
-                        item,
-                    ) =>
+                    (item) =>
                         item?.open &&
-                        !item
-                            ?.minimized,
+                        !item?.minimized,
                 )
                 .map(
-                    (
-                        item,
-                    ) =>
-                        item.zIndex ??
-                        0,
+                    (item) =>
+                        item.zIndex ?? 0,
                 ),
 
             0,
         )
-
 
     const activeAppId =
         Object
@@ -843,14 +830,9 @@ function Desktop({
                     ,
                     windowState,
                 ]) =>
-                    windowState
-                        ?.open &&
-
-                    !windowState
-                        ?.minimized &&
-
-                    windowState
-                        .zIndex ===
+                    windowState?.open &&
+                    !windowState?.minimized &&
+                    windowState.zIndex ===
                     activeZIndex,
             )?.[0] ??
         null
@@ -882,7 +864,6 @@ function Desktop({
             return
         }
 
-
         setSelectedShortcut(
             null,
         )
@@ -890,14 +871,11 @@ function Desktop({
 
 
     /* === WS MENU === */
-
     /* ----- ALTERNAR ----- */
     const toggleMenu =
         () => {
             setMenuOpen(
-                (
-                    previous,
-                ) =>
+                (previous) =>
                     !previous,
             )
 
@@ -925,17 +903,13 @@ function Desktop({
         appId,
     ) => {
         const currentWindow =
-            windows[
-            appId
-            ]
-
+            windows[appId]
 
         if (
             currentWindow?.open
         ) {
             if (
-                currentWindow
-                    .minimized
+                currentWindow.minimized
             ) {
                 restoreApp(
                     appId,
@@ -951,7 +925,6 @@ function Desktop({
             )
         }
 
-
         setSelectedShortcut(
             appId,
         )
@@ -963,14 +936,11 @@ function Desktop({
 
 
     /* === CONTROLES RÁPIDOS === */
-
     /* ----- ALTERNAR ----- */
     const toggleQuickControls =
         () => {
             setQuickControlsOpen(
-                (
-                    previous,
-                ) =>
+                (previous) =>
                     !previous,
             )
 
@@ -994,29 +964,21 @@ function Desktop({
 
 
     /* === PAINEL DE NOTIFICAÇÕES === */
-
     /* ----- ALTERNAR ----- */
     const toggleNotifications =
         () => {
             setNotificationsOpen(
-                (
-                    previous,
-                ) => {
+                (previous) => {
                     const next =
                         !previous
-
 
                     if (
                         next
                     ) {
                         setNotifications(
-                            (
-                                current,
-                            ) =>
+                            (current) =>
                                 current.map(
-                                    (
-                                        notification,
-                                    ) => ({
+                                    (notification) => ({
                                         ...notification,
 
                                         read:
@@ -1025,7 +987,6 @@ function Desktop({
                                 ),
                         )
                     }
-
 
                     return next
                 },
@@ -1060,19 +1021,16 @@ function Desktop({
             return
         }
 
-
         const currentWindow =
             windows[
             notification.appId
             ]
 
-
         if (
             currentWindow?.open
         ) {
             if (
-                currentWindow
-                    .minimized
+                currentWindow.minimized
             ) {
                 restoreApp(
                     notification.appId,
@@ -1088,7 +1046,6 @@ function Desktop({
             )
         }
 
-
         setSelectedShortcut(
             notification.appId,
         )
@@ -1100,16 +1057,12 @@ function Desktop({
 
 
     /* === TASKBAR === */
-
     /* ----- ALTERNAR APP ----- */
     const toggleTaskbarApp = (
         appId,
     ) => {
         const currentWindow =
-            windows[
-            appId
-            ]
-
+            windows[appId]
 
         if (
             !currentWindow
@@ -1117,10 +1070,8 @@ function Desktop({
             return
         }
 
-
         if (
-            currentWindow
-                .minimized
+            currentWindow.minimized
         ) {
             restoreApp(
                 appId,
@@ -1129,11 +1080,8 @@ function Desktop({
             return
         }
 
-
         const isActive =
-            activeAppId ===
-            appId
-
+            activeAppId === appId
 
         if (
             isActive
@@ -1144,7 +1092,6 @@ function Desktop({
 
             return
         }
-
 
         focusApp(
             appId,
@@ -1214,16 +1161,12 @@ function Desktop({
                             '',
                         )
 
-
                     const project =
                         allProjects.find(
-                            (
-                                item,
-                            ) =>
+                            (item) =>
                                 item.id ===
                                 projectId,
                         )
-
 
                     if (
                         !project
@@ -1235,7 +1178,6 @@ function Desktop({
                         )
                     }
 
-
                     return (
                         <ProjectDemo
                             project={
@@ -1244,7 +1186,6 @@ function Desktop({
                         />
                     )
                 }
-
 
                 return (
                     <p>
@@ -1277,27 +1218,20 @@ function Desktop({
             >
                 {apps
                     .filter(
-                        (
-                            app,
-                        ) =>
+                        (app) =>
                             app.desktop,
                     )
                     .map(
-                        (
-                            app,
-                        ) => {
+                        (app) => {
                             const Icon =
                                 app.icon
 
                             const windowState =
-                                windows[
-                                app.id
-                                ]
+                                windows[app.id]
 
                             const isOpen =
                                 Boolean(
-                                    windowState
-                                        ?.open,
+                                    windowState?.open,
                                 )
 
                             const isActive =
@@ -1307,7 +1241,6 @@ function Desktop({
                             const isSelected =
                                 selectedShortcut ===
                                 app.id
-
 
                             const shortcutClassName = [
                                 'shortcut',
@@ -1324,13 +1257,8 @@ function Desktop({
                                     ? 'shortcut-selected'
                                     : '',
                             ]
-                                .filter(
-                                    Boolean,
-                                )
-                                .join(
-                                    ' ',
-                                )
-
+                                .filter(Boolean)
+                                .join(' ')
 
                             return (
                                 <button
@@ -1344,11 +1272,10 @@ function Desktop({
                                     data-app-id={
                                         app.id
                                     }
-                                    onClick={
-                                        () =>
-                                            handleShortcutClick(
-                                                app.id,
-                                            )
+                                    onClick={() =>
+                                        handleShortcutClick(
+                                            app.id,
+                                        )
                                     }
                                     aria-label={
                                         `Abrir ${app.name}`
@@ -1386,30 +1313,20 @@ function Desktop({
 
             {/* === JANELAS === */}
             {allApps.map(
-                (
-                    app,
-                ) => {
+                (app) => {
                     const windowState =
-                        windows[
-                        app.id
-                        ]
-
+                        windows[app.id]
 
                     if (
-                        !windowState
-                            ?.open
+                        !windowState?.open
                     ) {
                         return null
                     }
 
-
                     const isActive =
-                        !windowState
-                            .minimized &&
-
+                        !windowState.minimized &&
                         activeAppId ===
                         app.id
-
 
                     return (
                         <Window
@@ -1417,8 +1334,7 @@ function Desktop({
                                 app.id
                             }
                             hidden={
-                                windowState
-                                    .minimized
+                                windowState.minimized
                             }
                             title={
                                 app.name
@@ -1427,75 +1343,62 @@ function Desktop({
                                 isActive
                             }
                             maximized={
-                                windowState
-                                    .maximized
+                                windowState.maximized
                             }
                             minimizing={
-                                windowState
-                                    .minimizing
+                                windowState.minimizing
                             }
                             closing={
-                                windowState
-                                    .closing
+                                windowState.closing
                             }
                             position={
-                                windowState
-                                    .position
+                                windowState.position
                             }
                             size={
-                                windowState
-                                    .size
+                                windowState.size
                             }
                             zIndex={
-                                windowState
-                                    .zIndex
+                                windowState.zIndex
                             }
-                            onFocus={
-                                () =>
-                                    focusApp(
-                                        app.id,
-                                    )
+                            onFocus={() =>
+                                focusApp(
+                                    app.id,
+                                )
                             }
-                            onPositionChange={
-                                (
+                            onPositionChange={(
+                                position,
+                            ) =>
+                                moveApp(
+                                    app.id,
                                     position,
-                                ) =>
-                                    moveApp(
-                                        app.id,
-                                        position,
-                                    )
+                                )
                             }
-                            onSizeChange={
-                                (
+                            onSizeChange={(
+                                size,
+                            ) =>
+                                resizeApp(
+                                    app.id,
                                     size,
-                                ) =>
-                                    resizeApp(
-                                        app.id,
-                                        size,
-                                    )
+                                )
                             }
-                            onClose={
-                                () =>
-                                    closeApp(
-                                        app.id,
-                                    )
+                            onClose={() =>
+                                closeApp(
+                                    app.id,
+                                )
                             }
-                            onMinimize={
-                                () =>
-                                    minimizeApp(
-                                        app.id,
-                                    )
+                            onMinimize={() =>
+                                minimizeApp(
+                                    app.id,
+                                )
                             }
-                            onMaximize={
-                                () =>
-                                    toggleMaximizeApp(
-                                        app.id,
-                                    )
+                            onMaximize={() =>
+                                toggleMaximizeApp(
+                                    app.id,
+                                )
                             }
                         >
                             {
-                                app.id ===
-                                    'game'
+                                app.id === 'game'
                                     ? (
                                         <Game
                                             isActive={
@@ -1518,9 +1421,7 @@ function Desktop({
                 <WSMenu
                     apps={
                         apps.filter(
-                            (
-                                app,
-                            ) =>
+                            (app) =>
                                 app.menu,
                         )
                     }
@@ -1629,6 +1530,5 @@ function Desktop({
         </main>
     )
 }
-
 
 export default Desktop

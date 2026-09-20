@@ -37,26 +37,56 @@ function Taskbar({
         dateTime,
         setDateTime,
     ] = useState(
-        new Date(),
+        () => new Date(),
     )
 
 
     /* === RELÓGIO === */
     useEffect(() => {
-        const interval =
-            setInterval(
+        let minuteInterval = null
+
+        const now =
+            new Date()
+
+        const millisecondsUntilNextMinute =
+            (
+                60 -
+                now.getSeconds()
+            ) * 1000 -
+            now.getMilliseconds()
+
+        const minuteTimeout =
+            setTimeout(
                 () => {
                     setDateTime(
                         new Date(),
                     )
+
+                    minuteInterval =
+                        setInterval(
+                            () => {
+                                setDateTime(
+                                    new Date(),
+                                )
+                            },
+                            60 * 1000,
+                        )
                 },
-                1000,
+                millisecondsUntilNextMinute,
             )
 
         return () => {
-            clearInterval(
-                interval,
+            clearTimeout(
+                minuteTimeout,
             )
+
+            if (
+                minuteInterval
+            ) {
+                clearInterval(
+                    minuteInterval,
+                )
+            }
         }
     }, [])
 
@@ -100,17 +130,26 @@ function Taskbar({
                 .filter(
                     (item) =>
                         item?.open &&
-                        !item
-                            ?.minimized,
+                        !item?.minimized,
                 )
                 .map(
                     (item) =>
-                        item.zIndex ??
-                        0,
+                        item.zIndex ?? 0,
                 ),
 
             0,
         )
+
+
+    /* === ACESSIBILIDADE === */
+    const notificationLabel =
+        notificationCount > 0
+            ? notificationsOpen
+                ? `Fechar notificações. ${notificationCount} não lidas.`
+                : `Abrir notificações. ${notificationCount} não lidas.`
+            : notificationsOpen
+                ? 'Fechar notificações'
+                : 'Abrir notificações'
 
 
     /* === RENDERIZAÇÃO === */
@@ -131,12 +170,8 @@ function Taskbar({
                             ? 'taskbar-menu-button-active'
                             : '',
                     ]
-                        .filter(
-                            Boolean,
-                        )
-                        .join(
-                            ' ',
-                        )}
+                        .filter(Boolean)
+                        .join(' ')}
                     type="button"
                     onClick={
                         onToggleMenu
@@ -176,18 +211,14 @@ function Taskbar({
                                 ]
 
                             if (
-                                !windowState
-                                    ?.open
+                                !windowState?.open
                             ) {
                                 return null
                             }
 
                             const isActive =
-                                !windowState
-                                    .minimized &&
-
-                                windowState
-                                    .zIndex ===
+                                !windowState.minimized &&
+                                windowState.zIndex ===
                                 activeZIndex
 
                             const Icon =
@@ -200,17 +231,12 @@ function Taskbar({
                                     ? 'taskbar-app-active'
                                     : '',
 
-                                windowState
-                                    .minimized
+                                windowState.minimized
                                     ? 'taskbar-app-minimized'
                                     : '',
                             ]
-                                .filter(
-                                    Boolean,
-                                )
-                                .join(
-                                    ' ',
-                                )
+                                .filter(Boolean)
+                                .join(' ')
 
                             return (
                                 <button
@@ -227,8 +253,7 @@ function Taskbar({
                                         )
                                     }
                                     aria-label={
-                                        windowState
-                                            .minimized
+                                        windowState.minimized
                                             ? `Restaurar ${app.name}`
                                             : isActive
                                                 ? `Minimizar ${app.name}`
@@ -242,6 +267,7 @@ function Taskbar({
                                         <Icon
                                             size={19}
                                             strokeWidth={1.8}
+                                            aria-hidden="true"
                                         />
                                     </span>
 
@@ -275,12 +301,8 @@ function Taskbar({
                                 ? 'taskbar-button-active'
                                 : '',
                         ]
-                            .filter(
-                                Boolean,
-                            )
-                            .join(
-                                ' ',
-                            )}
+                            .filter(Boolean)
+                            .join(' ')}
                         type="button"
                         onClick={
                             onToggleQuickControls
@@ -298,6 +320,7 @@ function Taskbar({
                         <SlidersHorizontal
                             size={17}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
                     </button>
 
@@ -312,20 +335,14 @@ function Taskbar({
                                 ? 'taskbar-button-active'
                                 : '',
                         ]
-                            .filter(
-                                Boolean,
-                            )
-                            .join(
-                                ' ',
-                            )}
+                            .filter(Boolean)
+                            .join(' ')}
                         type="button"
                         onClick={
                             onToggleNotifications
                         }
                         aria-label={
-                            notificationsOpen
-                                ? 'Fechar notificações'
-                                : 'Abrir notificações'
+                            notificationLabel
                         }
                         aria-expanded={
                             notificationsOpen
@@ -335,18 +352,16 @@ function Taskbar({
                         <Bell
                             size={17}
                             strokeWidth={1.8}
+                            aria-hidden="true"
                         />
 
                         {notificationCount > 0 && (
                             <span
                                 className="taskbar-notification-badge"
-                                aria-label={
-                                    `${notificationCount} notificações não lidas`
-                                }
+                                aria-hidden="true"
                             >
                                 {
-                                    notificationCount >
-                                        9
+                                    notificationCount > 9
                                         ? '9+'
                                         : notificationCount
                                 }
@@ -363,31 +378,30 @@ function Taskbar({
                             toggleTheme
                         }
                         aria-label={
-                            theme ===
-                                'dark'
+                            theme === 'dark'
                                 ? 'Ativar tema claro'
                                 : 'Ativar tema escuro'
                         }
                         title={
-                            theme ===
-                                'dark'
+                            theme === 'dark'
                                 ? 'Tema claro'
                                 : 'Tema escuro'
                         }
                     >
                         {
-                            theme ===
-                                'dark'
+                            theme === 'dark'
                                 ? (
                                     <Sun
                                         size={17}
                                         strokeWidth={1.8}
+                                        aria-hidden="true"
                                     />
                                 )
                                 : (
                                     <Moon
                                         size={17}
                                         strokeWidth={1.8}
+                                        aria-hidden="true"
                                     />
                                 )
                         }
@@ -409,6 +423,9 @@ function Taskbar({
                         className="taskbar-clock"
                         title={
                             `${time} • ${date}`
+                        }
+                        aria-label={
+                            `${time}, ${date}`
                         }
                     >
                         <span className="taskbar-time">
