@@ -12,14 +12,41 @@ import './QuickControls.css'
 
 
 /* === CONFIGURAÇÃO === */
-const BRIGHTNESS_MIN = 75
-const BRIGHTNESS_MAX = 105
+const BRIGHTNESS_MIN =
+    75
 
-const GLASS_MIN = 35
-const GLASS_MAX = 95
+const BRIGHTNESS_MAX =
+    105
+
+const TRANSPARENCY_MIN =
+    0
+
+const TRANSPARENCY_MAX =
+    100
+
+const GLASS_OPACITY_MIN =
+    45
+
+const GLASS_OPACITY_MAX =
+    96
 
 
 /* === UTILITÁRIOS === */
+const clamp = (
+    value,
+    min,
+    max,
+) => {
+    return Math.min(
+        Math.max(
+            value,
+            min,
+        ),
+        max,
+    )
+}
+
+
 const getRangeProgress = (
     value,
     min,
@@ -27,12 +54,68 @@ const getRangeProgress = (
 ) => {
     return (
         (
-            value - min
+            value -
+            min
         ) /
         (
-            max - min
+            max -
+            min
         )
     ) * 100
+}
+
+
+/* === OPACIDADE PARA TRANSPARÊNCIA === */
+const getGlassTransparency = (
+    opacity,
+) => {
+    const safeOpacity =
+        clamp(
+            opacity,
+            GLASS_OPACITY_MIN,
+            GLASS_OPACITY_MAX,
+        )
+
+    return Math.round(
+        (
+            (
+                GLASS_OPACITY_MAX -
+                safeOpacity
+            ) /
+            (
+                GLASS_OPACITY_MAX -
+                GLASS_OPACITY_MIN
+            )
+        ) *
+        100,
+    )
+}
+
+
+/* === TRANSPARÊNCIA PARA OPACIDADE === */
+const getGlassOpacity = (
+    transparency,
+) => {
+    const safeTransparency =
+        clamp(
+            transparency,
+            TRANSPARENCY_MIN,
+            TRANSPARENCY_MAX,
+        )
+
+    const opacityRange =
+        GLASS_OPACITY_MAX -
+        GLASS_OPACITY_MIN
+
+    const normalizedTransparency =
+        safeTransparency /
+        100
+
+    return (
+        GLASS_OPACITY_MAX -
+        opacityRange *
+        normalizedTransparency
+    )
 }
 
 
@@ -45,7 +128,6 @@ function QuickControls({
     setGlassOpacity,
     onClose,
 }) {
-
     /* === REFERÊNCIAS === */
     const panelRef =
         useRef(null)
@@ -59,12 +141,41 @@ function QuickControls({
             BRIGHTNESS_MAX,
         )
 
+    const glassTransparency =
+        getGlassTransparency(
+            glassOpacity,
+        )
+
     const glassProgress =
         getRangeProgress(
-            glassOpacity,
-            GLASS_MIN,
-            GLASS_MAX,
+            glassTransparency,
+            TRANSPARENCY_MIN,
+            TRANSPARENCY_MAX,
         )
+
+
+    /* === ALTERAR TRANSPARÊNCIA === */
+    const handleGlassChange = (
+        event,
+    ) => {
+        const transparency =
+            Number(
+                event.target.value,
+            )
+
+        const opacity =
+            getGlassOpacity(
+                transparency,
+            )
+
+        setGlassOpacity(
+            Number(
+                opacity.toFixed(
+                    2,
+                ),
+            ),
+        )
+    }
 
 
     /* === FECHAR COM ESC === */
@@ -73,7 +184,8 @@ function QuickControls({
             event,
         ) => {
             if (
-                event.key === 'Escape'
+                event.key ===
+                'Escape'
             ) {
                 onClose()
             }
@@ -155,9 +267,7 @@ function QuickControls({
                 </div>
             </header>
 
-
             <div className="quick-controls-content">
-
                 {/* === TEMA === */}
                 <button
                     className={[
@@ -214,7 +324,6 @@ function QuickControls({
                     </span>
                 </button>
 
-
                 {/* === BRILHO === */}
                 <div className="quick-control-group">
                     <div className="quick-control-heading">
@@ -265,7 +374,6 @@ function QuickControls({
                     />
                 </div>
 
-
                 {/* === TRANSPARÊNCIA === */}
                 <div className="quick-control-group">
                     <div className="quick-control-heading">
@@ -280,7 +388,7 @@ function QuickControls({
                         </div>
 
                         <span className="quick-control-value">
-                            {glassOpacity}%
+                            {glassTransparency}%
                         </span>
                     </div>
 
@@ -288,30 +396,25 @@ function QuickControls({
                         className="quick-control-range"
                         type="range"
                         min={
-                            GLASS_MIN
+                            TRANSPARENCY_MIN
                         }
                         max={
-                            GLASS_MAX
+                            TRANSPARENCY_MAX
                         }
+                        step="1"
                         value={
-                            glassOpacity
+                            glassTransparency
                         }
                         style={{
                             '--range-progress':
                                 `${glassProgress}%`,
                         }}
-                        onChange={(
-                            event,
-                        ) =>
-                            setGlassOpacity(
-                                Number(
-                                    event.target.value,
-                                ),
-                            )
+                        onChange={
+                            handleGlassChange
                         }
-                        aria-label="Opacidade do glass"
+                        aria-label="Transparência do glass"
                         aria-valuetext={
-                            `${glassOpacity}%`
+                            `${glassTransparency}%`
                         }
                     />
                 </div>
@@ -319,5 +422,6 @@ function QuickControls({
         </aside>
     )
 }
+
 
 export default QuickControls

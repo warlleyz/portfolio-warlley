@@ -27,7 +27,8 @@
 
     background:
         color-mix(in srgb,
-            var(--glass-background-strong) var(--runtime-glass-opacity, 78%),
+            var(--surface-secondary) var(--runtime-glass-opacity,
+                78%),
             transparent);
 
     color:
@@ -106,7 +107,7 @@
 .window-dragging {
     background:
         color-mix(in srgb,
-            var(--glass-background-strong) 62%,
+            var(--surface-secondary) 90%,
             transparent);
 
     box-shadow:
@@ -125,7 +126,7 @@
 .window-resizing {
     background:
         color-mix(in srgb,
-            var(--glass-background-strong) 62%,
+            var(--surface-secondary) 90%,
             transparent);
 
     box-shadow:
@@ -144,7 +145,7 @@
 .window-dragging .window-content,
 .window-resizing .window-content {
     opacity:
-        0.35;
+        0.7;
 }
 
 
@@ -155,7 +156,7 @@
         rgba(255,
             255,
             255,
-            0.015);
+            0.025);
 }
 
 
@@ -408,10 +409,9 @@
         auto;
 
     background:
-        rgba(255,
-            255,
-            255,
-            0.008);
+        color-mix(in srgb,
+            var(--surface-primary) 16%,
+            transparent);
 
     opacity:
         1;

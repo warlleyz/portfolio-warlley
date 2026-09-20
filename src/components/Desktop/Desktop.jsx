@@ -179,7 +179,9 @@ function Desktop({
     const [
         glassOpacity,
         setGlassOpacity,
-    ] = useState(78)
+    ] = useState(
+        55.2,
+    )   
 
 
     /* === NOTIFICAÇÕES === */
