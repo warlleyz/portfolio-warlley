@@ -9,6 +9,8 @@ import {
     useRef,
 } from 'react'
 
+import Tooltip from '../Tooltip/Tooltip'
+
 import './Notifications.css'
 
 
@@ -18,7 +20,6 @@ function Notifications({
     onClear,
     onOpenNotification,
 }) {
-    
     /* === REFERÊNCIAS === */
     const panelRef =
         useRef(null)
@@ -114,21 +115,25 @@ function Notifications({
                 </div>
 
                 {notifications.length > 0 && (
-                    <button
-                        className="notifications-clear"
-                        type="button"
-                        onClick={
-                            onClear
-                        }
-                        aria-label="Limpar notificações"
-                        title="Limpar notificações"
+                    <Tooltip
+                        text="Limpar"
+                        position="bottom"
                     >
-                        <Trash2
-                            size={15}
-                            strokeWidth={1.8}
-                            aria-hidden="true"
-                        />
-                    </button>
+                        <button
+                            className="notifications-clear"
+                            type="button"
+                            onClick={
+                                onClear
+                            }
+                            aria-label="Limpar"
+                        >
+                            <Trash2
+                                size={15}
+                                strokeWidth={1.8}
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </Tooltip>
                 )}
             </header>
 

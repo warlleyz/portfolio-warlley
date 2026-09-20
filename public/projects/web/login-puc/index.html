@@ -6,6 +6,8 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <meta name="description" content="Demonstração local da interface de autenticação do projeto Login PUC.">
+
     <title>Login | PUC Minas</title>
 
     <link rel="stylesheet" href="./css/login.css">
@@ -13,29 +15,34 @@
 
 <body>
     <main class="login-container">
-        <section class="login-image"></section>
+        <section class="login-image" aria-hidden="true"></section>
 
         <section class="login-content">
             <div class="login-box">
                 <img src="./images/logo-puc.png" alt="Logo PUC Minas" class="logo">
 
-                <h1>Bem-vindo</h1>
+                <h1>
+                    Bem-vindo
+                </h1>
 
                 <p class="subtitle">
                     Acesse sua conta para continuar
                 </p>
 
+                <p class="demo-notice">
+                    Demonstração local. Não utilize uma senha real.
+                </p>
+
                 <form id="login-form">
-                    <p id="form-message" 
-                    class="form-message">
-                    </p>
+                    <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
 
                     <div class="input-group">
                         <label for="username">
                             Usuário ou e-mail
                         </label>
 
-                        <input type="text" id="username" name="username" placeholder="Digite seu usuário ou e-mail">
+                        <input type="text" id="username" name="username" placeholder="Digite seu usuário ou e-mail"
+                            autocomplete="username" required>
                     </div>
 
                     <div class="input-group">
@@ -43,19 +50,20 @@
                             Senha
                         </label>
 
-                        <input type="password" id="password" name="password" placeholder="Digite sua senha">
+                        <input type="password" id="password" name="password" placeholder="Digite sua senha"
+                            autocomplete="current-password" required>
                     </div>
 
                     <div class="login-options">
-                        <label class="remember">
-                            <input type="checkbox">
+                        <label class="remember" for="remember-me">
+                            <input type="checkbox" id="remember-me" name="remember">
 
                             Lembrar-me
                         </label>
 
-                        <a href="#">
-                            Esqueci minha senha
-                        </a>
+                        <button type="button" id="reset-demo-button" class="link-button">
+                            Redefinir demo
+                        </button>
                     </div>
 
                     <button type="submit">
@@ -73,8 +81,8 @@
             </div>
         </section>
     </main>
-    
-<script src="./js/app.js"></script>
+
+    <script src="./js/app.js"></script>
 </body>
 
 </html>

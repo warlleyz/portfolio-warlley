@@ -17,6 +17,8 @@ import {
   X,
 } from 'lucide-react'
 
+import Tooltip from '../../components/Tooltip/Tooltip'
+
 import projectsData, {
   hiddenGithubRepositories,
 } from '../../data/projectsData'
@@ -87,7 +89,7 @@ function getProjectAction(
   project,
 ) {
   switch (
-    project.demoType
+  project.demoType
   ) {
     case 'terminal':
       return {
@@ -132,7 +134,6 @@ function getProjectAction(
 function Projects({
   onOpenProject,
 }) {
-
   /* === ESTADO === */
   const [
     githubRepositories,
@@ -525,9 +526,9 @@ function Projects({
           ) => {
             const matchesFilter =
               selectedFilter ===
-                'Todos' ||
+              'Todos' ||
               project.language ===
-                selectedFilter ||
+              selectedFilter ||
               project.technologies
                 ?.includes(
                   selectedFilter,
@@ -685,7 +686,7 @@ function Projects({
           />
 
           <input
-            type="search"
+            type="text"
             value={
               search
             }
@@ -699,26 +700,31 @@ function Projects({
             placeholder="Buscar projetos..."
             aria-label="Buscar projetos"
             autoComplete="off"
+            spellCheck="false"
           />
 
           {search && (
-            <button
-              type="button"
-              className="projects-search-clear"
-              onClick={() =>
-                setSearch(
-                  '',
-                )
-              }
-              aria-label="Limpar busca"
-              title="Limpar busca"
+            <Tooltip
+              text="Limpar busca"
+              position="bottom"
             >
-              <X
-                size={14}
-                strokeWidth={1.8}
-                aria-hidden="true"
-              />
-            </button>
+              <button
+                type="button"
+                className="projects-search-clear"
+                onClick={() =>
+                  setSearch(
+                    '',
+                  )
+                }
+                aria-label="Limpar busca"
+              >
+                <X
+                  size={14}
+                  strokeWidth={1.8}
+                  aria-hidden="true"
+                />
+              </button>
+            </Tooltip>
           )}
         </div>
 
@@ -775,232 +781,232 @@ function Projects({
       {
         filteredProjects.length > 0
           ? (
-              <div className="projects-grid">
-                {filteredProjects.map(
-                  (
-                    project,
-                  ) => {
-                    const Icon =
-                      project.icon ??
-                      FolderGit2
+            <div className="projects-grid">
+              {filteredProjects.map(
+                (
+                  project,
+                ) => {
+                  const Icon =
+                    project.icon ??
+                    FolderGit2
 
-                    const updatedDate =
-                      formatDate(
-                        project.pushedAt ??
-                        project.updatedAt,
-                      )
+                  const updatedDate =
+                    formatDate(
+                      project.pushedAt ??
+                      project.updatedAt,
+                    )
 
-                    const projectAction =
-                      getProjectAction(
-                        project,
-                      )
+                  const projectAction =
+                    getProjectAction(
+                      project,
+                    )
 
-                    const ActionIcon =
-                      projectAction.icon
+                  const ActionIcon =
+                    projectAction.icon
 
-                    return (
-                      <article
-                        key={
-                          project.id
-                        }
-                        className="project-card"
-                      >
+                  return (
+                    <article
+                      key={
+                        project.id
+                      }
+                      className="project-card"
+                    >
 
-                        {/* === TOPO === */}
-                        <div className="project-card-top">
-                          <div className="project-icon">
-                            <Icon
-                              size={22}
-                              strokeWidth={1.8}
-                              aria-hidden="true"
-                            />
-                          </div>
+                      {/* === TOPO === */}
+                      <div className="project-card-top">
+                        <div className="project-icon">
+                          <Icon
+                            size={22}
+                            strokeWidth={1.8}
+                            aria-hidden="true"
+                          />
+                        </div>
 
-                          <div className="project-card-badges">
-                            <span
-                              className={[
-                                'project-status',
+                        <div className="project-card-badges">
+                          <span
+                            className={[
+                              'project-status',
 
-                                project.configured
-                                  ? 'project-status-demo'
-                                  : 'project-status-github',
-                              ]
-                                .filter(Boolean)
-                                .join(' ')}
-                            >
+                              project.configured
+                                ? 'project-status-demo'
+                                : 'project-status-github',
+                            ]
+                              .filter(Boolean)
+                              .join(' ')}
+                          >
+                            {
+                              project.configured
+                                ? 'Demo disponível'
+                                : 'Somente GitHub'
+                            }
+                          </span>
+
+                          {project.language && (
+                            <span className="project-language">
                               {
-                                project.configured
-                                  ? 'Demo disponível'
-                                  : 'Somente GitHub'
+                                project.language
                               }
                             </span>
+                          )}
+                        </div>
+                      </div>
 
-                            {project.language && (
-                              <span className="project-language">
-                                {
-                                  project.language
-                                }
-                              </span>
+
+                      {/* === CONTEÚDO === */}
+                      <div className="project-content">
+                        <h2>
+                          {
+                            project.title
+                          }
+                        </h2>
+
+                        <p>
+                          {
+                            project.description
+                          }
+                        </p>
+                      </div>
+
+
+                      {/* === TECNOLOGIAS === */}
+                      {project.technologies
+                        ?.length > 0 && (
+                          <div className="project-technologies">
+                            {project.technologies.map(
+                              (
+                                technology,
+                              ) => (
+                                <span
+                                  key={
+                                    technology
+                                  }
+                                >
+                                  {
+                                    technology
+                                  }
+                                </span>
+                              ),
                             )}
                           </div>
-                        </div>
+                        )}
 
 
-                        {/* === CONTEÚDO === */}
-                        <div className="project-content">
-                          <h2>
+                      {/* === DADOS DO GITHUB === */}
+                      <div className="project-meta">
+                        <span>
+                          <Star
+                            size={13}
+                            strokeWidth={1.8}
+                            aria-hidden="true"
+                          />
+
+                          {
+                            project.stars
+                          }
+                        </span>
+
+                        <span>
+                          <GitFork
+                            size={13}
+                            strokeWidth={1.8}
+                            aria-hidden="true"
+                          />
+
+                          {
+                            project.forks
+                          }
+                        </span>
+
+                        {updatedDate && (
+                          <span className="project-updated">
+                            Atualizado em{' '}
                             {
-                              project.title
-                            }
-                          </h2>
-
-                          <p>
-                            {
-                              project.description
-                            }
-                          </p>
-                        </div>
-
-
-                        {/* === TECNOLOGIAS === */}
-                        {project.technologies
-                          ?.length > 0 && (
-                            <div className="project-technologies">
-                              {project.technologies.map(
-                                (
-                                  technology,
-                                ) => (
-                                  <span
-                                    key={
-                                      technology
-                                    }
-                                  >
-                                    {
-                                      technology
-                                    }
-                                  </span>
-                                ),
-                              )}
-                            </div>
-                          )}
-
-
-                        {/* === DADOS DO GITHUB === */}
-                        <div className="project-meta">
-                          <span>
-                            <Star
-                              size={13}
-                              strokeWidth={1.8}
-                              aria-hidden="true"
-                            />
-
-                            {
-                              project.stars
+                              updatedDate
                             }
                           </span>
-
-                          <span>
-                            <GitFork
-                              size={13}
-                              strokeWidth={1.8}
-                              aria-hidden="true"
-                            />
-
-                            {
-                              project.forks
-                            }
-                          </span>
-
-                          {updatedDate && (
-                            <span className="project-updated">
-                              Atualizado em{' '}
-                              {
-                                updatedDate
-                              }
-                            </span>
-                          )}
-                        </div>
+                        )}
+                      </div>
 
 
-                        {/* === AÇÕES === */}
-                        <div className="project-actions">
-                          <button
-                            type="button"
-                            className="project-button project-button-secondary"
-                            onClick={() =>
-                              openGithub(
-                                project.github,
-                              )
-                            }
-                            aria-label={
-                              `Abrir ${project.title} no GitHub`
-                            }
-                          >
-                            <GitBranch
-                              size={15}
-                              strokeWidth={1.8}
-                              aria-hidden="true"
-                            />
+                      {/* === AÇÕES === */}
+                      <div className="project-actions">
+                        <button
+                          type="button"
+                          className="project-button project-button-secondary"
+                          onClick={() =>
+                            openGithub(
+                              project.github,
+                            )
+                          }
+                          aria-label={
+                            `Abrir ${project.title} no GitHub`
+                          }
+                        >
+                          <GitBranch
+                            size={15}
+                            strokeWidth={1.8}
+                            aria-hidden="true"
+                          />
 
-                            GitHub
-                          </button>
+                          GitHub
+                        </button>
 
-                          <button
-                            type="button"
-                            className="project-button project-button-primary"
-                            onClick={() =>
-                              onOpenProject?.(
-                                project,
-                              )
-                            }
-                            aria-label={
-                              `${projectAction.label}: ${project.title}`
-                            }
-                          >
-                            <ActionIcon
-                              size={15}
-                              strokeWidth={1.8}
-                              aria-hidden="true"
-                            />
+                        <button
+                          type="button"
+                          className="project-button project-button-primary"
+                          onClick={() =>
+                            onOpenProject?.(
+                              project,
+                            )
+                          }
+                          aria-label={
+                            `${projectAction.label}: ${project.title}`
+                          }
+                        >
+                          <ActionIcon
+                            size={15}
+                            strokeWidth={1.8}
+                            aria-hidden="true"
+                          />
 
-                            {
-                              projectAction.label
-                            }
-                          </button>
-                        </div>
-                      </article>
-                    )
-                  },
-                )}
-              </div>
-            )
+                          {
+                            projectAction.label
+                          }
+                        </button>
+                      </div>
+                    </article>
+                  )
+                },
+              )}
+            </div>
+          )
           : (
-              <div className="projects-empty">
-                <Search
-                  size={22}
-                  strokeWidth={1.7}
-                  aria-hidden="true"
-                />
+            <div className="projects-empty">
+              <Search
+                size={22}
+                strokeWidth={1.7}
+                aria-hidden="true"
+              />
 
-                <strong>
-                  Nenhum projeto encontrado
-                </strong>
+              <strong>
+                Nenhum projeto encontrado
+              </strong>
 
-                <p>
-                  Tente outro termo ou selecione
-                  um filtro diferente.
-                </p>
+              <p>
+                Tente outro termo ou selecione
+                um filtro diferente.
+              </p>
 
-                <button
-                  type="button"
-                  onClick={
-                    clearFilters
-                  }
-                >
-                  Limpar filtros
-                </button>
-              </div>
-            )
+              <button
+                type="button"
+                onClick={
+                  clearFilters
+                }
+              >
+                Limpar filtros
+              </button>
+            </div>
+          )
       }
     </div>
   )

@@ -10,19 +10,14 @@ import {
     GitBranch,
 } from 'lucide-react'
 
+import {
+    getGithubData,
+} from '../../services/githubService'
+
 import './Stats.css'
 
 
 /* === CONFIGURAÇÕES === */
-const GITHUB_USERNAME =
-    'warlleyz'
-
-const GITHUB_USER_URL =
-    `https://api.github.com/users/${GITHUB_USERNAME}`
-
-const GITHUB_REPOSITORIES_URL =
-    `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`
-
 const WAKATIME_ACTIVITY_URL =
     'https://wakatime.com/share/@0e884e2e-00dc-4836-8f8c-f99c10ff79e6/0a108179-dd25-4e77-a2b8-12ca5599f8a8.json'
 
@@ -537,7 +532,6 @@ function getActivityTitle(
 
 
 function Stats() {
-
     /* === GITHUB === */
     const [
         githubData,
@@ -584,8 +578,8 @@ function Stats() {
 
     /* === CARREGAR GITHUB === */
     useEffect(() => {
-        const controller =
-            new AbortController()
+        let active =
+            true
 
         const loadGithubData =
             async () => {
@@ -594,66 +588,25 @@ function Stats() {
                         'loading',
                     )
 
-                    const [
-                        userResponse,
-                        repositoriesResponse,
-                    ] =
-                        await Promise.all([
-                            fetch(
-                                GITHUB_USER_URL,
-                                {
-                                    signal:
-                                        controller.signal,
-
-                                    headers: {
-                                        Accept:
-                                            'application/vnd.github+json',
-                                    },
-                                },
-                            ),
-
-                            fetch(
-                                GITHUB_REPOSITORIES_URL,
-                                {
-                                    signal:
-                                        controller.signal,
-
-                                    headers: {
-                                        Accept:
-                                            'application/vnd.github+json',
-                                    },
-                                },
-                            ),
-                        ])
+                    const {
+                        profile,
+                        repositories:
+                        githubRepositories,
+                    } =
+                        await getGithubData()
 
                     if (
-                        !userResponse.ok ||
-                        !repositoriesResponse.ok
+                        !active
                     ) {
-                        throw new Error(
-                            'Não foi possível carregar os dados do GitHub.',
-                        )
+                        return
                     }
 
-                    const [
-                        userData,
-                        repositoriesData,
-                    ] =
-                        await Promise.all([
-                            userResponse.json(),
-                            repositoriesResponse.json(),
-                        ])
-
                     setGithubData(
-                        userData,
+                        profile,
                     )
 
                     setRepositories(
-                        Array.isArray(
-                            repositoriesData,
-                        )
-                            ? repositoriesData
-                            : [],
+                        githubRepositories,
                     )
 
                     setGithubStatus(
@@ -661,11 +614,15 @@ function Stats() {
                     )
                 } catch (error) {
                     if (
-                        error.name ===
-                        'AbortError'
+                        !active
                     ) {
                         return
                     }
+
+                    console.error(
+                        'Erro ao carregar dados do GitHub:',
+                        error,
+                    )
 
                     setGithubStatus(
                         'error',
@@ -676,7 +633,8 @@ function Stats() {
         loadGithubData()
 
         return () => {
-            controller.abort()
+            active =
+                false
         }
     }, [])
 
@@ -856,7 +814,7 @@ function Stats() {
                         total +
                         (
                             Number(
-                                repository.stargazers_count,
+                                repository.stars,
                             ) ||
                             0
                         ),
@@ -873,14 +831,14 @@ function Stats() {
         useMemo(
             () => {
                 if (
-                    !githubData?.created_at
+                    !githubData?.createdAt
                 ) {
                     return '--'
                 }
 
                 const date =
                     new Date(
-                        githubData.created_at,
+                        githubData.createdAt,
                     )
 
                 return Number.isNaN(
@@ -1164,7 +1122,7 @@ function Stats() {
                                 githubStatus ===
                                     'success'
                                     ? githubData
-                                        ?.public_repos ??
+                                        ?.publicRepos ??
                                     0
                                     : '--'
                             }
@@ -1519,7 +1477,7 @@ function Stats() {
                                 <strong>
                                     {
                                         githubData
-                                            ?.public_repos ??
+                                            ?.publicRepos ??
                                         0
                                     }
                                 </strong>

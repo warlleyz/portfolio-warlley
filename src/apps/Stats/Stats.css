@@ -967,7 +967,7 @@
         var(--surface-primary);
 
     box-shadow:
-        var(--shadow-sm);
+        var(--shadow-small);
 
     font-size:
         8px;

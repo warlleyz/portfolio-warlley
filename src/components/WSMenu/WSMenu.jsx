@@ -14,6 +14,8 @@ import {
     searchWS,
 } from '../../data/searchData'
 
+import Tooltip from '../Tooltip/Tooltip'
+
 import './WSMenu.css'
 
 
@@ -293,24 +295,28 @@ function WSMenu({
                 </div>
 
 
-                <a
-                    className="ws-menu-github"
-                    href="https://github.com/warlleyz"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir GitHub em nova aba"
-                    title="GitHub"
+                <Tooltip
+                    text="GitHub"
+                    position="top"
                 >
-                    <Code2
-                        size={17}
-                        strokeWidth={1.8}
-                        aria-hidden="true"
-                    />
+                    <a
+                        className="ws-menu-github"
+                        href="https://github.com/warlleyz"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Abrir GitHub em nova aba"
+                    >
+                        <Code2
+                            size={17}
+                            strokeWidth={1.8}
+                            aria-hidden="true"
+                        />
 
-                    <span>
-                        GitHub
-                    </span>
-                </a>
+                        <span>
+                            GitHub
+                        </span>
+                    </a>
+                </Tooltip>
             </footer>
         </aside>
     )
@@ -375,9 +381,6 @@ function AppsGrid({
                             }
                             aria-label={
                                 `Abrir ${app.name}`
-                            }
-                            title={
-                                app.name
                             }
                         >
                             <span className="ws-menu-app-icon">

@@ -1,67 +1,398 @@
-const USERS_KEY = 'login-puc-demo-users'
-const SESSION_KEY = 'login-puc-demo-session'
+const USERS_KEY =
+    'login-puc-demo-users'
 
+const SESSION_KEY =
+    'login-puc-demo-session'
+
+
+/* === ARMAZENAMENTO === */
+function readStorage(
+    storage,
+    key,
+    fallback,
+) {
+    try {
+        const value =
+            storage.getItem(
+                key,
+            )
+
+        if (
+            value === null
+        ) {
+            return fallback
+        }
+
+        return JSON.parse(
+            value,
+        )
+    } catch {
+        return fallback
+    }
+}
+
+
+function writeStorage(
+    storage,
+    key,
+    value,
+) {
+    try {
+        storage.setItem(
+            key,
+            JSON.stringify(
+                value,
+            ),
+        )
+
+        return true
+    } catch {
+        return false
+    }
+}
+
+
+function removeStorage(
+    storage,
+    key,
+) {
+    try {
+        storage.removeItem(
+            key,
+        )
+    } catch {
+        // A demo continua mesmo se o armazenamento estiver indisponível.
+    }
+}
+
+
+/* === USUÁRIOS === */
 function getUsers() {
-    return JSON.parse(
-        localStorage.getItem(USERS_KEY) || '[]',
+    const users =
+        readStorage(
+            localStorage,
+            USERS_KEY,
+            [],
+        )
+
+    return Array.isArray(
+        users,
     )
+        ? users
+        : []
 }
 
-function saveUsers(users) {
-    localStorage.setItem(
+
+function saveUsers(
+    users,
+) {
+    return writeStorage(
+        localStorage,
         USERS_KEY,
-        JSON.stringify(users),
+        users,
     )
 }
 
-function showMessage(message, type = 'error') {
-    const messageElement =
-        document.querySelector('#form-message')
 
-    if (!messageElement) {
+/* === SESSÃO === */
+function getSession() {
+    const temporarySession =
+        readStorage(
+            sessionStorage,
+            SESSION_KEY,
+            null,
+        )
+
+    if (
+        temporarySession
+    ) {
+        return temporarySession
+    }
+
+    return readStorage(
+        localStorage,
+        SESSION_KEY,
+        null,
+    )
+}
+
+
+function saveSession(
+    session,
+    remember,
+) {
+    removeStorage(
+        localStorage,
+        SESSION_KEY,
+    )
+
+    removeStorage(
+        sessionStorage,
+        SESSION_KEY,
+    )
+
+    const storage =
+        remember
+            ? localStorage
+            : sessionStorage
+
+    return writeStorage(
+        storage,
+        SESSION_KEY,
+        session,
+    )
+}
+
+
+function clearSession() {
+    removeStorage(
+        localStorage,
+        SESSION_KEY,
+    )
+
+    removeStorage(
+        sessionStorage,
+        SESSION_KEY,
+    )
+}
+
+
+/* === MENSAGENS === */
+function showMessage(
+    message,
+    type = 'error',
+) {
+    const messageElement =
+        document.querySelector(
+            '#form-message',
+        )
+
+    if (
+        !messageElement
+    ) {
         return
     }
 
-    messageElement.textContent = message
+    messageElement.textContent =
+        message
+
     messageElement.className =
         `form-message form-message-${type}`
 }
 
+
+/* === CRIPTOGRAFIA DA DEMO === */
+function bytesToHex(
+    bytes,
+) {
+    return Array
+        .from(
+            bytes,
+        )
+        .map(
+            (
+                byte,
+            ) =>
+                byte
+                    .toString(16)
+                    .padStart(
+                        2,
+                        '0',
+                    ),
+        )
+        .join('')
+}
+
+
+function createSalt() {
+    const bytes =
+        new Uint8Array(16)
+
+    crypto.getRandomValues(
+        bytes,
+    )
+
+    return bytesToHex(
+        bytes,
+    )
+}
+
+
+async function hashPassword(
+    password,
+    salt,
+) {
+    const encoder =
+        new TextEncoder()
+
+    const data =
+        encoder.encode(
+            `${salt}:${password}`,
+        )
+
+    const digest =
+        await crypto.subtle.digest(
+            'SHA-256',
+            data,
+        )
+
+    return bytesToHex(
+        new Uint8Array(
+            digest,
+        ),
+    )
+}
+
+
+/* === VALIDAR SENHA === */
+async function passwordMatches(
+    user,
+    password,
+) {
+    if (
+        user.passwordHash &&
+        user.passwordSalt
+    ) {
+        const hash =
+            await hashPassword(
+                password,
+                user.passwordSalt,
+            )
+
+        return (
+            hash ===
+            user.passwordHash
+        )
+    }
+
+    /*
+     * Compatibilidade temporária com contas
+     * criadas pela versão antiga da demo.
+     */
+    return (
+        typeof user.password ===
+        'string' &&
+        user.password ===
+        password
+    )
+}
+
+
+/* === MIGRAR CONTA ANTIGA === */
+async function migrateLegacyPassword(
+    user,
+    password,
+) {
+    if (
+        !user.password ||
+        user.passwordHash
+    ) {
+        return
+    }
+
+    const users =
+        getUsers()
+
+    const userIndex =
+        users.findIndex(
+            (
+                currentUser,
+            ) =>
+                currentUser.username
+                    .toLowerCase() ===
+                user.username
+                    .toLowerCase(),
+        )
+
+    if (
+        userIndex === -1
+    ) {
+        return
+    }
+
+    const salt =
+        createSalt()
+
+    const passwordHash =
+        await hashPassword(
+            password,
+            salt,
+        )
+
+    const migratedUser = {
+        ...users[userIndex],
+
+        passwordSalt:
+            salt,
+
+        passwordHash,
+    }
+
+    delete migratedUser.password
+
+    users[userIndex] =
+        migratedUser
+
+    saveUsers(
+        users,
+    )
+}
+
+
 /* === CADASTRO === */
-
 const registerForm =
-    document.querySelector('#register-form')
+    document.querySelector(
+        '#register-form',
+    )
 
-if (registerForm) {
+if (
+    registerForm
+) {
     registerForm.addEventListener(
         'submit',
-        (event) => {
+        async (
+            event,
+        ) => {
             event.preventDefault()
 
             const name =
-                document.querySelector('#name')
+                document
+                    .querySelector(
+                        '#name',
+                    )
                     .value
                     .trim()
 
             const username =
-                document.querySelector('#username')
+                document
+                    .querySelector(
+                        '#username',
+                    )
                     .value
                     .trim()
 
             const email =
-                document.querySelector('#email')
+                document
+                    .querySelector(
+                        '#email',
+                    )
                     .value
                     .trim()
                     .toLowerCase()
 
             const password =
-                document.querySelector('#password')
+                document
+                    .querySelector(
+                        '#password',
+                    )
                     .value
 
             const confirmPassword =
-                document.querySelector(
-                    '#confirmPassword',
-                ).value
+                document
+                    .querySelector(
+                        '#confirmPassword',
+                    )
+                    .value
 
             if (
                 !name ||
@@ -77,7 +408,9 @@ if (registerForm) {
                 return
             }
 
-            if (password.length < 4) {
+            if (
+                password.length < 4
+            ) {
                 showMessage(
                     'A senha deve possuir pelo menos 4 caracteres.',
                 )
@@ -85,7 +418,10 @@ if (registerForm) {
                 return
             }
 
-            if (password !== confirmPassword) {
+            if (
+                password !==
+                confirmPassword
+            ) {
                 showMessage(
                     'As senhas não coincidem.',
                 )
@@ -93,16 +429,29 @@ if (registerForm) {
                 return
             }
 
-            const users = getUsers()
+            const users =
+                getUsers()
 
-            const userExists = users.some(
-                (user) =>
-                    user.username.toLowerCase() ===
-                    username.toLowerCase() ||
-                    user.email === email,
-            )
+            const normalizedUsername =
+                username
+                    .toLowerCase()
 
-            if (userExists) {
+            const userExists =
+                users.some(
+                    (
+                        user,
+                    ) =>
+                        user.username
+                            ?.toLowerCase() ===
+                        normalizedUsername ||
+                        user.email
+                            ?.toLowerCase() ===
+                        email,
+                )
+
+            if (
+                userExists
+            ) {
                 showMessage(
                     'Usuário ou e-mail já cadastrado.',
                 )
@@ -110,52 +459,108 @@ if (registerForm) {
                 return
             }
 
-            users.push({
-                name,
-                username,
-                email,
-                password,
-            })
+            try {
+                const passwordSalt =
+                    createSalt()
 
-            saveUsers(users)
+                const passwordHash =
+                    await hashPassword(
+                        password,
+                        passwordSalt,
+                    )
 
-            showMessage(
-                'Cadastro realizado com sucesso!',
-                'success',
-            )
+                users.push({
+                    name,
+                    username,
+                    email,
+                    passwordSalt,
+                    passwordHash,
+                })
 
-            registerForm.reset()
+                const saved =
+                    saveUsers(
+                        users,
+                    )
 
-            setTimeout(() => {
-                window.location.href =
-                    './index.html'
-            }, 1000)
+                if (
+                    !saved
+                ) {
+                    showMessage(
+                        'Não foi possível salvar a conta neste navegador.',
+                    )
+
+                    return
+                }
+
+                showMessage(
+                    'Cadastro realizado com sucesso!',
+                    'success',
+                )
+
+                registerForm.reset()
+
+                setTimeout(
+                    () => {
+                        window.location.href =
+                            './index.html'
+                    },
+                    1000,
+                )
+            } catch {
+                showMessage(
+                    'Não foi possível processar o cadastro.',
+                )
+            }
         },
     )
 }
 
+
 /* === LOGIN === */
-
 const loginForm =
-    document.querySelector('#login-form')
+    document.querySelector(
+        '#login-form',
+    )
 
-if (loginForm) {
+if (
+    loginForm
+) {
     loginForm.addEventListener(
         'submit',
-        (event) => {
+        async (
+            event,
+        ) => {
             event.preventDefault()
 
             const login =
-                document.querySelector('#username')
+                document
+                    .querySelector(
+                        '#username',
+                    )
                     .value
                     .trim()
                     .toLowerCase()
 
             const password =
-                document.querySelector('#password')
+                document
+                    .querySelector(
+                        '#password',
+                    )
                     .value
 
-            if (!login || !password) {
+            const remember =
+                Boolean(
+                    document
+                        .querySelector(
+                            '#remember-me',
+                        )
+                        ?.checked,
+                )
+
+            if (
+                !login ||
+                !password
+            ) {
                 showMessage(
                     'Informe seu usuário/e-mail e senha.',
                 )
@@ -163,19 +568,25 @@ if (loginForm) {
                 return
             }
 
-            const users = getUsers()
+            const users =
+                getUsers()
 
-            const user = users.find(
-                (item) =>
+            const user =
+                users.find(
                     (
-                        item.username.toLowerCase() ===
+                        item,
+                    ) =>
+                        item.username
+                            ?.toLowerCase() ===
                         login ||
-                        item.email === login
-                    ) &&
-                    item.password === password,
-            )
+                        item.email
+                            ?.toLowerCase() ===
+                        login,
+                )
 
-            if (!user) {
+            if (
+                !user
+            ) {
                 showMessage(
                     'Usuário ou senha inválidos.',
                 )
@@ -183,60 +594,155 @@ if (loginForm) {
                 return
             }
 
-            localStorage.setItem(
-                SESSION_KEY,
-                JSON.stringify({
-                    name: user.name,
-                    username: user.username,
-                }),
-            )
+            try {
+                const validPassword =
+                    await passwordMatches(
+                        user,
+                        password,
+                    )
 
-            showMessage(
-                `Bem-vindo, ${user.name}!`,
-                'success',
-            )
+                if (
+                    !validPassword
+                ) {
+                    showMessage(
+                        'Usuário ou senha inválidos.',
+                    )
 
-            setTimeout(() => {
-                window.location.href =
-                    './home.html'
-            }, 700)
+                    return
+                }
+
+                await migrateLegacyPassword(
+                    user,
+                    password,
+                )
+
+                const sessionSaved =
+                    saveSession(
+                        {
+                            name:
+                                user.name,
+
+                            username:
+                                user.username,
+                        },
+                        remember,
+                    )
+
+                if (
+                    !sessionSaved
+                ) {
+                    showMessage(
+                        'Não foi possível iniciar a sessão.',
+                    )
+
+                    return
+                }
+
+                showMessage(
+                    `Bem-vindo, ${user.name}!`,
+                    'success',
+                )
+
+                setTimeout(
+                    () => {
+                        window.location.href =
+                            './home.html'
+                    },
+                    700,
+                )
+            } catch {
+                showMessage(
+                    'Não foi possível validar o login.',
+                )
+            }
         },
     )
 }
 
-/* === ÁREA LOGADA === */
 
-const loggedUser =
-    document.querySelector('#logged-user')
-
-if (loggedUser) {
-    const session = JSON.parse(
-        localStorage.getItem(SESSION_KEY) ||
-        'null',
+/* === REDEFINIR DEMO === */
+const resetDemoButton =
+    document.querySelector(
+        '#reset-demo-button',
     )
 
-    if (!session) {
-        window.location.href =
-            './index.html'
+if (
+    resetDemoButton
+) {
+    resetDemoButton.addEventListener(
+        'click',
+        () => {
+            const confirmed =
+                window.confirm(
+                    'Deseja remover as contas e sessões salvas nesta demonstração?',
+                )
+
+            if (
+                !confirmed
+            ) {
+                return
+            }
+
+            removeStorage(
+                localStorage,
+                USERS_KEY,
+            )
+
+            clearSession()
+
+            loginForm?.reset()
+
+            showMessage(
+                'Dados da demonstração removidos.',
+                'success',
+            )
+        },
+    )
+}
+
+
+/* === ÁREA LOGADA === */
+const loggedUser =
+    document.querySelector(
+        '#logged-user',
+    )
+
+if (
+    loggedUser
+) {
+    const session =
+        getSession()
+
+    if (
+        !session?.name
+    ) {
+        window.location.replace(
+            './index.html',
+        )
     } else {
         loggedUser.textContent =
             session.name
     }
 }
 
-const logoutButton =
-    document.querySelector('#logout-button')
 
-if (logoutButton) {
+/* === LOGOUT === */
+const logoutButton =
+    document.querySelector(
+        '#logout-button',
+    )
+
+if (
+    logoutButton
+) {
     logoutButton.addEventListener(
         'click',
         () => {
-            localStorage.removeItem(
-                SESSION_KEY,
-            )
+            clearSession()
 
-            window.location.href =
-                './index.html'
+            window.location.replace(
+                './index.html',
+            )
         },
     )
 }

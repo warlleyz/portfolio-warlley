@@ -9,130 +9,12 @@ import {
     Trash2,
 } from 'lucide-react'
 
+import appsData from '../../data/appsData'
+import projectsData from '../../data/projectsData'
+
+import Tooltip from '../../components/Tooltip/Tooltip'
+
 import './Terminal.css'
-
-
-/* === APLICATIVOS DO WS OS === */
-const apps = {
-    about: {
-        name:
-            'Sobre mim',
-    },
-
-    projects: {
-        name:
-            'Projetos',
-    },
-
-    technologies: {
-        name:
-            'Tecnologias',
-    },
-
-    contact: {
-        name:
-            'Contato',
-    },
-
-    resume: {
-        name:
-            'Currículo',
-    },
-
-    stats: {
-        name:
-            'Estatísticas',
-    },
-
-    game: {
-        name:
-            'Snake',
-    },
-}
-
-
-/* === PROJETOS === */
-const projects = {
-    'api-clima': {
-        id:
-            'api-clima',
-
-        name:
-            'API Clima',
-
-        repository:
-            'API-Clima',
-
-        technologies:
-            'Java, Spring Boot, API REST',
-
-        description:
-            'API desenvolvida em Spring Boot para consulta de informações climáticas.',
-
-        github:
-            'https://github.com/warlleyz/API-Clima',
-    },
-
-    'carrinho-compras': {
-        id:
-            'carrinho-compras',
-
-        name:
-            'Carrinho de Compras',
-
-        repository:
-            'Carrinho-Compras-POO',
-
-        technologies:
-            'Java, POO',
-
-        description:
-            'Projeto acadêmico aplicando conceitos de Programação Orientada a Objetos.',
-
-        github:
-            'https://github.com/warlleyz/Carrinho-Compras-POO',
-    },
-
-    'login-puc': {
-        id:
-            'login-puc',
-
-        name:
-            'Login PUC',
-
-        repository:
-            'Login-PUC',
-
-        technologies:
-            'Java, Spring Boot, HTML, CSS',
-
-        description:
-            'Sistema web de autenticação desenvolvido com Spring Boot.',
-
-        github:
-            'https://github.com/warlleyz/Login-PUC',
-    },
-
-    snakepy: {
-        id:
-            'snakepy',
-
-        name:
-            'SnakePy',
-
-        repository:
-            'SnakePy',
-
-        technologies:
-            'Python, Pygame, Pytest',
-
-        description:
-            'Jogo Snake desenvolvido em Python utilizando Pygame.',
-
-        github:
-            'https://github.com/warlleyz/SnakePy',
-    },
-}
 
 
 /* === LINKS === */
@@ -146,6 +28,59 @@ const externalLinks = {
     email:
         'mailto:warlleysilvax@gmail.com',
 }
+
+
+/* === APLICATIVOS DO WS OS === */
+const apps =
+    Object.fromEntries(
+        appsData.map(
+            (
+                app,
+            ) => [
+                    app.id,
+
+                    {
+                        name:
+                            app.name,
+                    },
+                ],
+        ),
+    )
+
+
+/* === PROJETOS === */
+const projects =
+    Object.fromEntries(
+        projectsData.map(
+            (
+                project,
+            ) => [
+                    project.id,
+
+                    {
+                        id:
+                            project.id,
+
+                        name:
+                            project.title,
+
+                        repository:
+                            project.repository,
+
+                        technologies:
+                            project.technologies
+                                .join(', '),
+
+                        description:
+                            project.description ??
+                            'Projeto disponível no GitHub.',
+
+                        github:
+                            `https://github.com/warlleyz/${project.repository}`,
+                    },
+                ],
+        ),
+    )
 
 
 /* === SISTEMA DE ARQUIVOS SIMULADO === */
@@ -182,47 +117,34 @@ const fileSystem = {
     },
 
     '~/portfolio/projects': {
-        directories: [
-            'api-clima',
-            'carrinho-compras',
-            'login-puc',
-            'snakepy',
-        ],
+        directories:
+            projectsData.map(
+                (
+                    project,
+                ) =>
+                    project.id,
+            ),
 
         files: [],
     },
 
-    '~/portfolio/projects/api-clima': {
-        directories: [],
+    ...Object.fromEntries(
+        projectsData.map(
+            (
+                project,
+            ) => [
+                    `~/portfolio/projects/${project.id}`,
 
-        files: [
-            'README.md',
-        ],
-    },
+                    {
+                        directories: [],
 
-    '~/portfolio/projects/carrinho-compras': {
-        directories: [],
-
-        files: [
-            'README.md',
-        ],
-    },
-
-    '~/portfolio/projects/login-puc': {
-        directories: [],
-
-        files: [
-            'README.md',
-        ],
-    },
-
-    '~/portfolio/projects/snakepy': {
-        directories: [],
-
-        files: [
-            'README.md',
-        ],
-    },
+                        files: [
+                            'README.md',
+                        ],
+                    },
+                ],
+        ),
+    ),
 
     '~/portfolio/technologies': {
         directories: [],
@@ -422,7 +344,6 @@ EXEMPLOS
 function Terminal({
     onOpenApp,
 }) {
-
     /* === ESTADO === */
     const [
         command,
@@ -702,10 +623,10 @@ function Terminal({
                 return `${project.name}
 
                 ${project.description}
-
+                
                 Tecnologias:
                 ${project.technologies}
-
+                
                 GitHub:
                 ${project.github}`
             }
@@ -1404,9 +1325,9 @@ function Terminal({
                         - Linguagens
                         - Repositórios
                         - Atividade por período
-
+                        
                         Use:
-
+                        
                         open stats`
                     break
 
@@ -1679,7 +1600,8 @@ function Terminal({
         }
 
         const nextIndex =
-            historyIndex + 1
+            historyIndex +
+            1
 
         if (
             nextIndex >=
@@ -1864,35 +1786,43 @@ function Terminal({
                 </div>
 
                 <div className="portfolio-terminal-actions">
-                    <button
-                        type="button"
-                        onClick={
-                            clearTerminal
-                        }
-                        title="Limpar terminal"
-                        aria-label="Limpar terminal"
+                    <Tooltip
+                        text="Limpar terminal"
+                        position="bottom"
                     >
-                        <Trash2
-                            size={14}
-                            strokeWidth={1.8}
-                            aria-hidden="true"
-                        />
-                    </button>
+                        <button
+                            type="button"
+                            onClick={
+                                clearTerminal
+                            }
+                            aria-label="Limpar terminal"
+                        >
+                            <Trash2
+                                size={14}
+                                strokeWidth={1.8}
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </Tooltip>
 
-                    <button
-                        type="button"
-                        onClick={
-                            resetTerminal
-                        }
-                        title="Reiniciar terminal"
-                        aria-label="Reiniciar terminal"
+                    <Tooltip
+                        text="Reiniciar terminal"
+                        position="bottom"
                     >
-                        <RotateCcw
-                            size={14}
-                            strokeWidth={1.8}
-                            aria-hidden="true"
-                        />
-                    </button>
+                        <button
+                            type="button"
+                            onClick={
+                                resetTerminal
+                            }
+                            aria-label="Reiniciar terminal"
+                        >
+                            <RotateCcw
+                                size={14}
+                                strokeWidth={1.8}
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </Tooltip>
                 </div>
             </header>
 

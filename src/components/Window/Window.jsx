@@ -1,4 +1,5 @@
 import {
+    useCallback,
     useEffect,
     useRef,
     useState,
@@ -11,21 +12,35 @@ import {
     X,
 } from 'lucide-react'
 
+import Tooltip from '../Tooltip/Tooltip'
+
 import './Window.css'
 
 
 /* === CONFIGURAÇÃO === */
-const DEFAULT_WIDTH = 720
-const DEFAULT_HEIGHT = 500
+const DEFAULT_WIDTH =
+    720
 
-const MIN_WIDTH = 360
-const MIN_HEIGHT = 260
+const DEFAULT_HEIGHT =
+    500
 
-const DESKTOP_PADDING = 8
+const MIN_WIDTH =
+    360
 
-const MAXIMIZED_TOP = 8
-const MAXIMIZED_SIDE = 8
-const MAXIMIZED_BOTTOM = 8
+const MIN_HEIGHT =
+    260
+
+const DESKTOP_PADDING =
+    8
+
+const MAXIMIZED_TOP =
+    8
+
+const MAXIMIZED_SIDE =
+    8
+
+const MAXIMIZED_BOTTOM =
+    8
 
 
 function Window({
@@ -49,7 +64,6 @@ function Window({
     onPositionChange,
     onSizeChange,
 }) {
-
     /* === REFERÊNCIAS === */
     const dragState =
         useRef(null)
@@ -158,103 +172,123 @@ function Window({
 
     /* === LIMITES === */
     /* ----- POSIÇÃO ----- */
-    const constrainPosition = (
-        x,
-        y,
-        width =
-            currentSize.width,
-        height =
-            currentSize.height,
-    ) => {
-        const maxX =
-            Math.max(
-                viewport.width -
-                width -
-                DESKTOP_PADDING,
-                DESKTOP_PADDING,
-            )
-
-        const maxY =
-            Math.max(
-                viewport.height -
-                height -
-                DESKTOP_PADDING,
-                DESKTOP_PADDING,
-            )
-
-        return {
-            x:
-                Math.min(
+    const constrainPosition =
+        useCallback(
+            (
+                x,
+                y,
+                width =
+                    currentSize.width,
+                height =
+                    currentSize.height,
+            ) => {
+                const maxX =
                     Math.max(
-                        x,
+                        viewport.width -
+                        width -
                         DESKTOP_PADDING,
-                    ),
-                    maxX,
-                ),
+                        DESKTOP_PADDING,
+                    )
 
-            y:
-                Math.min(
+                const maxY =
                     Math.max(
-                        y,
+                        viewport.height -
+                        height -
                         DESKTOP_PADDING,
-                    ),
-                    maxY,
-                ),
-        }
-    }
+                        DESKTOP_PADDING,
+                    )
+
+                return {
+                    x:
+                        Math.min(
+                            Math.max(
+                                x,
+                                DESKTOP_PADDING,
+                            ),
+                            maxX,
+                        ),
+
+                    y:
+                        Math.min(
+                            Math.max(
+                                y,
+                                DESKTOP_PADDING,
+                            ),
+                            maxY,
+                        ),
+                }
+            },
+            [
+                viewport.width,
+                viewport.height,
+                currentSize.width,
+                currentSize.height,
+            ],
+        )
 
 
     /* ----- TAMANHO ----- */
-    const constrainSize = (
-        width,
-        height,
-        x =
-            currentPosition.x,
-        y =
-            currentPosition.y,
-    ) => {
-        const availableWidth =
-            Math.max(
-                viewport.width -
-                x -
-                DESKTOP_PADDING,
-                0,
-            )
+    const constrainSize =
+        useCallback(
+            (
+                width,
+                height,
+                x =
+                    currentPosition.x,
+                y =
+                    currentPosition.y,
+            ) => {
+                const availableWidth =
+                    Math.max(
+                        viewport.width -
+                        x -
+                        DESKTOP_PADDING,
+                        0,
+                    )
 
-        const availableHeight =
-            Math.max(
-                viewport.height -
-                y -
-                DESKTOP_PADDING,
-                0,
-            )
+                const availableHeight =
+                    Math.max(
+                        viewport.height -
+                        y -
+                        DESKTOP_PADDING,
+                        0,
+                    )
 
-        return {
-            width:
-                Math.min(
-                    Math.max(
-                        width,
-                        minimumWidth,
-                    ),
-                    Math.max(
-                        availableWidth,
-                        minimumWidth,
-                    ),
-                ),
+                return {
+                    width:
+                        Math.min(
+                            Math.max(
+                                width,
+                                minimumWidth,
+                            ),
+                            Math.max(
+                                availableWidth,
+                                minimumWidth,
+                            ),
+                        ),
 
-            height:
-                Math.min(
-                    Math.max(
-                        height,
-                        minimumHeight,
-                    ),
-                    Math.max(
-                        availableHeight,
-                        minimumHeight,
-                    ),
-                ),
-        }
-    }
+                    height:
+                        Math.min(
+                            Math.max(
+                                height,
+                                minimumHeight,
+                            ),
+                            Math.max(
+                                availableHeight,
+                                minimumHeight,
+                            ),
+                        ),
+                }
+            },
+            [
+                viewport.width,
+                viewport.height,
+                currentPosition.x,
+                currentPosition.y,
+                minimumWidth,
+                minimumHeight,
+            ],
+        )
 
 
     /* === FOCO === */
@@ -338,6 +372,7 @@ function Window({
         }
 
         event.preventDefault()
+
         event.stopPropagation()
 
         handleFocus()
@@ -372,6 +407,13 @@ function Window({
 
     /* === MOVIMENTO GLOBAL === */
     useEffect(() => {
+        if (
+            !dragging &&
+            !resizing
+        ) {
+            return
+        }
+
         const handleMouseMove = (
             event,
         ) => {
@@ -569,6 +611,7 @@ function Window({
         }
 
 
+        /* ----- FINALIZAR ----- */
         const handleMouseUp =
             () => {
                 dragState.current =
@@ -587,6 +630,7 @@ function Window({
             }
 
 
+        /* ----- REGISTRAR ----- */
         window.addEventListener(
             'mousemove',
             handleMouseMove,
@@ -608,7 +652,16 @@ function Window({
                 handleMouseUp,
             )
         }
-    })
+    }, [
+        dragging,
+        resizing,
+        minimumWidth,
+        minimumHeight,
+        constrainPosition,
+        constrainSize,
+        onPositionChange,
+        onSizeChange,
+    ])
 
 
     /* === VIEWPORT === */
@@ -735,7 +788,15 @@ function Window({
                 handleViewportResize,
             )
         }
-    })
+    }, [
+        maximized,
+        currentSize.width,
+        currentSize.height,
+        currentPosition.x,
+        currentPosition.y,
+        onSizeChange,
+        onPositionChange,
+    ])
 
 
     /* === CLASSES === */
@@ -871,77 +932,89 @@ function Window({
                     className="window-controls"
                     aria-label="Controles da janela"
                 >
-                    <button
-                        className="window-control window-control-minimize"
-                        type="button"
-                        onClick={
-                            onMinimize
-                        }
-                        aria-label={
-                            `Minimizar ${title}`
-                        }
-                        title="Minimizar"
+                    <Tooltip
+                        text="Minimizar"
+                        position="bottom"
                     >
-                        <Minus
-                            size={16}
-                            strokeWidth={1.8}
-                            aria-hidden="true"
-                        />
-                    </button>
+                        <button
+                            className="window-control window-control-minimize"
+                            type="button"
+                            onClick={
+                                onMinimize
+                            }
+                            aria-label={
+                                `Minimizar ${title}`
+                            }
+                        >
+                            <Minus
+                                size={16}
+                                strokeWidth={1.8}
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </Tooltip>
 
-                    <button
-                        className="window-control window-control-maximize"
-                        type="button"
-                        onClick={
-                            onMaximize
-                        }
-                        aria-label={
-                            maximized
-                                ? `Restaurar ${title}`
-                                : `Maximizar ${title}`
-                        }
-                        title={
+                    <Tooltip
+                        text={
                             maximized
                                 ? 'Restaurar'
                                 : 'Maximizar'
                         }
+                        position="bottom"
                     >
-                        {
-                            maximized
-                                ? (
-                                    <Minimize2
-                                        size={14}
-                                        strokeWidth={1.8}
-                                        aria-hidden="true"
-                                    />
-                                )
-                                : (
-                                    <Maximize2
-                                        size={14}
-                                        strokeWidth={1.8}
-                                        aria-hidden="true"
-                                    />
-                                )
-                        }
-                    </button>
+                        <button
+                            className="window-control window-control-maximize"
+                            type="button"
+                            onClick={
+                                onMaximize
+                            }
+                            aria-label={
+                                maximized
+                                    ? `Restaurar ${title}`
+                                    : `Maximizar ${title}`
+                            }
+                        >
+                            {
+                                maximized
+                                    ? (
+                                        <Minimize2
+                                            size={14}
+                                            strokeWidth={1.8}
+                                            aria-hidden="true"
+                                        />
+                                    )
+                                    : (
+                                        <Maximize2
+                                            size={14}
+                                            strokeWidth={1.8}
+                                            aria-hidden="true"
+                                        />
+                                    )
+                            }
+                        </button>
+                    </Tooltip>
 
-                    <button
-                        className="window-control window-control-close"
-                        type="button"
-                        onClick={
-                            onClose
-                        }
-                        aria-label={
-                            `Fechar ${title}`
-                        }
-                        title="Fechar"
+                    <Tooltip
+                        text="Fechar"
+                        position="bottom"
                     >
-                        <X
-                            size={17}
-                            strokeWidth={1.8}
-                            aria-hidden="true"
-                        />
-                    </button>
+                        <button
+                            className="window-control window-control-close"
+                            type="button"
+                            onClick={
+                                onClose
+                            }
+                            aria-label={
+                                `Fechar ${title}`
+                            }
+                        >
+                            <X
+                                size={17}
+                                strokeWidth={1.8}
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </Tooltip>
                 </div>
             </header>
 
@@ -1059,5 +1132,6 @@ function Window({
         </section>
     )
 }
+
 
 export default Window

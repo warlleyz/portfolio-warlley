@@ -16,6 +16,9 @@ const projectsData = [
         id: 'api-clima',
         title: 'API Clima',
 
+        description:
+            'API desenvolvida em Spring Boot para consulta de informações climáticas.',
+
         technologies: [
             'Java',
             'Spring Boot',
@@ -50,6 +53,9 @@ const projectsData = [
         id: 'carrinho-compras',
         title: 'Carrinho de Compras',
 
+        description:
+            'Projeto acadêmico aplicando conceitos de Programação Orientada a Objetos.',
+
         technologies: [
             'Java',
             'POO',
@@ -70,6 +76,9 @@ const projectsData = [
         repository: 'Login-PUC',
         id: 'login-puc',
         title: 'Login PUC',
+
+        description:
+            'Sistema web de autenticação desenvolvido com Spring Boot.',
 
         technologies: [
             'Java',
@@ -93,6 +102,9 @@ const projectsData = [
         repository: 'SnakePy',
         id: 'snakepy',
         title: 'SnakePy',
+
+        description:
+            'Jogo Snake desenvolvido em Python utilizando Pygame.',
 
         technologies: [
             'Python',

@@ -26,6 +26,8 @@ import {
     SiSpring,
 } from 'react-icons/si'
 
+import Tooltip from '../../components/Tooltip/Tooltip'
+
 import {
     isSupabaseConfigured,
     supabase,
@@ -264,7 +266,6 @@ function getInitialRecord() {
 function Game({
     isActive = true,
 }) {
-
     /* === JOGO === */
     const [
         snake,
@@ -373,6 +374,9 @@ function Game({
 
     /* === CICLO DO COMPONENTE === */
     useEffect(() => {
+        mountedRef.current =
+            true
+
         return () => {
             mountedRef.current =
                 false
@@ -630,7 +634,19 @@ function Game({
 
     /* === CARREGAR RANKING === */
     useEffect(() => {
-        loadRanking()
+        const timer =
+            window.setTimeout(
+                () => {
+                    loadRanking()
+                },
+                0,
+            )
+
+        return () => {
+            window.clearTimeout(
+                timer,
+            )
+        }
     }, [
         loadRanking,
     ])
@@ -645,14 +661,25 @@ function Game({
             return
         }
 
-        setPaused(
-            true,
-        )
+        const timer =
+            window.setTimeout(
+                () => {
+                    setPaused(
+                        true,
+                    )
+                },
+                0,
+            )
+
+        return () => {
+            window.clearTimeout(
+                timer,
+            )
+        }
     }, [
         isActive,
         gameOver,
     ])
-
 
     useEffect(() => {
         const handleBlur =
@@ -1187,6 +1214,7 @@ function Game({
                                     ),
                                 )
                             } catch {
+                                // O jogo continua funcionando sem persistência local.
                             }
                         }
 
@@ -1440,33 +1468,37 @@ function Game({
                                     technology.icon
 
                                 return (
-                                    <div
-                                        className="game-food"
+                                    <Tooltip
                                         key={
                                             `${food.x}-${food.y}-${food.technology}-${index}`
                                         }
-                                        style={
-                                            getPositionStyle(
-                                                food.x,
-                                                food.y,
-                                            )
-                                        }
-                                        title={
+                                        text={
                                             technology.name
                                         }
+                                        position="top"
                                     >
-                                        <span
-                                            className="game-food-icon"
-                                            style={{
-                                                '--food-color':
-                                                    technology.color,
-                                            }}
+                                        <div
+                                            className="game-food"
+                                            style={
+                                                getPositionStyle(
+                                                    food.x,
+                                                    food.y,
+                                                )
+                                            }
                                         >
-                                            <FoodIcon
-                                                aria-hidden="true"
-                                            />
-                                        </span>
-                                    </div>
+                                            <span
+                                                className="game-food-icon"
+                                                style={{
+                                                    '--food-color':
+                                                        technology.color,
+                                                }}
+                                            >
+                                                <FoodIcon
+                                                    aria-hidden="true"
+                                                />
+                                            </span>
+                                        </div>
+                                    </Tooltip>
                                 )
                             },
                         )}

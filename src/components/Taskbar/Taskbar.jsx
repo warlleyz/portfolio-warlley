@@ -10,6 +10,7 @@ import {
     Sun,
 } from 'lucide-react'
 
+import Tooltip from '../Tooltip/Tooltip'
 import WeatherWidget from './WeatherWidget'
 
 import './Taskbar.css'
@@ -161,35 +162,39 @@ function Taskbar({
             <div className="taskbar-main">
 
                 {/* === WS MENU === */}
-                <button
-                    className={[
-                        'taskbar-button',
-                        'taskbar-menu-button',
-
-                        menuOpen
-                            ? 'taskbar-menu-button-active'
-                            : '',
-                    ]
-                        .filter(Boolean)
-                        .join(' ')}
-                    type="button"
-                    onClick={
-                        onToggleMenu
-                    }
-                    aria-label={
-                        menuOpen
-                            ? 'Fechar WS Menu'
-                            : 'Abrir WS Menu'
-                    }
-                    aria-expanded={
-                        menuOpen
-                    }
-                    title="WS Menu"
+                <Tooltip
+                    text="WS Menu"
+                    position="top"
                 >
-                    <span className="taskbar-menu-logo">
-                        WS
-                    </span>
-                </button>
+                    <button
+                        className={[
+                            'taskbar-button',
+                            'taskbar-menu-button',
+
+                            menuOpen
+                                ? 'taskbar-menu-button-active'
+                                : '',
+                        ]
+                            .filter(Boolean)
+                            .join(' ')}
+                        type="button"
+                        onClick={
+                            onToggleMenu
+                        }
+                        aria-label={
+                            menuOpen
+                                ? 'Fechar WS Menu'
+                                : 'Abrir WS Menu'
+                        }
+                        aria-expanded={
+                            menuOpen
+                        }
+                    >
+                        <span className="taskbar-menu-logo">
+                            WS
+                        </span>
+                    </button>
+                </Tooltip>
 
 
                 <span
@@ -239,43 +244,47 @@ function Taskbar({
                                 .join(' ')
 
                             return (
-                                <button
+                                <Tooltip
                                     key={
                                         app.id
                                     }
-                                    type="button"
-                                    className={
-                                        className
-                                    }
-                                    onClick={() =>
-                                        toggleTaskbarApp(
-                                            app.id,
-                                        )
-                                    }
-                                    aria-label={
-                                        windowState.minimized
-                                            ? `Restaurar ${app.name}`
-                                            : isActive
-                                                ? `Minimizar ${app.name}`
-                                                : `Focar ${app.name}`
-                                    }
-                                    title={
+                                    text={
                                         app.name
                                     }
+                                    position="top"
                                 >
-                                    <span className="taskbar-app-icon">
-                                        <Icon
-                                            size={19}
-                                            strokeWidth={1.8}
+                                    <button
+                                        type="button"
+                                        className={
+                                            className
+                                        }
+                                        onClick={() =>
+                                            toggleTaskbarApp(
+                                                app.id,
+                                            )
+                                        }
+                                        aria-label={
+                                            windowState.minimized
+                                                ? `Restaurar ${app.name}`
+                                                : isActive
+                                                    ? `Minimizar ${app.name}`
+                                                    : `Focar ${app.name}`
+                                        }
+                                    >
+                                        <span className="taskbar-app-icon">
+                                            <Icon
+                                                size={19}
+                                                strokeWidth={1.8}
+                                                aria-hidden="true"
+                                            />
+                                        </span>
+
+                                        <span
+                                            className="taskbar-app-state"
                                             aria-hidden="true"
                                         />
-                                    </span>
-
-                                    <span
-                                        className="taskbar-app-state"
-                                        aria-hidden="true"
-                                    />
-                                </button>
+                                    </button>
+                                </Tooltip>
                             )
                         },
                     )}
@@ -292,120 +301,132 @@ function Taskbar({
                 <div className="taskbar-system">
 
                     {/* ----- CONTROLES RÁPIDOS ----- */}
-                    <button
-                        className={[
-                            'taskbar-button',
-                            'taskbar-quick-controls-button',
-
-                            quickControlsOpen
-                                ? 'taskbar-button-active'
-                                : '',
-                        ]
-                            .filter(Boolean)
-                            .join(' ')}
-                        type="button"
-                        onClick={
-                            onToggleQuickControls
-                        }
-                        aria-label={
-                            quickControlsOpen
-                                ? 'Fechar controles rápidos'
-                                : 'Abrir controles rápidos'
-                        }
-                        aria-expanded={
-                            quickControlsOpen
-                        }
-                        title="Controles rápidos"
+                    <Tooltip
+                        text="Controles rápidos"
+                        position="top"
                     >
-                        <SlidersHorizontal
-                            size={17}
-                            strokeWidth={1.8}
-                            aria-hidden="true"
-                        />
-                    </button>
+                        <button
+                            className={[
+                                'taskbar-button',
+                                'taskbar-quick-controls-button',
+
+                                quickControlsOpen
+                                    ? 'taskbar-button-active'
+                                    : '',
+                            ]
+                                .filter(Boolean)
+                                .join(' ')}
+                            type="button"
+                            onClick={
+                                onToggleQuickControls
+                            }
+                            aria-label={
+                                quickControlsOpen
+                                    ? 'Fechar controles rápidos'
+                                    : 'Abrir controles rápidos'
+                            }
+                            aria-expanded={
+                                quickControlsOpen
+                            }
+                        >
+                            <SlidersHorizontal
+                                size={17}
+                                strokeWidth={1.8}
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </Tooltip>
 
 
                     {/* ----- NOTIFICAÇÕES ----- */}
-                    <button
-                        className={[
-                            'taskbar-button',
-                            'taskbar-notifications-button',
-
-                            notificationsOpen
-                                ? 'taskbar-button-active'
-                                : '',
-                        ]
-                            .filter(Boolean)
-                            .join(' ')}
-                        type="button"
-                        onClick={
-                            onToggleNotifications
-                        }
-                        aria-label={
-                            notificationLabel
-                        }
-                        aria-expanded={
-                            notificationsOpen
-                        }
-                        title="Notificações"
+                    <Tooltip
+                        text="Notificações"
+                        position="top"
                     >
-                        <Bell
-                            size={17}
-                            strokeWidth={1.8}
-                            aria-hidden="true"
-                        />
+                        <button
+                            className={[
+                                'taskbar-button',
+                                'taskbar-notifications-button',
 
-                        {notificationCount > 0 && (
-                            <span
-                                className="taskbar-notification-badge"
+                                notificationsOpen
+                                    ? 'taskbar-button-active'
+                                    : '',
+                            ]
+                                .filter(Boolean)
+                                .join(' ')}
+                            type="button"
+                            onClick={
+                                onToggleNotifications
+                            }
+                            aria-label={
+                                notificationLabel
+                            }
+                            aria-expanded={
+                                notificationsOpen
+                            }
+                        >
+                            <Bell
+                                size={17}
+                                strokeWidth={1.8}
                                 aria-hidden="true"
-                            >
-                                {
-                                    notificationCount > 9
-                                        ? '9+'
-                                        : notificationCount
-                                }
-                            </span>
-                        )}
-                    </button>
+                            />
+
+                            {notificationCount > 0 && (
+                                <span
+                                    className="taskbar-notification-badge"
+                                    aria-hidden="true"
+                                >
+                                    {
+                                        notificationCount > 9
+                                            ? '9+'
+                                            : notificationCount
+                                    }
+                                </span>
+                            )}
+                        </button>
+                    </Tooltip>
 
 
                     {/* ----- TEMA ----- */}
-                    <button
-                        className="taskbar-button"
-                        type="button"
-                        onClick={
-                            toggleTheme
-                        }
-                        aria-label={
-                            theme === 'dark'
-                                ? 'Ativar tema claro'
-                                : 'Ativar tema escuro'
-                        }
-                        title={
+                    <Tooltip
+                        text={
                             theme === 'dark'
                                 ? 'Tema claro'
                                 : 'Tema escuro'
                         }
+                        position="top"
                     >
-                        {
-                            theme === 'dark'
-                                ? (
-                                    <Sun
-                                        size={17}
-                                        strokeWidth={1.8}
-                                        aria-hidden="true"
-                                    />
-                                )
-                                : (
-                                    <Moon
-                                        size={17}
-                                        strokeWidth={1.8}
-                                        aria-hidden="true"
-                                    />
-                                )
-                        }
-                    </button>
+                        <button
+                            className="taskbar-button"
+                            type="button"
+                            onClick={
+                                toggleTheme
+                            }
+                            aria-label={
+                                theme === 'dark'
+                                    ? 'Ativar tema claro'
+                                    : 'Ativar tema escuro'
+                            }
+                        >
+                            {
+                                theme === 'dark'
+                                    ? (
+                                        <Sun
+                                            size={17}
+                                            strokeWidth={1.8}
+                                            aria-hidden="true"
+                                        />
+                                    )
+                                    : (
+                                        <Moon
+                                            size={17}
+                                            strokeWidth={1.8}
+                                            aria-hidden="true"
+                                        />
+                                    )
+                            }
+                        </button>
+                    </Tooltip>
                 </div>
 
 
@@ -419,23 +440,27 @@ function Taskbar({
                 <div className="taskbar-status">
                     <WeatherWidget />
 
-                    <div
-                        className="taskbar-clock"
-                        title={
+                    <Tooltip
+                        text={
                             `${time} • ${date}`
                         }
-                        aria-label={
-                            `${time}, ${date}`
-                        }
+                        position="top"
                     >
-                        <span className="taskbar-time">
-                            {time}
-                        </span>
+                        <div
+                            className="taskbar-clock"
+                            aria-label={
+                                `${time}, ${date}`
+                            }
+                        >
+                            <span className="taskbar-time">
+                                {time}
+                            </span>
 
-                        <span className="taskbar-date">
-                            {date}
-                        </span>
-                    </div>
+                            <span className="taskbar-date">
+                                {date}
+                            </span>
+                        </div>
+                    </Tooltip>
                 </div>
             </div>
         </footer>

@@ -1,0 +1,193 @@
+/* === ÂNCORA === */
+.ws-tooltip-anchor {
+    display:
+        contents;
+}
+
+
+/* === TOOLTIP DO WS OS === */
+.ws-tooltip {
+    position:
+        fixed;
+
+    max-width:
+        220px;
+
+    padding:
+        6px 9px;
+
+    border:
+        1px solid var(--border-default);
+
+    border-radius:
+        7px;
+
+    color:
+        var(--text-primary);
+
+    background:
+        var(--glass-background-strong);
+
+    box-shadow:
+        var(--shadow-small);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    font-size:
+        11px;
+
+    font-weight:
+        550;
+
+    line-height:
+        1.2;
+
+    text-align:
+        center;
+
+    white-space:
+        nowrap;
+
+    pointer-events:
+        none;
+
+    animation:
+        ws-tooltip-enter var(--transition-fast) ease;
+
+    z-index:
+        999999;
+}
+
+
+/* === SETA === */
+.ws-tooltip::after {
+    position:
+        absolute;
+
+    width:
+        7px;
+
+    height:
+        7px;
+
+    border:
+        1px solid var(--border-default);
+
+    background:
+        var(--glass-background-strong);
+
+    content:
+        '';
+
+    pointer-events:
+        none;
+}
+
+
+/* === SETA SUPERIOR === */
+.ws-tooltip[data-position='top']::after {
+    left:
+        50%;
+
+    bottom:
+        -4px;
+
+    border-top:
+        0;
+
+    border-left:
+        0;
+
+    transform:
+        translateX(-50%) rotate(45deg);
+}
+
+
+/* === SETA INFERIOR === */
+.ws-tooltip[data-position='bottom']::after {
+    top:
+        -4px;
+
+    left:
+        50%;
+
+    border-right:
+        0;
+
+    border-bottom:
+        0;
+
+    transform:
+        translateX(-50%) rotate(45deg);
+}
+
+
+/* === SETA À ESQUERDA === */
+.ws-tooltip[data-position='left']::after {
+    top:
+        50%;
+
+    right:
+        -4px;
+
+    border-bottom:
+        0;
+
+    border-left:
+        0;
+
+    transform:
+        translateY(-50%) rotate(45deg);
+}
+
+
+/* === SETA À DIREITA === */
+.ws-tooltip[data-position='right']::after {
+    top:
+        50%;
+
+    left:
+        -4px;
+
+    border-top:
+        0;
+
+    border-right:
+        0;
+
+    transform:
+        translateY(-50%) rotate(45deg);
+}
+
+
+/* === ANIMAÇÃO === */
+@keyframes ws-tooltip-enter {
+    from {
+        opacity:
+            0;
+
+        transform:
+            translateY(2px);
+    }
+
+    to {
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* === MOVIMENTO REDUZIDO === */
+@media (prefers-reduced-motion: reduce) {
+    .ws-tooltip {
+        animation:
+            none;
+    }
+}
