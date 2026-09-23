@@ -35,6 +35,14 @@ const About =
             ),
     )
 
+const Certificates =
+    lazy(
+        () =>
+            import(
+                '../../apps/Certificates/Certificates'
+            ),
+    )
+
 const Contact =
     lazy(
         () =>
@@ -1293,6 +1301,11 @@ function Desktop({
             case 'technologies':
                 return (
                     <Technologies />
+                )
+
+            case 'certificates':
+                return (
+                    <Certificates />
                 )
 
             case 'contact':

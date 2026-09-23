@@ -1,4 +1,5 @@
 import {
+    Award,
     Code2,
     Cpu,
     FileText,
@@ -49,6 +50,20 @@ const appsData = [
         window: {
             width: 900,
             height: 565,
+            centered: true,
+        },
+    },
+
+    {
+        id: 'certificates',
+        name: 'Certificados',
+        icon: Award,
+        desktop: true,
+        menu: true,
+
+        window: {
+            width: 1000,
+            height: 720,
             centered: true,
         },
     },
