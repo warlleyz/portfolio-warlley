@@ -560,3 +560,7 @@
             none;
     }
 }
+.quick-controls { max-height: calc(100dvh - 90px); overflow-y: auto; }
+.quick-control-language { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; }
+.quick-control-language select { min-height: 36px; min-width: 120px; border: 1px solid var(--border-default); border-radius: 7px; padding: 5px 8px; color: var(--text-primary); background: var(--surface-secondary); font: inherit; }
+.quick-control-language select:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }

@@ -1,3 +1,4 @@
+import { useLanguage } from '../../i18n/language'
 import {
     useEffect,
     useRef,
@@ -128,6 +129,8 @@ function QuickControls({
     setGlassOpacity,
     onClose,
 }) {
+    const { language, setLanguage, t } = useLanguage()
+
     /* === REFERÊNCIAS === */
     const panelRef =
         useRef(null)
@@ -253,7 +256,7 @@ function QuickControls({
                 panelRef
             }
             className="quick-controls"
-            aria-label="Controles rápidos"
+            aria-label={t("Controles rápidos")}
         >
             <header className="quick-controls-header">
                 <div>
@@ -261,13 +264,20 @@ function QuickControls({
                         WS OS
                     </span>
 
-                    <h2 className="quick-controls-title">
-                        Controles rápidos
-                    </h2>
+                    <h2 className="quick-controls-title">{t("Controles rápidos")}</h2>
                 </div>
             </header>
 
             <div className="quick-controls-content">
+                <div className="quick-control-group">
+                    <label className="quick-control-language" htmlFor="ws-language">
+                        <strong>{t('Idioma')}</strong>
+                        <select id="ws-language" value={language} onChange={(event) => setLanguage(event.target.value)}>
+                            <option value="pt-BR" lang="pt-BR">Português</option>
+                            <option value="en" lang="en">English</option>
+                        </select>
+                    </label>
+                </div>
                 {/* === TEMA === */}
                 <button
                     className={[
@@ -285,8 +295,8 @@ function QuickControls({
                     }
                     aria-label={
                         theme === 'dark'
-                            ? 'Alterar para tema claro'
-                            : 'Alterar para tema escuro'
+                            ? t('Alterar para tema claro')
+                            : t('Alterar para tema escuro')
                     }
                 >
                     <span className="quick-control-theme-icon">
@@ -310,15 +320,13 @@ function QuickControls({
                     </span>
 
                     <span className="quick-control-theme-text">
-                        <strong>
-                            Tema
-                        </strong>
+                        <strong>{t("Tema")}</strong>
 
                         <span>
                             {
                                 theme === 'dark'
-                                    ? 'Escuro'
-                                    : 'Claro'
+                                    ? t('Escuro')
+                                    : t('Claro')
                             }
                         </span>
                     </span>
@@ -328,13 +336,9 @@ function QuickControls({
                 <div className="quick-control-group">
                     <div className="quick-control-heading">
                         <div>
-                            <strong>
-                                Brilho
-                            </strong>
+                            <strong>{t("Brilho")}</strong>
 
-                            <span>
-                                Intensidade visual
-                            </span>
+                            <span>{t("Intensidade visual")}</span>
                         </div>
 
                         <span className="quick-control-value">
@@ -367,7 +371,7 @@ function QuickControls({
                                 ),
                             )
                         }
-                        aria-label="Brilho da interface"
+                        aria-label={t("Brilho da interface")}
                         aria-valuetext={
                             `${brightness}%`
                         }
@@ -378,13 +382,9 @@ function QuickControls({
                 <div className="quick-control-group">
                     <div className="quick-control-heading">
                         <div>
-                            <strong>
-                                Transparência
-                            </strong>
+                            <strong>{t("Transparência")}</strong>
 
-                            <span>
-                                Intensidade do glass
-                            </span>
+                            <span>{t("Intensidade do glass")}</span>
                         </div>
 
                         <span className="quick-control-value">
@@ -412,7 +412,7 @@ function QuickControls({
                         onChange={
                             handleGlassChange
                         }
-                        aria-label="Transparência do glass"
+                        aria-label={t("Transparência do glass")}
                         aria-valuetext={
                             `${glassTransparency}%`
                         }

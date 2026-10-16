@@ -1,3 +1,4 @@
+import { useLanguage } from '../../i18n/language'
 import { BriefcaseBusiness, ExternalLink, GraduationCap } from 'lucide-react'
 import './Experiences.css'
 
@@ -33,33 +34,33 @@ const experiences = [
 ]
 
 function Experiences() {
+    const { language, t } = useLanguage()
     return (
-        <div className="experiences">
+        <div className="experiences" lang={language}>
             <header className="experiences-intro">
-                <span className="experiences-eyebrow">Trajetória e aprendizado</span>
-                <h1>Experiências</h1>
-                <p>Atividades acadêmicas e projetos pessoais que fazem parte da minha formação em desenvolvimento de software.</p>
+                <span className="experiences-eyebrow">{t("Trajetória e aprendizado")}</span>
+                <h1>{t("Experiências")}</h1>
+                <p>{t("Atividades acadêmicas e projetos pessoais que fazem parte da minha formação em desenvolvimento de software.")}</p>
             </header>
 
-            <ol className="experiences-timeline" aria-label="Experiências acadêmicas e pessoais">
+            <ol className="experiences-timeline" aria-label={t("Experiências acadêmicas e pessoais")}>
                 {experiences.map(({ id, institution, role, period, icon: Icon, description, activities, href }) => (
                     <li className="experiences-item" key={id}>
                         <article className="experiences-card" aria-labelledby={`experience-${id}`}>
                             <div className="experiences-card-header">
                                 <span className="experiences-icon"><Icon size={22} aria-hidden="true" /></span>
                                 <div>
-                                    <p className="experiences-institution">{institution}</p>
-                                    <h2 id={`experience-${id}`}>{role}</h2>
-                                    <p className="experiences-period">{period}</p>
+                                    <p className="experiences-institution">{t(institution)}</p>
+                                    <h2 id={`experience-${id}`}>{t(role)}</h2>
+                                    <p className="experiences-period">{t(period)}</p>
                                 </div>
                             </div>
-                            <p>{description}</p>
+                            <p>{t(description)}</p>
                             <ul>
-                                {activities.map((activity) => <li key={activity}>{activity}</li>)}
+                                {activities.map((activity) => <li key={t(activity)}>{t(activity)}</li>)}
                             </ul>
                             {href && (
-                                <a href={href} target="_blank" rel="noopener noreferrer">
-                                    Ver repositório <ExternalLink size={14} aria-hidden="true" />
+                                <a href={href} target="_blank" rel="noopener noreferrer">{t("Ver repositório")}<ExternalLink size={14} aria-hidden="true" />
                                 </a>
                             )}
                         </article>
