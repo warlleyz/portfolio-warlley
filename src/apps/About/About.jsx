@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import {
     BookOpen,
     Code2,
@@ -100,9 +102,71 @@ const knowledgeGroups = [
 ]
 
 
+const english = {
+    "Foto de Warlley Silva": "Photo of Warlley Silva",
+    "Estudante de Engenharia de Software": "Software Engineering Student",
+    "Estudante de Engenharia de Software na PUC Minas, interessado em desenvolvimento de sistemas, automação, gerenciamento de dados e inteligência artificial.": "Software Engineering student at PUC Minas, interested in software development, automation, data management, and artificial intelligence.",
+    "Apresentação": "Introduction",
+    "Quem sou": "About me",
+    "Atualmente estou no 2º período de Engenharia de Software na PUC Minas e venho construindo minha base em programação, desenvolvimento web, orientação a objetos, APIs e backend.": "I am currently in my second semester of Software Engineering at PUC Minas, building a foundation in programming, web development, object-oriented programming, APIs, and backend development.",
+    "Tenho interesse em entender não apenas como escrever código, mas também como estruturar sistemas, conectar diferentes serviços e transformar ideias em aplicações funcionais.": "I am interested in understanding how to write code, design systems, connect different services, and turn ideas into working applications.",
+    "Gosto de aprender na prática, desenvolvendo projetos que me ajudam a compreender como diferentes tecnologias podem trabalhar juntas na construção de soluções reais.": "I enjoy learning by doing, developing projects that help me understand how different technologies work together to build real solutions.",
+    "Aprendizado": "Learning",
+    "O que estou estudando": "What I am studying",
+    "Tecnologias e conceitos que fazem parte dos meus estudos e projetos atuais.": "Technologies and concepts that are part of my current studies and projects.",
+    "Base atual": "Current foundation",
+    "Conhecimentos": "Knowledge",
+    "Desenvolvimento": "Development",
+    "Programação Orientada a Objetos": "Object-Oriented Programming",
+    "Lógica de Programação": "Programming fundamentals",
+    "Desenvolvimento Web": "Web development",
+    "Estruturação de aplicações backend": "Backend application design",
+    "Integração": "Integration",
+    "Criação e consumo de APIs REST": "Building and consuming REST APIs",
+    "Integração entre aplicações": "Application integration",
+    "Ferramentas": "Tools",
+    "Dados": "Data",
+    "Modelagem de dados": "Data modeling",
+    "Manipulação de dados": "Data manipulation",
+    "Organização de informações": "Information organization",
+    "Fundamentos de banco de dados": "Database fundamentals",
+    "APIs REST": "REST APIs",
+    "Próximos passos": "Next steps",
+    "Objetivos": "Goals",
+    "Continuar evoluindo tecnicamente por meio de projetos acadêmicos e pessoais, adquirindo experiência prática no desenvolvimento de software.": "Continue developing my technical skills through academic and personal projects, gaining practical experience in software development.",
+    "Buscar uma oportunidade de estágio onde eu possa aplicar meus conhecimentos, aprender com profissionais da área e participar de soluções reais.": "Find an internship where I can apply my knowledge, learn from professionals, and contribute to real solutions.",
+    "Aprofundar meus conhecimentos em desenvolvimento de sistemas, automação, integração de aplicações e gerenciamento de dados.": "Deepen my knowledge of software development, automation, application integration, and data management."
+}
+
+const LANGUAGE_KEY = 'ws-os:about-language'
+
+function getInitialLanguage() {
+    try {
+        return localStorage.getItem(LANGUAGE_KEY) === 'en' ? 'en' : 'pt-BR'
+    } catch {
+        return 'pt-BR'
+    }
+}
+
 function About() {
+    const [language, setLanguage] = useState(getInitialLanguage)
+    const t = (text) => language === 'en' ? (english[text] ?? text) : text
+
+    const changeLanguage = (nextLanguage) => {
+        setLanguage(nextLanguage)
+        try {
+            localStorage.setItem(LANGUAGE_KEY, nextLanguage)
+        } catch {
+            // A troca continua funcionando se o armazenamento estiver indisponível.
+        }
+    }
+
     return (
-        <div className="about">
+        <div className="about" lang={language}>
+            <div className="about-language" role="group" aria-label={language === 'en' ? 'About me language' : 'Idioma do Sobre Mim'}>
+                <button type="button" lang="pt-BR" aria-pressed={language === 'pt-BR'} onClick={() => changeLanguage('pt-BR')}>Português</button>
+                <button type="button" lang="en" aria-pressed={language === 'en'} onClick={() => changeLanguage('en')}>English</button>
+            </div>
 
             {/* === PERFIL === */}
             <section className="about-profile">
@@ -112,26 +176,18 @@ function About() {
                         src={
                             PROFILE_IMAGE
                         }
-                        alt="Foto de Warlley Silva"
+                        alt={t("Foto de Warlley Silva")}
                     />
                 </div>
 
                 <div className="about-profile-content">
-                    <span className="about-eyebrow">
-                        Estudante de Engenharia de Software
-                    </span>
+                    <span className="about-eyebrow">{t("Estudante de Engenharia de Software")}</span>
 
                     <h1>
                         Warlley Silva
                     </h1>
 
-                    <p>
-                        Estudante de Engenharia de Software
-                        na PUC Minas, interessado em
-                        desenvolvimento de sistemas,
-                        automação, gerenciamento de dados
-                        e inteligência artificial.
-                    </p>
+                    <p>{t("Estudante de Engenharia de Software na PUC Minas, interessado em desenvolvimento de sistemas, automação, gerenciamento de dados e inteligência artificial.")}</p>
 
                     <div className="about-profile-meta">
                         <span>
@@ -171,42 +227,18 @@ function About() {
                         />
 
                         <div>
-                            <span>
-                                Apresentação
-                            </span>
+                            <span>{t("Apresentação")}</span>
 
-                            <h2>
-                                Quem sou
-                            </h2>
+                            <h2>{t("Quem sou")}</h2>
                         </div>
                     </div>
 
                     <div className="about-text">
-                        <p>
-                            Atualmente estou no 2º período
-                            de Engenharia de Software na
-                            PUC Minas e venho construindo
-                            minha base em programação,
-                            desenvolvimento web, orientação
-                            a objetos, APIs e backend.
-                        </p>
+                        <p>{t("Atualmente estou no 2º período de Engenharia de Software na PUC Minas e venho construindo minha base em programação, desenvolvimento web, orientação a objetos, APIs e backend.")}</p>
 
-                        <p>
-                            Tenho interesse em entender não
-                            apenas como escrever código,
-                            mas também como estruturar sistemas,
-                            conectar diferentes serviços e
-                            transformar ideias em aplicações
-                            funcionais.
-                        </p>
+                        <p>{t("Tenho interesse em entender não apenas como escrever código, mas também como estruturar sistemas, conectar diferentes serviços e transformar ideias em aplicações funcionais.")}</p>
 
-                        <p>
-                            Gosto de aprender na prática,
-                            desenvolvendo projetos que me
-                            ajudam a compreender como diferentes
-                            tecnologias podem trabalhar juntas
-                            na construção de soluções reais.
-                        </p>
+                        <p>{t("Gosto de aprender na prática, desenvolvendo projetos que me ajudam a compreender como diferentes tecnologias podem trabalhar juntas na construção de soluções reais.")}</p>
                     </div>
                 </section>
 
@@ -221,32 +253,21 @@ function About() {
                         />
 
                         <div>
-                            <span>
-                                Aprendizado
-                            </span>
+                            <span>{t("Aprendizado")}</span>
 
-                            <h2>
-                                O que estou estudando
-                            </h2>
+                            <h2>{t("O que estou estudando")}</h2>
                         </div>
                     </div>
 
-                    <p className="about-learning-description">
-                        Tecnologias e conceitos que fazem
-                        parte dos meus estudos e projetos atuais.
-                    </p>
+                    <p className="about-learning-description">{t("Tecnologias e conceitos que fazem parte dos meus estudos e projetos atuais.")}</p>
 
                     <div className="about-tags">
                         {studying.map(
                             (technology) => (
                                 <span
-                                    key={
-                                        technology
-                                    }
+                                    key={t(technology)}
                                 >
-                                    {
-                                        technology
-                                    }
+                                    {t(technology)}
                                 </span>
                             ),
                         )}
@@ -265,13 +286,9 @@ function About() {
                     />
 
                     <div>
-                        <span>
-                            Base atual
-                        </span>
+                        <span>{t("Base atual")}</span>
 
-                        <h2>
-                            Conhecimentos
-                        </h2>
+                        <h2>{t("Conhecimentos")}</h2>
                     </div>
                 </div>
 
@@ -284,9 +301,7 @@ function About() {
                             return (
                                 <article
                                     className="about-knowledge-card"
-                                    key={
-                                        group.title
-                                    }
+                                    key={t(group.title)}
                                 >
                                     <div className="about-knowledge-header">
                                         <span className="about-knowledge-icon">
@@ -298,9 +313,7 @@ function About() {
                                         </span>
 
                                         <h3>
-                                            {
-                                                group.title
-                                            }
+                                            {t(group.title)}
                                         </h3>
                                     </div>
 
@@ -308,13 +321,9 @@ function About() {
                                         {group.items.map(
                                             (item) => (
                                                 <li
-                                                    key={
-                                                        item
-                                                    }
+                                                    key={t(item)}
                                                 >
-                                                    {
-                                                        item
-                                                    }
+                                                    {t(item)}
                                                 </li>
                                             ),
                                         )}
@@ -337,37 +346,18 @@ function About() {
                     />
 
                     <div>
-                        <span>
-                            Próximos passos
-                        </span>
+                        <span>{t("Próximos passos")}</span>
 
-                        <h2>
-                            Objetivos
-                        </h2>
+                        <h2>{t("Objetivos")}</h2>
                     </div>
                 </div>
 
                 <div className="about-goals-grid">
-                    <p>
-                        Continuar evoluindo tecnicamente
-                        por meio de projetos acadêmicos e
-                        pessoais, adquirindo experiência
-                        prática no desenvolvimento de software.
-                    </p>
+                    <p>{t("Continuar evoluindo tecnicamente por meio de projetos acadêmicos e pessoais, adquirindo experiência prática no desenvolvimento de software.")}</p>
 
-                    <p>
-                        Buscar uma oportunidade de estágio
-                        onde eu possa aplicar meus conhecimentos,
-                        aprender com profissionais da área
-                        e participar de soluções reais.
-                    </p>
+                    <p>{t("Buscar uma oportunidade de estágio onde eu possa aplicar meus conhecimentos, aprender com profissionais da área e participar de soluções reais.")}</p>
 
-                    <p>
-                        Aprofundar meus conhecimentos em
-                        desenvolvimento de sistemas, automação,
-                        integração de aplicações e gerenciamento
-                        de dados.
-                    </p>
+                    <p>{t("Aprofundar meus conhecimentos em desenvolvimento de sistemas, automação, integração de aplicações e gerenciamento de dados.")}</p>
                 </div>
             </section>
         </div>
