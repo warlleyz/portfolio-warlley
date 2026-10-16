@@ -1,490 +1,167 @@
-# WS OS — Interactive Portfolio
+# WS OS — Portfólio Profissional
 
-Portfólio pessoal desenvolvido como uma experiência de sistema operacional desktop.
+Portfólio de **Warlley Silva**, estudante de Engenharia de Software na PUC Minas. A interface utiliza um desktop com aplicativos e janelas para apresentar formação, projetos, experiências e canais de contato.
 
-O **WS OS** transforma um portfólio tradicional em um ambiente interativo com janelas, aplicativos, terminal, projetos, estatísticas, currículo, notificações, clima e até um jogo Snake.
+![Identidade visual do WS OS](public/assets/branding/ws-os-dark.png)
 
-> Desenvolvido com React, Vite e JavaScript, com foco em interface, experiência do usuário, organização de código e performance.
+## Links úteis
 
----
+- [Site no GitHub Pages](https://warlleyz.github.io/portfolio-warlley/)
+- [Repositório](https://github.com/warlleyz/portfolio-warlley)
+- [Configuração do formulário](docs/CONTATO.md)
+- [Checklist de entrega do laboratório](docs/ENTREGA-LAB01.md)
+- [Referência do template de README solicitado](https://github.com/joaopauloaramuni/desenvolvimento-e-integracao-de-aplicacoes-web/blob/main/TEMPLATES/template_README.md)
 
-## Visão geral
+A configuração para Vercel está em `vercel.json`. O endereço Vercel deverá ser acrescentado após a publicação; nenhum endereço foi inventado.
 
-O projeto simula a experiência de um sistema operacional moderno diretamente no navegador.
+## Sobre o projeto e funcionalidades
 
-Em vez de páginas convencionais, o visitante navega pelo portfólio através de um desktop com aplicativos independentes.
+| Seção | Funcionalidade |
+| --- | --- |
+| Sobre Mim | Perfil, formação, conhecimentos, interesses e objetivos em português e inglês. |
+| Projetos | Timeline do mais antigo ao mais recente, busca, filtros, GitHub e demos configuradas. |
+| Experiências | Formação acadêmica e desenvolvimento do portfólio, com instituição/projeto, atividade, período e descrição. |
+| Contato | E-mail clicável, GitHub, LinkedIn e formulário com nome, e-mail, mensagem e consentimento. O envio depende da configuração EmailJS. |
+| Currículo e Certificados | Documentos pessoais e recursos de visualização já existentes. |
+| Recursos complementares | Tecnologias, estatísticas, Terminal, Snake, temas, notificações e clima. Alguns recursos dependem de serviços externos. |
 
-Entre as principais funcionalidades estão:
+Abra um aplicativo pelo atalho ou pelo WS Menu. Os Controles Rápidos permitem escolher **Português/English**, tema, brilho e transparência. O idioma é compartilhado com Sobre Mim, Experiências, Contato e os rótulos principais do shell/Projetos. Conteúdo vindo do GitHub, documentos e apps complementares podem permanecer no idioma original; não se trata de tradução integral de todos os aplicativos.
 
-- janelas arrastáveis e redimensionáveis;
-- minimizar, maximizar, restaurar e fechar aplicativos;
-- controle de foco e `z-index`;
-- barra de tarefas;
-- menu de aplicativos;
-- notificações;
-- controles rápidos;
-- tema claro e escuro;
-- terminal interativo;
-- projetos integrados ao GitHub;
-- estatísticas do GitHub e WakaTime;
-- currículo;
-- formulário de contato;
-- widget de clima;
-- jogo Snake com ranking global.
+No celular, as janelas ocupam a área útil acima da barra. A timeline mantém os filtros e se adapta a uma coluna.
 
----
+## Tecnologias e dependências
 
-## Tecnologias
+| Tecnologia | Uso |
+| --- | --- |
+| React 19 e React DOM | Componentes, estado e renderização. |
+| Vite 8 e plugin React | Desenvolvimento, carregamento sob demanda e build. |
+| JavaScript e CSS | Comportamento, temas e layout responsivo. |
+| Lucide React e React Icons | Ícones da interface. |
+| Supabase JS | Integração opcional do ranking existente do Snake. |
+| ESLint e plugins React | Verificação estática de código. |
+| Node.js Test Runner | Testes de timeline e formulário, sem biblioteca adicional. |
+| GitHub Actions | Lint, testes, build e publicação no GitHub Pages. |
 
-### Front-end
+As versões exatas estão em `package.json` e `package-lock.json`. A API REST do EmailJS é usada diretamente, sem SDK adicional.
 
-- React 19
-- Vite
-- JavaScript
-- CSS
-- Lucide React
-- React Icons
+## Arquitetura
 
-### Integrações
+Aplicação React estática, com serviços externos para funcionalidades específicas. Não há servidor próprio ou autenticação administrativa neste escopo.
 
-- GitHub API
-- WakaTime
-- Open-Meteo
-- Supabase
+- `App` inicializa o sistema e controla o tema.
+- `Desktop` gerencia abertura, foco, dimensões e ciclo de vida das janelas.
+- `components` reúne janela, Taskbar, menu, painéis e componentes compartilhados.
+- `apps` contém a interface e o comportamento de cada aplicativo.
+- `data` concentra catálogo, projetos e índice de busca.
+- `services` integra GitHub e contato, mantendo requisições fora da interface.
+- `i18n` compartilha idioma e traduções sem alterar IDs ou comandos internos.
 
-### Ferramentas
+O fluxo do contato é: formulário validado → serviço REST → EmailJS → destinatário fixo no template. A interface só informa sucesso após resposta positiva do serviço. Isso não comprova recebimento ou leitura na caixa final.
 
-- ESLint
-- Git
-- GitHub
-- GitHub Pages
+## Instalação e execução
 
----
-
-## Aplicativos
-
-### Sobre
-
-Apresenta informações pessoais e profissionais dentro de uma interface integrada ao WS OS.
-
-### Projetos
-
-Centraliza os projetos do portfólio e também sincroniza repositórios públicos através da API do GitHub.
-
-Possui:
-
-- pesquisa;
-- filtros por tecnologia;
-- dados de estrelas e forks;
-- tecnologias utilizadas;
-- data da última atualização;
-- acesso ao repositório;
-- abertura de demos dentro do próprio sistema.
-
-### Experiências
-
-Apresenta a trajetória acadêmica e o desenvolvimento do portfólio, com instituição ou projeto, atividade, período e descrição. Os dados podem ser atualizados em `src/apps/Experiences/Experiences.jsx`.
-
-### Tecnologias
-
-Exibe as principais tecnologias utilizadas nos projetos e estudos.
-
-### Currículo
-
-Disponibiliza o currículo diretamente dentro do ambiente do portfólio.
-
-### Contato
-
-Área dedicada aos canais de contato profissional.
-
-### Estatísticas
-
-Combina informações públicas do GitHub com dados de programação do WakaTime.
-
-Entre os dados exibidos estão:
-
-- número de repositórios;
-- seguidores;
-- estrelas;
-- linguagem principal;
-- tempo de programação;
-- linguagens mais utilizadas;
-- atividade dos últimos dias, semanas e meses.
-
-### Terminal
-
-Interface inspirada em um terminal real para navegar pelo portfólio através de comandos.
-
-Os comandos utilizam os mesmos dados dos aplicativos e projetos do sistema, evitando duplicação de informações.
-
-### Snake
-
-Versão do clássico Snake integrada ao WS OS.
-
-As comidas do jogo são representadas por tecnologias como:
-
-- Java;
-- JavaScript;
-- Python;
-- HTML;
-- CSS;
-- Docker;
-- Git;
-- Spring.
-
-O jogo possui:
-
-- pontuação;
-- recorde local;
-- aumento progressivo de velocidade;
-- pausa;
-- controles por teclado;
-- ranking global com Supabase.
-
----
-
-## Sistema de janelas
-
-O WS OS possui um gerenciador de janelas próprio desenvolvido em React.
-
-Cada aplicativo pode ser:
-
-- aberto;
-- fechado;
-- minimizado;
-- restaurado;
-- maximizado;
-- arrastado;
-- redimensionado pelos lados e cantos.
-
-O sistema também controla:
-
-- posição;
-- dimensões;
-- aplicativo ativo;
-- ordem de sobreposição;
-- animações;
-- estado de minimização;
-- múltiplas janelas abertas simultaneamente.
-
-Os listeners globais utilizados durante arraste e redimensionamento são registrados somente enquanto existe uma interação ativa.
-
----
-
-## GitHub API
-
-Os dados do GitHub são centralizados em:
-
-```text
-src/services/githubService.js
-```
-
-O serviço possui cache temporário para reduzir requisições repetidas.
-
-Aplicativos diferentes podem reutilizar os mesmos dados de:
-
-- perfil;
-- repositórios;
-- linguagens;
-- estrelas;
-- forks;
-- datas de atualização.
-
-Também existe compartilhamento de requisições em andamento, evitando chamadas duplicadas caso dois aplicativos solicitem os mesmos dados simultaneamente.
-
----
-
-## Performance
-
-Os aplicativos utilizam **code splitting** com:
-
-```js
-React.lazy()
-```
-
-e:
-
-```js
-Suspense
-```
-
-Dessa forma, cada aplicativo é carregado somente quando necessário.
-
-### Resultado do build
-
-Antes da divisão dos módulos, o bundle JavaScript principal possuía aproximadamente:
-
-```text
-556 kB
-```
-
-Após a implementação de carregamento sob demanda:
-
-```text
-Bundle principal: 258.56 kB
-Gzip:             80.54 kB
-```
-
-Isso representa uma redução de aproximadamente **53% no JavaScript principal inicial**.
-
-Aplicativos como:
-
-```text
-Game
-Projects
-Stats
-Terminal
-About
-Contact
-Resume
-Technologies
-```
-
-agora são distribuídos em chunks independentes.
-
-O CSS também é dividido entre os aplicativos quando possível.
-
----
-
-## Estrutura do projeto
-
-```text
-portfolio-warlley/
-├── public/
-│   ├── assets/
-│   │   ├── branding/
-│   │   ├── cursors/
-│   │   ├── profile/
-│   │   └── wallpapers/
-│   ├── documents/
-│   └── projects/
-│
-├── src/
-│   ├── apps/
-│   │   ├── About/
-│   │   ├── Contact/
-│   │   ├── Game/
-│   │   ├── Projects/
-│   │   ├── Resume/
-│   │   ├── Stats/
-│   │   ├── Technologies/
-│   │   └── Terminal/
-│   │
-│   ├── components/
-│   │   ├── BootScreen/
-│   │   ├── Desktop/
-│   │   ├── Notifications/
-│   │   ├── QuickControls/
-│   │   ├── Taskbar/
-│   │   ├── Tooltip/
-│   │   ├── Window/
-│   │   └── WSMenu/
-│   │
-│   ├── data/
-│   ├── lib/
-│   ├── services/
-│   ├── App.jsx
-│   ├── index.css
-│   └── main.jsx
-│
-├── .env.example
-├── eslint.config.js
-├── index.html
-├── package.json
-└── vite.config.js
-```
-
----
-
-## Design
-
-A interface utiliza uma identidade visual própria inspirada em sistemas operacionais modernos, sem reproduzir diretamente uma interface existente.
-
-A direção visual utiliza:
-
-- tons de azul-marinho;
-- grafite;
-- cinza claro;
-- azul frio como cor de destaque;
-- transparências controladas;
-- glassmorphism;
-- sombras suaves;
-- animações discretas.
-
-O sistema também possui temas claro e escuro.
-
----
-
-## Tooltips
-
-O projeto possui um componente próprio de Tooltip utilizando `createPortal`.
-
-Isso permite que os tooltips sejam renderizados fora de containers com `overflow`, evitando cortes dentro de janelas e painéis.
-
-O componente também:
-
-- ajusta a posição automaticamente;
-- detecta limites da viewport;
-- alterna entre cima, baixo, esquerda e direita;
-- possui suporte a foco por teclado;
-- utiliza `aria-describedby`.
-
----
-
-## Clima
-
-O widget de clima utiliza:
-
-- Geolocation API do navegador;
-- Open-Meteo.
-
-A localização é utilizada somente para consultar o clima atual.
-
-As coordenadas não são armazenadas pelo WS OS.
-
-Caso a localização seja bloqueada ou indisponível, o restante do sistema continua funcionando normalmente.
-
----
-
-## Ranking do Snake
-
-O ranking global utiliza Supabase.
-
-A tabela esperada é:
-
-```text
-snake_scores
-```
-
-com os campos:
-
-```text
-player_name
-score
-```
-
-O uso do Supabase é opcional.
-
-Sem configuração, o Snake continua funcionando normalmente com recorde local.
-
----
-
-## Variáveis de ambiente
-
-Crie um arquivo `.env` na raiz do projeto com base no `.env.example`.
-
-```env
-VITE_SUPABASE_URL=SEU_SUPABASE_URL
-VITE_SUPABASE_ANON_KEY=SUA_SUPABASE_ANON_KEY
-```
-
-As variáveis são utilizadas exclusivamente para os recursos que dependem do Supabase.
-
----
-
-## Executando localmente
-
-Clone o projeto:
+Use **Node.js 22.12+ ou 24** e npm.
 
 ```bash
 git clone https://github.com/warlleyz/portfolio-warlley.git
-```
-
-Entre no diretório:
-
-```bash
 cd portfolio-warlley
-```
-
-Instale as dependências:
-
-```bash
-npm install
-```
-
-Inicie o servidor de desenvolvimento:
-
-```bash
+npm ci
 npm run dev
 ```
 
----
-
-## Build
-
-Gerar o build de produção:
-
-```bash
-npm run build
-```
-
-Testar o build localmente:
-
-```bash
-npm run preview
-```
-
-Executar o ESLint:
+O caminho padrão local é `/portfolio-warlley/`; use a URL exibida pelo Vite.
 
 ```bash
 npm run lint
+npm test
+npm run build
+npm run preview
 ```
 
----
+O preview serve o conteúdo gerado em `dist`. Não envia e-mails de teste automaticamente.
 
-## Deploy
+## Variáveis de ambiente
 
-O projeto utiliza Vite com o caminho base:
+Copie `.env.example` para `.env.local` e preencha somente os serviços que utilizará.
+
+| Variável | Finalidade |
+| --- | --- |
+| `VITE_EMAILJS_SERVICE_ID` | Identificador público do serviço de envio. |
+| `VITE_EMAILJS_TEMPLATE_ID` | Identificador do template com destinatário fixo. |
+| `VITE_EMAILJS_PUBLIC_KEY` | Chave pública EmailJS. |
+| `VITE_WHATSAPP_NUMBER` | Número real opcional com país e DDD, somente dígitos. |
+| `VITE_SUPABASE_URL` | URL do projeto Supabase usado pelo ranking opcional. |
+| `VITE_SUPABASE_ANON_KEY` | Chave pública limitada pelas políticas do banco. |
+
+Todas as variáveis `VITE_*` são públicas no frontend. Nunca utilize senhas, chaves privadas ou `service_role`. Não versione `.env.local`.
+
+Sem EmailJS configurado, o formulário informa a indisponibilidade e mantém o envio desabilitado. O e-mail direto e as redes continuam acessíveis. Guia de template, consentimento, timeout e restrições de origem: [CONTATO.md](docs/CONTATO.md).
+
+## Publicação
+
+### GitHub Pages
+
+O workflow existente em `.github/workflows/deploy.yml` executa lint, testes e build antes de publicar. Mantém o caminho `/portfolio-warlley/`. Configure os secrets de mesmo nome das variáveis necessárias. Verifique a execução do workflow e o site após cada publicação.
+
+### Vercel
+
+Importe este repositório na sua conta. A configuração versionada usa `npm run build -- --base=/` e saída `dist`, preservando o caminho padrão do GitHub Pages para os demais builds. Cadastre as variáveis necessárias e faça o deploy. Depois, registre o endereço definitivo neste README e confira as URLs de metadados de `index.html` caso a Vercel se torne o endereço principal.
+
+Não há necessidade de trocar a base do Vite manualmente para cada plataforma. O projeto não usa rotas internas de páginas; os aplicativos abrem na mesma URL.
+
+## Estrutura de pastas
 
 ```text
-/portfolio-warlley/
+portfolio-warlley/
+├── .github/workflows/deploy.yml
+├── docs/
+│   ├── CONTATO.md
+│   └── ENTREGA-LAB01.md
+├── public/
+│   ├── assets/              # Identidade, foto, cursores e wallpapers
+│   ├── certificates/        # Certificados existentes
+│   ├── documents/           # Currículo PDF
+│   └── projects/            # Demos e mídias públicas
+├── src/
+│   ├── apps/                # About, Projects, Experiences, Contact e demais apps
+│   ├── components/          # Desktop, Window, Taskbar, WSMenu e painéis
+│   ├── data/                # Catálogos e projetos
+│   ├── i18n/                # Idioma compartilhado e traduções
+│   ├── lib/                 # Cliente Supabase existente
+│   ├── services/            # GitHub e contato
+│   ├── App.jsx
+│   ├── index.css
+│   └── main.jsx
+├── tests/
+├── .env.example
+├── index.html
+├── package.json
+├── package-lock.json
+├── vercel.json
+└── vite.config.js
 ```
 
-preparado para publicação através do GitHub Pages.
+## Conteúdo, demonstrações e protótipos
 
-URL prevista:
+- **Sobre Mim:** `src/apps/About/About.jsx`; traduções em `src/i18n/translations.js`.
+- **Experiências:** array de `src/apps/Experiences/Experiences.jsx`. Os períodos atuais não inventam datas de contratação; substitua por intervalos reais quando disponíveis.
+- **Projetos:** `src/data/projectsData.js`. A timeline utiliza criação do repositório, que pode diferir do início real do desenvolvimento.
+- **Capturas/GIFs:** salve arquivos reais em `public/projects/` e configure `screenshot` no projeto correspondente. Exemplo: `screenshot: BASE_URL + 'projects/screenshots/login-puc.png'`. O card exibe a mídia quando cadastrada. Não há capturas fictícias para preencher esse requisito.
+- **SnakePy:** configure `demo.video` e `demo.images` após adicionar os arquivos reais. Referências anteriores a arquivos inexistentes foram removidas; a interface informa ausência de mídia.
+- **Contato:** canais em `src/apps/Contact/Contact.jsx`, configurações em `.env.local` e no ambiente de hospedagem.
+- **Protótipos Figma:** link e imagens ainda precisam ser fornecidos pelo autor. Capturas da aplicação não devem ser apresentadas como protótipos feitos anteriormente.
 
-```text
-https://warlleyz.github.io/portfolio-warlley/
-```
+## Testes e limitações
 
----
+`npm test` executa testes de ordenação cronológica, datas inválidas, validação de contato, ausência de configuração, resposta do provedor e timeout. As chamadas EmailJS dos testes são simuladas e não enviam mensagens.
 
-## Objetivo
+Ainda é necessário validar o recebimento real do formulário, inserir capturas/GIFs dos projetos e anexar os protótipos exigidos. A publicação na conta Vercel depende do autor. As APIs externas podem apresentar limite de requisições ou indisponibilidade.
 
-O WS OS foi desenvolvido não apenas como uma página para apresentar projetos, mas também como um projeto de desenvolvimento por si só.
+## Autor e referências
 
-Ele explora conceitos como:
+**Warlley Silva** — Engenharia de Software, PUC Minas.
 
-- componentização;
-- gerenciamento de estado;
-- manipulação de eventos;
-- interfaces desktop;
-- integração com APIs;
-- carregamento assíncrono;
-- cache;
-- code splitting;
-- acessibilidade;
-- responsividade;
-- persistência local;
-- integração com serviços externos.
-
----
-
-## Autor
-
-**Warlley Silva**
-
-GitHub:  
-https://github.com/warlleyz
-
----
-
-## Status
-
-O projeto está em desenvolvimento contínuo e recebe melhorias de interface, performance, acessibilidade e novos projetos.
-### Linha do tempo de projetos
-
-Projetos são exibidos do mais antigo ao mais recente pela data de criação do repositório no GitHub, mantendo busca, filtros e demos. As datas verificadas dos projetos cadastrados ficam em src/data/projectsData.js para uso quando a API estiver indisponível. Essa data representa a criação do repositório, não necessariamente o início do desenvolvimento.
-
-Teste da ordenação: node --test tests/projectTimeline.test.js
+- [GitHub](https://github.com/warlleyz)
+- [LinkedIn](https://www.linkedin.com/in/warlleysilvab/)
+- [React](https://react.dev/), [Vite](https://vite.dev/), [EmailJS](https://www.emailjs.com/docs/rest-api/send/)
+- [Template de documentação do professor João Paulo Aramuni](https://github.com/joaopauloaramuni/desenvolvimento-e-integracao-de-aplicacoes-web/blob/main/TEMPLATES/template_README.md), adaptado ao escopo real desta aplicação.
