@@ -89,3 +89,8 @@ Nove testes aprovados, lint aprovado e builds padrão e raiz aprovados. No previ
 Revisados os contadores e rótulos dinâmicos de Projetos, busca, notificações, dicas das janelas e links de contato. Currículo, controles de Certificados e Tecnologias passaram a acompanhar o idioma; as datas e durações dos certificados também. Os quatro projetos cadastrados têm descrições em inglês. Nomes oficiais de certificados, PDFs e conteúdo externo continuam no idioma original.
 
 Onze testes, lint e build aprovados. No navegador, conferidos Projetos, Tecnologias, Certificados e Contato em inglês, retorno ao português e ausência de erros de execução na aba revisada. O formulário continua corretamente desabilitado sem configuração EmailJS; envio real, capturas dos projetos e evidências Figma continuam pendentes. Esta revisão não altera o estado dessas exigências do laboratório.
+
+
+## Configuração EmailJS recebida
+
+Service ID, Template ID e Public Key fornecidos pelo autor foram configurados como valores públicos padrão, com substituição opcional por variáveis de ambiente. O formulário está habilitado quando estes identificadores estão disponíveis. Nenhum e-mail real foi enviado automaticamente: ainda é necessário o autor submeter uma mensagem pelo site e confirmar o recebimento no destinatário fixo configurado no EmailJS.

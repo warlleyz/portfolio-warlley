@@ -1,9 +1,11 @@
 const environment = import.meta.env ?? {}
 
+// Identificadores públicos fornecidos pelo autor; não são credenciais privadas.
+// Variáveis de build podem sobrescrever estes valores sem alterar o código.
 export const contactConfiguration = {
-    serviceId: environment.VITE_EMAILJS_SERVICE_ID ?? '',
-    templateId: environment.VITE_EMAILJS_TEMPLATE_ID ?? '',
-    publicKey: environment.VITE_EMAILJS_PUBLIC_KEY ?? '',
+    serviceId: environment.VITE_EMAILJS_SERVICE_ID?.trim() || 'service_d6jwhvf',
+    templateId: environment.VITE_EMAILJS_TEMPLATE_ID?.trim() || 'template_au7azrr',
+    publicKey: environment.VITE_EMAILJS_PUBLIC_KEY?.trim() || 'dR_srJZx9lh9_GOta',
 }
 
 export function isContactConfigured(config = contactConfiguration) {

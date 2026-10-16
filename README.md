@@ -82,7 +82,7 @@ O preview serve o conteúdo gerado em `dist`. Não envia e-mails de teste automa
 
 ## Variáveis de ambiente
 
-Copie `.env.example` para `.env.local` e preencha somente os serviços que utilizará.
+Os identificadores públicos EmailJS fornecidos pelo autor já estão configurados no serviço de contato. Para substituí-los ou configurar recursos opcionais, copie `.env.example` para `.env.local` e preencha as variáveis necessárias.
 
 | Variável | Finalidade |
 | --- | --- |

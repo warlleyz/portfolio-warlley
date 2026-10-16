@@ -2,6 +2,10 @@
 
 O formulário usa a API REST do EmailJS, sem instalar SDK e sem chave privada no frontend.
 
+## Estado atual
+
+Os três identificadores públicos fornecidos pelo autor estão configurados em `src/services/contactService.js`. O site publicado pode habilitar o formulário sem cadastrar secrets adicionais. As variáveis de ambiente abaixo são opcionais para substituir esses identificadores. Nenhuma senha ou chave privada foi adicionada. O recebimento real ainda precisa ser confirmado pelo autor.
+
 ## Configuração
 
 1. Na sua conta EmailJS, conecte um serviço de e-mail e crie um template.
