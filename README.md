@@ -483,3 +483,8 @@ https://github.com/warlleyz
 ## Status
 
 O projeto está em desenvolvimento contínuo e recebe melhorias de interface, performance, acessibilidade e novos projetos.
+### Linha do tempo de projetos
+
+Projetos são exibidos do mais antigo ao mais recente pela data de criação do repositório no GitHub, mantendo busca, filtros e demos. As datas verificadas dos projetos cadastrados ficam em src/data/projectsData.js para uso quando a API estiver indisponível. Essa data representa a criação do repositório, não necessariamente o início do desenvolvimento.
+
+Teste da ordenação: node --test tests/projectTimeline.test.js

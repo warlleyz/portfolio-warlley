@@ -27,6 +27,8 @@ import {
   getGithubRepositories,
 } from '../../services/githubService'
 
+import { compareProjectsByCreation } from './projectTimeline'
+
 import './Projects.css'
 
 
@@ -271,6 +273,9 @@ function Projects({
                 repository?.homepage ??
                 null,
 
+              createdAt:
+                repository?.createdAt ?? project.createdAt ?? null,
+
               updatedAt:
                 repository?.updatedAt ??
                 null,
@@ -399,6 +404,8 @@ function Projects({
                   repository.topics ??
                   [],
 
+                createdAt: repository.createdAt,
+
                 updatedAt:
                   repository.updatedAt,
 
@@ -511,75 +518,21 @@ function Projects({
     )
 
 
-  /* === PROJETOS FILTRADOS === */
-  const filteredProjects =
-    useMemo(
-      () => {
-        const normalizedSearch =
-          normalizeText(
-            search,
-          )
-
-        return projects.filter(
-          (
-            project,
-          ) => {
-            const matchesFilter =
-              selectedFilter ===
-              'Todos' ||
-              project.language ===
-              selectedFilter ||
-              project.technologies
-                ?.includes(
-                  selectedFilter,
-                )
-
-            if (
-              !matchesFilter
-            ) {
-              return false
-            }
-
-            if (
-              !normalizedSearch
-            ) {
-              return true
-            }
-
-            const searchableContent =
-              [
-                project.title,
-                project.repository,
-                project.description,
-                project.language,
-
-                ...(
-                  project.technologies ??
-                  []
-                ),
-
-                ...(
-                  project.topics ??
-                  []
-                ),
-              ]
-                .filter(Boolean)
-                .join(' ')
-
-            return normalizeText(
-              searchableContent,
-            ).includes(
-              normalizedSearch,
-            )
-          },
-        )
-      },
-      [
-        projects,
-        search,
-        selectedFilter,
-      ],
-    )
+  /* === FILTROS E ORDEM CRONOLÓGICA === */
+  const filteredProjects = useMemo(() => {
+    const normalizedSearch = normalizeText(search)
+    return projects.filter((project) => {
+      const matchesFilter = selectedFilter === 'Todos' ||
+        project.language === selectedFilter ||
+        project.technologies?.includes(selectedFilter)
+      if (!matchesFilter) return false
+      const searchableContent = [
+        project.title, project.repository, project.description, project.language,
+        ...(project.technologies ?? []), ...(project.topics ?? []),
+      ].filter(Boolean).join(' ')
+      return !normalizedSearch || normalizeText(searchableContent).includes(normalizedSearch)
+    }).sort(compareProjectsByCreation)
+  }, [projects, search, selectedFilter])
 
 
   /* === ABRIR GITHUB === */
@@ -629,9 +582,8 @@ function Projects({
           </h1>
 
           <p>
-            Projetos acadêmicos, pessoais
-            e repositórios públicos sincronizados
-            com o GitHub.
+            Linha do tempo do mais antigo ao mais recente, pela data de criação
+            do repositório no GitHub. Projetos acadêmicos, pessoais e repositórios públicos.
           </p>
         </div>
 
@@ -781,7 +733,7 @@ function Projects({
       {
         filteredProjects.length > 0
           ? (
-            <div className="projects-grid">
+            <ol className="projects-timeline" aria-label="Linha do tempo dos projetos, do mais antigo ao mais recente">
               {filteredProjects.map(
                 (
                   project,
@@ -789,6 +741,8 @@ function Projects({
                   const Icon =
                     project.icon ??
                     FolderGit2
+
+                  const createdDate = formatDate(project.createdAt)
 
                   const updatedDate =
                     formatDate(
@@ -805,12 +759,13 @@ function Projects({
                     projectAction.icon
 
                   return (
-                    <article
-                      key={
-                        project.id
-                      }
-                      className="project-card"
-                    >
+                    <li className="project-timeline-item" key={project.id}>
+                      <div className="project-timeline-date">
+                        {createdDate ? (
+                          <><span>Repositório criado em</span><time dateTime={project.createdAt}>{createdDate}</time></>
+                        ) : <span>Data não informada</span>}
+                      </div>
+                      <article className="project-card">
 
                       {/* === TOPO === */}
                       <div className="project-card-top">
@@ -974,11 +929,12 @@ function Projects({
                           }
                         </button>
                       </div>
-                    </article>
+                      </article>
+                    </li>
                   )
                 },
               )}
-            </div>
+            </ol>
           )
           : (
             <div className="projects-empty">

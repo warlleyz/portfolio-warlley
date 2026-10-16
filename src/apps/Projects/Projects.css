@@ -1091,3 +1091,44 @@
             none;
     }
 }
+
+/* === LINHA DO TEMPO DOS PROJETOS === */
+.projects-timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.project-timeline-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 20px;
+    padding: 0 0 20px 22px;
+    margin-left: 7px;
+    border-left: 2px solid var(--glass-border);
+}
+.project-timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 23px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+}
+.project-timeline-item:last-child { padding-bottom: 0; }
+.project-timeline-date {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-top: 20px;
+    color: var(--text-secondary);
+    font-size: 10px;
+}
+.project-timeline-date time { color: var(--text-primary); font-size: 13px; font-weight: 650; }
+@media (max-width: 650px) {
+    .project-timeline-item { grid-template-columns: minmax(0, 1fr); gap: 10px; padding-left: 17px; }
+    .project-timeline-date { padding-top: 17px; }
+    .project-timeline-item > .project-card { width: 100%; }
+}

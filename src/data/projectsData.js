@@ -14,6 +14,8 @@ const projectsData = [
     {
         repository: 'API-Clima',
         id: 'api-clima',
+        // Data pública de criação do repositório; fallback para indisponibilidade da API.
+        createdAt: '2026-08-27T20:40:52Z',
         title: 'API Clima',
 
         description:
@@ -51,6 +53,8 @@ const projectsData = [
     {
         repository: 'Carrinho-Compras-POO',
         id: 'carrinho-compras',
+        // Data pública de criação do repositório; fallback para indisponibilidade da API.
+        createdAt: '2026-09-08T21:17:02Z',
         title: 'Carrinho de Compras',
 
         description:
@@ -75,6 +79,8 @@ const projectsData = [
     {
         repository: 'Login-PUC',
         id: 'login-puc',
+        // Data pública de criação do repositório; fallback para indisponibilidade da API.
+        createdAt: '2026-09-10T20:57:16Z',
         title: 'Login PUC',
 
         description:
@@ -101,6 +107,8 @@ const projectsData = [
     {
         repository: 'SnakePy',
         id: 'snakepy',
+        // Data pública de criação do repositório; fallback para indisponibilidade da API.
+        createdAt: '2026-05-27T19:43:49Z',
         title: 'SnakePy',
 
         description:
