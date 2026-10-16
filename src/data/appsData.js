@@ -1,5 +1,6 @@
 import {
     Award,
+    BriefcaseBusiness,
     Code2,
     Cpu,
     FileText,
@@ -38,6 +39,15 @@ const appsData = [
             height: 700,
             centered: true,
         },
+    },
+
+    {
+        id: 'experiences',
+        name: 'Experiências',
+        icon: BriefcaseBusiness,
+        desktop: true,
+        menu: true,
+        window: { width: 900, height: 700, centered: true },
     },
 
     {

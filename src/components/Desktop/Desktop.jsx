@@ -27,6 +27,8 @@ import './Desktop.css'
 
 
 /* === APPS === */
+const Experiences = lazy(() => import('../../apps/Experiences/Experiences'))
+
 const About =
     lazy(
         () =>
@@ -1297,6 +1299,9 @@ function Desktop({
                         }
                     />
                 )
+
+            case 'experiences':
+                return <Experiences />
 
             case 'technologies':
                 return (

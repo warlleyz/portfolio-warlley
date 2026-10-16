@@ -46,6 +46,8 @@ const appKeywords = {
         'software',
     ],
 
+    experiences: ['experiencias', 'experiencia', 'trajetoria', 'academico', 'formacao', 'puc', 'experience'],
+
     technologies: [
         'tecnologias',
         'tecnologia',

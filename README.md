@@ -81,6 +81,10 @@ Possui:
 - acesso ao repositório;
 - abertura de demos dentro do próprio sistema.
 
+### Experiências
+
+Apresenta a trajetória acadêmica e o desenvolvimento do portfólio, com instituição ou projeto, atividade, período e descrição. Os dados podem ser atualizados em `src/apps/Experiences/Experiences.jsx`.
+
 ### Tecnologias
 
 Exibe as principais tecnologias utilizadas nos projetos e estudos.
