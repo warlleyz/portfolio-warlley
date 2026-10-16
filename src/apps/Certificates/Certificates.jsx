@@ -1,3 +1,4 @@
+import { useLanguage } from '../../i18n/language'
 import {
     ArrowLeft,
     Award,
@@ -26,6 +27,7 @@ import './Certificates.css'
 /* === FORMATAR DATA === */
 const formatCertificateDate = (
     value,
+    locale = 'pt-BR',
 ) => {
     if (
         !value
@@ -48,7 +50,7 @@ const formatCertificateDate = (
 
     return date
         .toLocaleDateString(
-            'pt-BR',
+            locale,
             {
                 month:
                     'long',
@@ -141,6 +143,8 @@ function CertificateCard({
     certificate,
     onOpen,
 }) {
+    const { language, t } = useLanguage()
+
     return (
         <button
             className="certificate-card"
@@ -151,7 +155,7 @@ function CertificateCard({
                 )
             }
             aria-label={
-                `Abrir certificado ${certificate.title}`
+                t('Abrir') + ' ' + t('Certificado') + ': ' + certificate.title
             }
         >
             <div className="certificate-card-top">
@@ -164,11 +168,7 @@ function CertificateCard({
                 </span>
 
                 <span className="certificate-card-category">
-                    {
-                        getCategoryLabel(
-                            certificate.category,
-                        )
-                    }
+                    {t(getCategoryLabel(certificate.category))}
                 </span>
             </div>
 
@@ -196,9 +196,7 @@ function CertificateCard({
                         />
 
                         {
-                            formatCertificateDate(
-                                certificate.date,
-                            )
+                            formatCertificateDate(certificate.date, language)
                         }
                     </span>
 
@@ -212,9 +210,7 @@ function CertificateCard({
                                     aria-hidden="true"
                                 />
 
-                                {
-                                    certificate.workload
-                                }
+                                {t(certificate.workload)}
                             </span>
                         )
                     }
@@ -247,10 +243,7 @@ function CertificateCard({
                 }
             </div>
 
-            <span className="certificate-card-action">
-                Ver certificado
-
-                <ExternalLink
+            <span className="certificate-card-action">{t("Ver certificado")}<ExternalLink
                     size={14}
                     strokeWidth={1.7}
                     aria-hidden="true"
@@ -266,6 +259,8 @@ function CertificateDetails({
     certificate,
     onBack,
 }) {
+    const { language, t } = useLanguage()
+
     return (
         <div className="certificate-details">
 
@@ -282,10 +277,7 @@ function CertificateDetails({
                         size={16}
                         strokeWidth={1.8}
                         aria-hidden="true"
-                    />
-
-                    Voltar
-                </button>
+                    />{t("Voltar")}</button>
             </header>
 
 
@@ -301,11 +293,7 @@ function CertificateDetails({
 
                 <div className="certificate-details-heading">
                     <span className="certificate-details-category">
-                        {
-                            getCategoryLabel(
-                                certificate.category,
-                            )
-                        }
+                        {t(getCategoryLabel(certificate.category))}
                     </span>
 
                     <h2>
@@ -326,15 +314,11 @@ function CertificateDetails({
             {/* === METADADOS === */}
             <section className="certificate-details-meta">
                 <div>
-                    <span>
-                        Data
-                    </span>
+                    <span>{t("Data")}</span>
 
                     <strong>
                         {
-                            formatCertificateDate(
-                                certificate.date,
-                            )
+                            formatCertificateDate(certificate.date, language)
                         }
                     </strong>
                 </div>
@@ -343,14 +327,10 @@ function CertificateDetails({
                     certificate.workload &&
                     (
                         <div>
-                            <span>
-                                Carga horária
-                            </span>
+                            <span>{t("Carga horária")}</span>
 
                             <strong>
-                                {
-                                    certificate.workload
-                                }
+                                {t(certificate.workload)}
                             </strong>
                         </div>
                     )
@@ -363,9 +343,7 @@ function CertificateDetails({
                 certificate.description &&
                 (
                     <section className="certificate-details-description">
-                        <h3>
-                            Sobre
-                        </h3>
+                        <h3>{t("Sobre")}</h3>
 
                         <p>
                             {
@@ -428,13 +406,9 @@ function CertificateDetails({
                                         aria-hidden="true"
                                     />
 
-                                    <strong>
-                                        Documento ainda não adicionado
-                                    </strong>
+                                    <strong>{t("Documento ainda não adicionado")}</strong>
 
-                                    <span>
-                                        O certificado será disponibilizado aqui.
-                                    </span>
+                                    <span>{t("O certificado será disponibilizado aqui.")}</span>
                                 </div>
                             )
                     }
@@ -456,10 +430,7 @@ function CertificateDetails({
                                         size={15}
                                         strokeWidth={1.8}
                                         aria-hidden="true"
-                                    />
-
-                                    Abrir documento
-                                </a>
+                                    />{t("Abrir documento")}</a>
 
                                 <a
                                     href={
@@ -471,10 +442,7 @@ function CertificateDetails({
                                         size={15}
                                         strokeWidth={1.8}
                                         aria-hidden="true"
-                                    />
-
-                                    Baixar
-                                </a>
+                                    />{t("Baixar")}</a>
                             </>
                         )
                     }
@@ -493,10 +461,7 @@ function CertificateDetails({
                                     size={15}
                                     strokeWidth={1.8}
                                     aria-hidden="true"
-                                />
-
-                                Verificar credencial
-                            </a>
+                                />{t("Verificar credencial")}</a>
                         )
                     }
                 </div>
@@ -508,6 +473,8 @@ function CertificateDetails({
 
 /* === APP === */
 function Certificates() {
+    const { t } = useLanguage()
+
 
     /* === ESTADO === */
     const [
@@ -678,14 +645,9 @@ function Certificates() {
                     </span>
 
                     <div>
-                        <h2>
-                            Certificados
-                        </h2>
+                        <h2>{t("Certificados")}</h2>
 
-                        <p>
-                            Cursos, certificações e participações
-                            que fazem parte da minha formação.
-                        </p>
+                        <p>{t("Cursos, certificações e participações que fazem parte da minha formação.")}</p>
                     </div>
                 </div>
             </header>
@@ -716,9 +678,7 @@ function Certificates() {
                                         )
                                     }
                                 >
-                                    {
-                                        category.label
-                                    }
+                                    {t(category.label)}
                                 </button>
                             ),
                         )
@@ -744,8 +704,8 @@ function Certificates() {
                                 event.target.value,
                             )
                         }
-                        placeholder="Pesquisar certificados..."
-                        aria-label="Pesquisar certificados"
+                        placeholder={t("Pesquisar certificados...")}
+                        aria-label={t("Pesquisar certificados")}
                         autoComplete="off"
                     />
                 </label>
@@ -765,14 +725,9 @@ function Certificates() {
                                     aria-hidden="true"
                                 />
 
-                                <strong>
-                                    Nenhum certificado encontrado
-                                </strong>
+                                <strong>{t("Nenhum certificado encontrado")}</strong>
 
-                                <span>
-                                    Os certificados serão adicionados
-                                    gradualmente ao portfólio.
-                                </span>
+                                <span>{t("Os certificados serão adicionados gradualmente ao portfólio.")}</span>
                             </div>
                         )
                         : (

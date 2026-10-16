@@ -291,9 +291,7 @@ function WSMenu({
                             Warlley Silva
                         </strong>
 
-                        <span>
-                            Engenharia de Software
-                        </span>
+                        <span>{t("Engenharia de Software")}</span>
                     </div>
                 </div>
 
@@ -433,13 +431,9 @@ function SearchResults({
                     aria-hidden="true"
                 />
 
-                <strong>
-                    Nenhum resultado
-                </strong>
+                <strong>{t("Nenhum resultado")}</strong>
 
-                <span>
-                    Tente pesquisar outro termo.
-                </span>
+                <span>{t("Tente pesquisar outro termo.")}</span>
             </div>
         )
     }
@@ -468,7 +462,7 @@ function SearchResults({
                                     )
                                 }
                                 aria-label={
-                                    `Abrir ${t(result.title)}`
+                                    t(`Abrir ${t(result.title)}`)
                                 }
                             >
                                 <span className="ws-search-result-icon">
@@ -493,7 +487,7 @@ function SearchResults({
                                     {
                                         result.type ===
                                             'project'
-                                            ? 'Projeto'
+                                            ? t('Projeto')
                                             : result.type ===
                                                 'external'
                                                 ? 'Web'

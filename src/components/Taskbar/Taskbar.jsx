@@ -35,7 +35,7 @@ function Taskbar({
     onToggleNotifications,
     notificationCount,
 }) {
-    const { t } = useLanguage()
+    const { language, t } = useLanguage()
 
     const [
         dateTime,
@@ -98,7 +98,7 @@ function Taskbar({
     /* === DATA E HORA === */
     const time =
         dateTime.toLocaleTimeString(
-            'pt-BR',
+            language === 'en' ? 'en-US' : 'pt-BR',
             {
                 hour:
                     '2-digit',
@@ -110,7 +110,7 @@ function Taskbar({
 
     const date =
         dateTime.toLocaleDateString(
-            'pt-BR',
+            language === 'en' ? 'en-US' : 'pt-BR',
             {
                 day:
                     '2-digit',
@@ -359,9 +359,7 @@ function Taskbar({
                             onClick={
                                 onToggleNotifications
                             }
-                            aria-label={
-                                notificationLabel
-                            }
+                            aria-label={t(notificationLabel)}
                             aria-expanded={
                                 notificationsOpen
                             }

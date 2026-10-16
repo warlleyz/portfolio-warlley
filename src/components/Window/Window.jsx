@@ -960,8 +960,8 @@ function Window({
                     <Tooltip
                         text={
                             maximized
-                                ? 'Restaurar'
-                                : 'Maximizar'
+                                ? t('Restaurar')
+                                : t('Maximizar')
                         }
                         position="bottom"
                     >

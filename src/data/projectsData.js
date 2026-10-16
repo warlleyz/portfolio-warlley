@@ -14,6 +14,7 @@ const projectsData = [
     {
         repository: 'API-Clima',
         id: 'api-clima',
+        descriptionEn: "A Spring Boot API for retrieving weather information.",
         // Data pública de criação do repositório; fallback para indisponibilidade da API.
         createdAt: '2026-08-27T20:40:52Z',
         screenshot: null, // URL de uma captura real ou GIF do projeto.
@@ -54,6 +55,7 @@ const projectsData = [
     {
         repository: 'Carrinho-Compras-POO',
         id: 'carrinho-compras',
+        descriptionEn: "An academic Java shopping cart project applying object-oriented programming concepts.",
         // Data pública de criação do repositório; fallback para indisponibilidade da API.
         createdAt: '2026-09-08T21:17:02Z',
         screenshot: null, // URL de uma captura real ou GIF do projeto.
@@ -81,6 +83,7 @@ const projectsData = [
     {
         repository: 'Login-PUC',
         id: 'login-puc',
+        descriptionEn: "A web authentication project built with Spring Boot.",
         // Data pública de criação do repositório; fallback para indisponibilidade da API.
         createdAt: '2026-09-10T20:57:16Z',
         screenshot: null, // URL de uma captura real ou GIF do projeto.
@@ -110,6 +113,7 @@ const projectsData = [
     {
         repository: 'SnakePy',
         id: 'snakepy',
+        descriptionEn: "A Snake game developed in Python using Pygame.",
         // Data pública de criação do repositório; fallback para indisponibilidade da API.
         createdAt: '2026-05-27T19:43:49Z',
         screenshot: null, // URL de uma captura real ou GIF do projeto.

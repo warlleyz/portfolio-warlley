@@ -1,3 +1,4 @@
+import { useLanguage } from '../../i18n/language'
 import {
     Download,
     ExternalLink,
@@ -16,6 +17,8 @@ const RESUME_URL =
 
 
 function Resume() {
+    const { t } = useLanguage()
+
     return (
         <div className="resume">
 
@@ -31,9 +34,7 @@ function Resume() {
                     </span>
 
                     <div>
-                        <strong>
-                            Currículo
-                        </strong>
+                        <strong>{t("Currículo")}</strong>
 
                         <span>
                             curriculo-warlley.pdf
@@ -50,16 +51,13 @@ function Resume() {
                         }
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label="Abrir currículo em nova aba"
+                        aria-label={t("Abrir currículo em nova aba")}
                     >
                         <ExternalLink
                             size={15}
                             strokeWidth={1.8}
                             aria-hidden="true"
-                        />
-
-                        Abrir
-                    </a>
+                        />{t("Abrir")}</a>
 
                     <a
                         className="resume-action resume-action-primary"
@@ -67,16 +65,13 @@ function Resume() {
                             RESUME_URL
                         }
                         download="curriculo-warlley.pdf"
-                        aria-label="Baixar currículo em PDF"
+                        aria-label={t("Baixar currículo em PDF")}
                     >
                         <Download
                             size={15}
                             strokeWidth={1.8}
                             aria-hidden="true"
-                        />
-
-                        Baixar
-                    </a>
+                        />{t("Baixar")}</a>
                 </div>
             </header>
 
@@ -84,7 +79,7 @@ function Resume() {
             {/* === VISUALIZADOR === */}
             <section
                 className="resume-viewer"
-                aria-label="Visualização do currículo"
+                aria-label={t("Visualização do currículo")}
             >
                 <object
                     className="resume-pdf"
@@ -92,7 +87,7 @@ function Resume() {
                         RESUME_URL
                     }
                     type="application/pdf"
-                    aria-label="Currículo de Warlley Silva"
+                    aria-label={t("Currículo de Warlley Silva")}
                 >
                     <div className="resume-fallback">
                         <FileText
@@ -101,13 +96,9 @@ function Resume() {
                             aria-hidden="true"
                         />
 
-                        <strong>
-                            Não foi possível exibir o PDF.
-                        </strong>
+                        <strong>{t("Não foi possível exibir o PDF.")}</strong>
 
-                        <span>
-                            Abra o arquivo diretamente no navegador.
-                        </span>
+                        <span>{t("Abra o arquivo diretamente no navegador.")}</span>
 
                         <a
                             href={
@@ -115,9 +106,7 @@ function Resume() {
                             }
                             target="_blank"
                             rel="noopener noreferrer"
-                        >
-                            Abrir arquivo
-                        </a>
+                        >{t("Abrir arquivo")}</a>
                     </div>
                 </object>
             </section>

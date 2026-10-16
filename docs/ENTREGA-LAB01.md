@@ -83,3 +83,9 @@ Não declarar atendimento integral do laboratório enquanto os itens externos ac
 ## Conferência final da versão compilada
 
 Nove testes aprovados, lint aprovado e builds padrão e raiz aprovados. No preview de produção com base raiz, página, JavaScript principal, fotografia e currículo PDF retornaram HTTP 200 com tipos de conteúdo adequados. O navegador abriu o Sobre Mim compilado e aplicou a troca de idioma pelo painel sem erros de execução observados. Isso valida o build local; não comprova o deploy na Vercel nem o envio real de e-mail.
+
+## Revisão de textos antes da entrega
+
+Revisados os contadores e rótulos dinâmicos de Projetos, busca, notificações, dicas das janelas e links de contato. Currículo, controles de Certificados e Tecnologias passaram a acompanhar o idioma; as datas e durações dos certificados também. Os quatro projetos cadastrados têm descrições em inglês. Nomes oficiais de certificados, PDFs e conteúdo externo continuam no idioma original.
+
+Onze testes, lint e build aprovados. No navegador, conferidos Projetos, Tecnologias, Certificados e Contato em inglês, retorno ao português e ausência de erros de execução na aba revisada. O formulário continua corretamente desabilitado sem configuração EmailJS; envio real, capturas dos projetos e evidências Figma continuam pendentes. Esta revisão não altera o estado dessas exigências do laboratório.

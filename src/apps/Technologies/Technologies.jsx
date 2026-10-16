@@ -1,3 +1,4 @@
+import { useLanguage } from '../../i18n/language'
 import {
     Code2,
     Database,
@@ -96,6 +97,8 @@ const technologyGroups = [
 
 
 function Technologies() {
+    const { t } = useLanguage()
+
     return (
         <div className="technologies">
 
@@ -105,15 +108,9 @@ function Technologies() {
                     Stack
                 </span>
 
-                <h1>
-                    Tecnologias e ferramentas
-                </h1>
+                <h1>{t("Tecnologias e ferramentas")}</h1>
 
-                <p>
-                    Tecnologias que venho utilizando
-                    durante minha formação, estudos
-                    e desenvolvimento de projetos.
-                </p>
+                <p>{t("Tecnologias que venho utilizando durante minha formação, estudos e desenvolvimento de projetos.")}</p>
             </header>
 
 
@@ -121,13 +118,9 @@ function Technologies() {
             <section className="technologies-featured">
                 <div className="technologies-featured-header">
                     <div>
-                        <span>
-                            Uso frequente
-                        </span>
+                        <span>{t("Uso frequente")}</span>
 
-                        <h2>
-                            Principais tecnologias
-                        </h2>
+                        <h2>{t("Principais tecnologias")}</h2>
                     </div>
                 </div>
 
@@ -135,13 +128,9 @@ function Technologies() {
                     {featuredTechnologies.map(
                         (technology) => (
                             <span
-                                key={
-                                    technology
-                                }
+                                key={t(technology)}
                             >
-                                {
-                                    technology
-                                }
+                                {t(technology)}
                             </span>
                         ),
                     )}
@@ -158,9 +147,7 @@ function Technologies() {
 
                         return (
                             <article
-                                key={
-                                    group.title
-                                }
+                                key={t(group.title)}
                                 className="technology-card"
                             >
                                 <div className="technology-card-header">
@@ -174,15 +161,11 @@ function Technologies() {
 
                                     <div>
                                         <h2>
-                                            {
-                                                group.title
-                                            }
+                                            {t(group.title)}
                                         </h2>
 
                                         <p>
-                                            {
-                                                group.description
-                                            }
+                                            {t(group.description)}
                                         </p>
                                     </div>
                                 </div>
@@ -191,13 +174,9 @@ function Technologies() {
                                     {group.items.map(
                                         (item) => (
                                             <span
-                                                key={
-                                                    item
-                                                }
+                                                key={t(item)}
                                             >
-                                                {
-                                                    item
-                                                }
+                                                {t(item)}
                                             </span>
                                         ),
                                     )}

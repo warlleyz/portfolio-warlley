@@ -310,7 +310,7 @@ function Contact() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={
-                                    `Abrir ${contact.label} em nova aba`
+                                    t(`Abrir ${contact.label} em nova aba`)
                                 }
                             >
                                 <div className="contact-card-header">

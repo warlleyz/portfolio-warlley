@@ -1,3 +1,4 @@
+import { useLanguage } from '../../i18n/language'
 import {
     useEffect,
     useState,
@@ -168,6 +169,7 @@ function getGeolocationErrorMessage(
 
 
 function WeatherWidget() {
+    const { language, t } = useLanguage()
     /* === SUPORTE === */
     const geolocationSupported =
         typeof navigator !==
@@ -445,12 +447,12 @@ function WeatherWidget() {
     ) {
         return (
             <Tooltip
-                text="Carregando clima..."
+                text={t("Carregando clima...")}
                 position="top"
             >
                 <div
                     className="weather-widget"
-                    aria-label="Carregando clima"
+                    aria-label={t("Carregando clima")}
                 >
                     <span
                         className="weather-widget-emoji"
@@ -474,16 +476,12 @@ function WeatherWidget() {
     ) {
         return (
             <Tooltip
-                text={
-                    errorMessage
-                }
+                text={t(errorMessage)}
                 position="top"
             >
                 <div
                     className="weather-widget"
-                    aria-label={
-                        errorMessage
-                    }
+                    aria-label={t(errorMessage)}
                 >
                     <span
                         className="weather-widget-emoji"
@@ -512,13 +510,13 @@ function WeatherWidget() {
     /* === RENDERIZAÇÃO === */
     return (
         <Tooltip
-            text="Clima da sua localização"
+            text={t("Clima da sua localização")}
             position="top"
         >
             <div
                 className="weather-widget"
                 aria-label={
-                    `Temperatura atual: ${temperature} graus Celsius`
+                    language === 'en' ? `Current temperature: ${temperature} degrees Celsius` : `Temperatura atual: ${temperature} graus Celsius`
                 }
             >
                 <span

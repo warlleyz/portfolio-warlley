@@ -232,7 +232,7 @@ function Notifications({
                                                 {notification.time && (
                                                     <small>
                                                         {
-                                                            notification.time
+                                                            t(notification.time)
                                                         }
                                                     </small>
                                                 )}
@@ -254,9 +254,7 @@ function Notifications({
 
                                 <strong>{t("Tudo em dia")}</strong>
 
-                                <span>
-                                    Nenhuma notificação no momento.
-                                </span>
+                                <span>{t("Nenhuma notificação no momento.")}</span>
                             </div>
                         )
                 }

@@ -51,6 +51,7 @@ function normalizeText(
 /* === FORMATAR DATA === */
 function formatDate(
   value,
+  locale = 'pt-BR',
 ) {
   if (
     !value
@@ -70,7 +71,7 @@ function formatDate(
   }
 
   return new Intl.DateTimeFormat(
-    'pt-BR',
+    locale,
     {
       day:
         '2-digit',
@@ -619,8 +620,8 @@ function Projects({
 
             {
               filteredProjects.length === 1
-                ? 'projeto'
-                : 'projetos'
+                ? t('projeto')
+                : t('projetos')
             }
           </span>
         </div>
@@ -741,12 +742,13 @@ function Projects({
 
                   const hasDemo = project.configured && (project.demoType !== 'media' || Boolean(project.demo?.video || project.demo?.images?.length))
 
-                  const createdDate = formatDate(project.createdAt)
+                  const createdDate = formatDate(project.createdAt, language)
 
                   const updatedDate =
                     formatDate(
                       project.pushedAt ??
                       project.updatedAt,
+                      language,
                     )
 
                   const projectAction =
@@ -818,7 +820,7 @@ function Projects({
 
                         <p>
                           {
-                            project.description
+                            language === 'en' && project.descriptionEn ? project.descriptionEn : project.description
                           }
                         </p>
                       </div>
@@ -875,7 +877,7 @@ function Projects({
 
                         {updatedDate && (
                           <span className="project-updated">
-                            Atualizado em{' '}
+                            {t('Atualizado em')}{' '}
                             {
                               updatedDate
                             }
