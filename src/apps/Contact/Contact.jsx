@@ -1,3 +1,5 @@
+import { useLanguage } from '../../i18n/language'
+import ContactForm from './ContactForm'
 import {
     Check,
     Copy,
@@ -59,7 +61,14 @@ const contactLinks = [
 ]
 
 
+const whatsappNumber = (import.meta.env.VITE_WHATSAPP_NUMBER ?? '').replace(/\D/g, '')
+if (/^\d{8,15}$/.test(whatsappNumber)) contactLinks.push({
+    label: 'WhatsApp', value: 'WhatsApp', description: 'Converse comigo pelo WhatsApp.',
+    href: 'https://wa.me/' + whatsappNumber, icon: MessageCircle,
+})
+
 function Contact() {
+    const { language, t } = useLanguage()
 
     /* === ESTADO === */
     const [
@@ -189,7 +198,7 @@ function Contact() {
 
     /* === RENDERIZAÇÃO === */
     return (
-        <div className="contact">
+        <div className="contact" lang={language}>
 
             {/* === APRESENTAÇÃO === */}
             <section className="contact-intro">
@@ -203,25 +212,16 @@ function Contact() {
 
                 <div className="contact-intro-content">
                     <div className="contact-intro-heading">
-                        <strong>
-                            Contato profissional
-                        </strong>
+                        <strong>{t("Contato profissional")}</strong>
 
                         <span className="contact-availability">
                             <span
                                 className="contact-status"
                                 aria-hidden="true"
-                            />
-
-                            Aberto a oportunidades
-                        </span>
+                            />{t("Aberto a oportunidades")}</span>
                     </div>
 
-                    <p>
-                        Entre em contato para conversar sobre
-                        projetos, oportunidades ou desenvolvimento
-                        de software.
-                    </p>
+                    <p>{t("Entre em contato para conversar sobre projetos, oportunidades ou desenvolvimento de software.")}</p>
                 </div>
             </section>
 
@@ -237,17 +237,13 @@ function Contact() {
                 </span>
 
                 <div className="contact-email-content">
-                    <span className="contact-type">
-                        E-mail
-                    </span>
+                    <span className="contact-type">{t("E-mail")}</span>
 
                     <strong>
-                        {EMAIL}
+                        <a className="contact-email-direct" href={`mailto:${EMAIL}`}>{EMAIL}</a>
                     </strong>
 
-                    <p>
-                        Melhor canal para contato direto.
-                    </p>
+                    <p>{t("Melhor canal para contato direto.")}</p>
                 </div>
 
                 <button
@@ -266,8 +262,8 @@ function Contact() {
                     }
                     aria-label={
                         copied
-                            ? 'E-mail copiado'
-                            : 'Copiar endereço de e-mail'
+                            ? t('E-mail copiado')
+                            : t('Copiar endereço de e-mail')
                     }
                 >
                     {
@@ -278,10 +274,7 @@ function Contact() {
                                         size={15}
                                         strokeWidth={1.8}
                                         aria-hidden="true"
-                                    />
-
-                                    Copiado
-                                </>
+                                    />{t("Copiado")}</>
                             )
                             : (
                                 <>
@@ -289,15 +282,14 @@ function Contact() {
                                         size={15}
                                         strokeWidth={1.8}
                                         aria-hidden="true"
-                                    />
-
-                                    Copiar e-mail
-                                </>
+                                    />{t("Copiar e-mail")}</>
                             )
                     }
                 </button>
             </section>
 
+
+            <ContactForm />
 
             {/* === REDES PROFISSIONAIS === */}
             <section className="contact-socials">
@@ -352,9 +344,7 @@ function Contact() {
                                     </strong>
 
                                     <p>
-                                        {
-                                            contact.description
-                                        }
+                                        {t(contact.description)}
                                     </p>
                                 </div>
                             </a>

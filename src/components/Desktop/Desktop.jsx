@@ -906,7 +906,10 @@ function Desktop({
     /* ----- FECHAR ----- */
     const closeApp = (
         appId,
+        force = false,
     ) => {
+        if (!force && !window.dispatchEvent(new CustomEvent('ws-os:before-close', { cancelable: true, detail: { appId, proceed: () => closeApp(appId, true) } }))) return
+
         clearWindowTimer(
             appId,
         )

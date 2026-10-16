@@ -87,7 +87,7 @@ const appsData = [
 
         window: {
             width: 760,
-            height: 380,
+            height: 740,
             centered: true,
         },
     },
