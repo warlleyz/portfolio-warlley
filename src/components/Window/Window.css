@@ -743,3 +743,20 @@
             0;
     }
 }
+/* Aplicativos utilizam a área útil da tela no celular, preservando a Taskbar. */
+@media (max-width: 700px) {
+    .window, .window:not(.window-maximized) {
+        left: 8px !important;
+        top: 8px !important;
+        width: calc(100vw - 16px) !important;
+        height: calc(100dvh - 82px) !important;
+        max-height: calc(100dvh - 82px);
+        min-width: 0;
+        min-height: 0;
+    }
+    .window-resize { display: none; }
+    .window-header { cursor: default; }
+    .window-controls { margin-left: 6px; }
+    .window-title { min-width: 0; }
+    .window-control { width: 36px; height: 40px; }
+}

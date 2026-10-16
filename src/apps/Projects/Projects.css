@@ -1132,3 +1132,6 @@
     .project-timeline-date { padding-top: 17px; }
     .project-timeline-item > .project-card { width: 100%; }
 }
+
+.project-screenshot { margin: 0; overflow: hidden; border-radius: 10px; border: 1px solid var(--border-subtle); }
+.project-screenshot img { display: block; width: 100%; max-height: 280px; object-fit: contain; background: var(--surface-secondary); }

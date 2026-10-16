@@ -1,3 +1,4 @@
+import { useLanguage } from '../../i18n/language'
 import {
     useEffect,
     useMemo,
@@ -26,6 +27,8 @@ function WSMenu({
     onOpenApp,
     onClose,
 }) {
+    const { t } = useLanguage()
+
     /* === REFERÊNCIAS === */
     const menuRef =
         useRef(null)
@@ -236,8 +239,8 @@ function WSMenu({
                                 event.target.value,
                             )
                         }
-                        placeholder="Pesquisar no WS OS"
-                        aria-label="Pesquisar no WS OS"
+                        placeholder={t("Pesquisar no WS OS")}
+                        aria-label={t("Pesquisar no WS OS")}
                         autoComplete="off"
                     />
                 </div>
@@ -330,6 +333,8 @@ function AppsGrid({
     activeAppId,
     onOpenApp,
 }) {
+    const { t } = useLanguage()
+
     return (
         <div className="ws-menu-grid">
             {apps.map(
@@ -380,7 +385,7 @@ function AppsGrid({
                                 )
                             }
                             aria-label={
-                                `Abrir ${app.name}`
+                                t(`Abrir ${t(app.name)}`)
                             }
                         >
                             <span className="ws-menu-app-icon">
@@ -399,9 +404,7 @@ function AppsGrid({
                             </span>
 
                             <span className="ws-menu-app-name">
-                                {
-                                    app.name
-                                }
+                                {t(app.name)}
                             </span>
                         </button>
                     )
@@ -417,6 +420,8 @@ function SearchResults({
     results,
     onSelect,
 }) {
+    const { t } = useLanguage()
+
     if (
         results.length === 0
     ) {
@@ -441,9 +446,7 @@ function SearchResults({
 
     return (
         <div className="ws-search-results">
-            <span className="ws-search-heading">
-                Resultados
-            </span>
+            <span className="ws-search-heading">{t("Resultados")}</span>
 
             <div className="ws-search-list">
                 {results.map(
@@ -465,7 +468,7 @@ function SearchResults({
                                     )
                                 }
                                 aria-label={
-                                    `Abrir ${result.title}`
+                                    `Abrir ${t(result.title)}`
                                 }
                             >
                                 <span className="ws-search-result-icon">
@@ -478,15 +481,11 @@ function SearchResults({
 
                                 <span className="ws-search-result-text">
                                     <strong>
-                                        {
-                                            result.title
-                                        }
+                                        {t(result.title)}
                                     </strong>
 
                                     <span>
-                                        {
-                                            result.subtitle
-                                        }
+                                        {t(result.subtitle)}
                                     </span>
                                 </span>
 

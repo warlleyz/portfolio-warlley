@@ -1,3 +1,4 @@
+import { useLanguage } from '../../i18n/language'
 import {
     Bell,
     CheckCheck,
@@ -20,6 +21,8 @@ function Notifications({
     onClear,
     onOpenNotification,
 }) {
+    const { t } = useLanguage()
+
     /* === REFERÊNCIAS === */
     const panelRef =
         useRef(null)
@@ -100,7 +103,7 @@ function Notifications({
                 panelRef
             }
             className="notifications-panel"
-            aria-label="Notificações"
+            aria-label={t("Notificações")}
         >
             {/* === CABEÇALHO === */}
             <header className="notifications-header">
@@ -109,14 +112,12 @@ function Notifications({
                         WS OS
                     </span>
 
-                    <h2 className="notifications-title">
-                        Notificações
-                    </h2>
+                    <h2 className="notifications-title">{t("Notificações")}</h2>
                 </div>
 
                 {notifications.length > 0 && (
                     <Tooltip
-                        text="Limpar"
+                        text={t("Limpar")}
                         position="bottom"
                     >
                         <button
@@ -125,7 +126,7 @@ function Notifications({
                             onClick={
                                 onClear
                             }
-                            aria-label="Limpar"
+                            aria-label={t("Limpar")}
                         >
                             <Trash2
                                 size={15}
@@ -195,7 +196,7 @@ function Notifications({
                                             }
                                             aria-label={
                                                 isActionable
-                                                    ? `Abrir ${notification.title}`
+                                                    ? `Abrir ${t(notification.title)}`
                                                     : notification.title
                                             }
                                         >
@@ -213,9 +214,7 @@ function Notifications({
                                             <div className="notification-text">
                                                 <div className="notification-title-row">
                                                     <strong>
-                                                        {
-                                                            notification.title
-                                                        }
+                                                        {t(notification.title)}
                                                     </strong>
 
                                                     {!notification.read && (
@@ -227,9 +226,7 @@ function Notifications({
                                                 </div>
 
                                                 <span>
-                                                    {
-                                                        notification.description
-                                                    }
+                                                    {t(notification.description)}
                                                 </span>
 
                                                 {notification.time && (
@@ -255,9 +252,7 @@ function Notifications({
                                     />
                                 </span>
 
-                                <strong>
-                                    Tudo em dia
-                                </strong>
+                                <strong>{t("Tudo em dia")}</strong>
 
                                 <span>
                                     Nenhuma notificação no momento.

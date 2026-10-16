@@ -178,6 +178,8 @@ const getProjectSearchText = (
 }
 
 
+const appEnglishNames = { about: 'about me', projects: 'projects', experiences: 'experience', technologies: 'technologies', certificates: 'certificates', contact: 'contact', resume: 'resume', terminal: 'terminal', stats: 'statistics', game: 'snake game' }
+
 /* === ÍNDICE DOS APLICATIVOS === */
 const appSearchItems =
     appsData
@@ -191,6 +193,7 @@ const appSearchItems =
 
             const searchableText = [
                 app.name,
+                appEnglishNames[app.id] ?? '',
                 ...keywords,
             ].join(' ')
 
@@ -392,7 +395,7 @@ const calculateSearchScore = (
 
     /* ----- PRIORIDADE DOS APPS ----- */
     if (
-        item.type === 'app'
+        item.type === 'app' && score > 0
     ) {
         score += 3
     }

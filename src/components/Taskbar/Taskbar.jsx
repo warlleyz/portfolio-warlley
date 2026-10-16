@@ -1,3 +1,4 @@
+import { useLanguage } from '../../i18n/language'
 import {
     useEffect,
     useState,
@@ -34,6 +35,8 @@ function Taskbar({
     onToggleNotifications,
     notificationCount,
 }) {
+    const { t } = useLanguage()
+
     const [
         dateTime,
         setDateTime,
@@ -157,7 +160,7 @@ function Taskbar({
     return (
         <footer
             className="taskbar"
-            aria-label="Barra de tarefas"
+            aria-label={t("Barra de tarefas")}
         >
             <div className="taskbar-main">
 
@@ -183,8 +186,8 @@ function Taskbar({
                         }
                         aria-label={
                             menuOpen
-                                ? 'Fechar WS Menu'
-                                : 'Abrir WS Menu'
+                                ? t('Fechar WS Menu')
+                                : t('Abrir WS Menu')
                         }
                         aria-expanded={
                             menuOpen
@@ -206,7 +209,7 @@ function Taskbar({
                 {/* === APPS ABERTOS === */}
                 <div
                     className="taskbar-apps"
-                    aria-label="Aplicativos abertos"
+                    aria-label={t("Aplicativos abertos")}
                 >
                     {apps.map(
                         (app) => {
@@ -248,9 +251,7 @@ function Taskbar({
                                     key={
                                         app.id
                                     }
-                                    text={
-                                        app.name
-                                    }
+                                    text={t(app.name)}
                                     position="top"
                                 >
                                     <button
@@ -265,10 +266,10 @@ function Taskbar({
                                         }
                                         aria-label={
                                             windowState.minimized
-                                                ? `Restaurar ${app.name}`
+                                                ? t(`Restaurar ${t(app.name)}`)
                                                 : isActive
-                                                    ? `Minimizar ${app.name}`
-                                                    : `Focar ${app.name}`
+                                                    ? t(`Minimizar ${t(app.name)}`)
+                                                    : `Focar ${t(app.name)}`
                                         }
                                     >
                                         <span className="taskbar-app-icon">
@@ -302,7 +303,7 @@ function Taskbar({
 
                     {/* ----- CONTROLES RÁPIDOS ----- */}
                     <Tooltip
-                        text="Controles rápidos"
+                        text={t("Controles rápidos")}
                         position="top"
                     >
                         <button
@@ -322,8 +323,8 @@ function Taskbar({
                             }
                             aria-label={
                                 quickControlsOpen
-                                    ? 'Fechar controles rápidos'
-                                    : 'Abrir controles rápidos'
+                                    ? t('Fechar controles rápidos')
+                                    : t('Abrir controles rápidos')
                             }
                             aria-expanded={
                                 quickControlsOpen
@@ -340,7 +341,7 @@ function Taskbar({
 
                     {/* ----- NOTIFICAÇÕES ----- */}
                     <Tooltip
-                        text="Notificações"
+                        text={t("Notificações")}
                         position="top"
                     >
                         <button
@@ -391,8 +392,8 @@ function Taskbar({
                     <Tooltip
                         text={
                             theme === 'dark'
-                                ? 'Tema claro'
-                                : 'Tema escuro'
+                                ? t('Tema claro')
+                                : t('Tema escuro')
                         }
                         position="top"
                     >
@@ -404,8 +405,8 @@ function Taskbar({
                             }
                             aria-label={
                                 theme === 'dark'
-                                    ? 'Ativar tema claro'
-                                    : 'Ativar tema escuro'
+                                    ? t('Ativar tema claro')
+                                    : t('Ativar tema escuro')
                             }
                         >
                             {

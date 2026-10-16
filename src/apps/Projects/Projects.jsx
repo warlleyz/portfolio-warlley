@@ -1,3 +1,4 @@
+import { useLanguage } from '../../i18n/language'
 import {
   useEffect,
   useMemo,
@@ -114,7 +115,7 @@ function getProjectAction(
     case 'media':
       return {
         label:
-          'Ver demonstração',
+          project.demo?.video || project.demo?.images?.length ? 'Ver demonstração' : 'Ver detalhes',
 
         icon:
           Image,
@@ -133,9 +134,22 @@ function getProjectAction(
 }
 
 
+function ProjectScreenshot({ project }) {
+  const { t } = useLanguage()
+  const [failed, setFailed] = useState(false)
+  if (!project.screenshot || failed) return null
+  return (
+    <figure className="project-screenshot">
+      <img src={project.screenshot} alt={project.title + ' — ' + t('Captura do projeto em funcionamento')} loading="lazy" onError={() => setFailed(true)} />
+    </figure>
+  )
+}
+
 function Projects({
   onOpenProject,
 }) {
+    const { language, t } = useLanguage()
+
   /* === ESTADO === */
   const [
     githubRepositories,
@@ -573,18 +587,11 @@ function Projects({
       {/* === CABEÇALHO === */}
       <section className="projects-header">
         <div>
-          <span className="projects-label">
-            Portfólio
-          </span>
+          <span className="projects-label">{t("Portfólio")}</span>
 
-          <h1>
-            Meus projetos
-          </h1>
+          <h1>{t("Meus projetos")}</h1>
 
-          <p>
-            Linha do tempo do mais antigo ao mais recente, pela data de criação
-            do repositório no GitHub. Projetos acadêmicos, pessoais e repositórios públicos.
-          </p>
+          <p>{t("Linha do tempo do mais antigo ao mais recente, pela data de criação do repositório no GitHub. Projetos acadêmicos, pessoais e repositórios públicos.")}</p>
         </div>
 
         <div
@@ -592,23 +599,17 @@ function Projects({
           aria-live="polite"
         >
           {loading && (
-            <span className="projects-github-status">
-              Sincronizando GitHub...
-            </span>
+            <span className="projects-github-status">{t("Sincronizando GitHub...")}</span>
           )}
 
           {!loading &&
             githubError && (
-              <span className="projects-github-status projects-github-status-error">
-                Dados locais
-              </span>
+              <span className="projects-github-status projects-github-status-error">{t("Dados locais")}</span>
             )}
 
           {!loading &&
             !githubError && (
-              <span className="projects-github-status projects-github-status-success">
-                GitHub sincronizado
-              </span>
+              <span className="projects-github-status projects-github-status-success">{t("GitHub sincronizado")}</span>
             )}
 
           <span className="projects-count">
@@ -649,15 +650,15 @@ function Projects({
                 event.target.value,
               )
             }
-            placeholder="Buscar projetos..."
-            aria-label="Buscar projetos"
+            placeholder={t("Buscar projetos...")}
+            aria-label={t("Buscar projetos")}
             autoComplete="off"
             spellCheck="false"
           />
 
           {search && (
             <Tooltip
-              text="Limpar busca"
+              text={t("Limpar busca")}
               position="bottom"
             >
               <button
@@ -668,7 +669,7 @@ function Projects({
                     '',
                   )
                 }
-                aria-label="Limpar busca"
+                aria-label={t("Limpar busca")}
               >
                 <X
                   size={14}
@@ -684,7 +685,7 @@ function Projects({
         {/* ----- FILTROS ----- */}
         <div
           className="projects-filters"
-          aria-label="Filtrar projetos por tecnologia"
+          aria-label={t("Filtrar projetos por tecnologia")}
         >
           {filters.map(
             (
@@ -696,9 +697,7 @@ function Projects({
 
               return (
                 <button
-                  key={
-                    filter
-                  }
+                  key={t(filter)}
                   type="button"
                   className={[
                     'projects-filter',
@@ -718,9 +717,7 @@ function Projects({
                     isSelected
                   }
                 >
-                  {
-                    filter
-                  }
+                  {t(filter)}
                 </button>
               )
             },
@@ -733,7 +730,7 @@ function Projects({
       {
         filteredProjects.length > 0
           ? (
-            <ol className="projects-timeline" aria-label="Linha do tempo dos projetos, do mais antigo ao mais recente">
+            <ol className="projects-timeline" aria-label={t("Linha do tempo dos projetos, do mais antigo ao mais recente")}>
               {filteredProjects.map(
                 (
                   project,
@@ -741,6 +738,8 @@ function Projects({
                   const Icon =
                     project.icon ??
                     FolderGit2
+
+                  const hasDemo = project.configured && (project.demoType !== 'media' || Boolean(project.demo?.video || project.demo?.images?.length))
 
                   const createdDate = formatDate(project.createdAt)
 
@@ -762,10 +761,12 @@ function Projects({
                     <li className="project-timeline-item" key={project.id}>
                       <div className="project-timeline-date">
                         {createdDate ? (
-                          <><span>Repositório criado em</span><time dateTime={project.createdAt}>{createdDate}</time></>
-                        ) : <span>Data não informada</span>}
+                          <><span>{t("Repositório criado em")}</span><time dateTime={project.createdAt}>{createdDate}</time></>
+                        ) : <span>{t("Data não informada")}</span>}
                       </div>
                       <article className="project-card">
+
+                      <ProjectScreenshot project={project} />
 
                       {/* === TOPO === */}
                       <div className="project-card-top">
@@ -782,7 +783,7 @@ function Projects({
                             className={[
                               'project-status',
 
-                              project.configured
+                              hasDemo
                                 ? 'project-status-demo'
                                 : 'project-status-github',
                             ]
@@ -790,9 +791,9 @@ function Projects({
                               .join(' ')}
                           >
                             {
-                              project.configured
-                                ? 'Demo disponível'
-                                : 'Somente GitHub'
+                              hasDemo
+                                ? t('Demo disponível')
+                                : t('Somente GitHub')
                             }
                           </span>
 
@@ -894,7 +895,7 @@ function Projects({
                             )
                           }
                           aria-label={
-                            `Abrir ${project.title} no GitHub`
+                            language === 'en' ? `Open ${project.title} on GitHub` : `Abrir ${project.title} no GitHub`
                           }
                         >
                           <GitBranch
@@ -915,7 +916,7 @@ function Projects({
                             )
                           }
                           aria-label={
-                            `${projectAction.label}: ${project.title}`
+                            `${t(projectAction.label)}: ${project.title}`
                           }
                         >
                           <ActionIcon
@@ -924,9 +925,7 @@ function Projects({
                             aria-hidden="true"
                           />
 
-                          {
-                            projectAction.label
-                          }
+                          {t(projectAction.label)}
                         </button>
                       </div>
                       </article>
@@ -944,23 +943,16 @@ function Projects({
                 aria-hidden="true"
               />
 
-              <strong>
-                Nenhum projeto encontrado
-              </strong>
+              <strong>{t("Nenhum projeto encontrado")}</strong>
 
-              <p>
-                Tente outro termo ou selecione
-                um filtro diferente.
-              </p>
+              <p>{t("Tente outro termo ou selecione um filtro diferente.")}</p>
 
               <button
                 type="button"
                 onClick={
                   clearFilters
                 }
-              >
-                Limpar filtros
-              </button>
+              >{t("Limpar filtros")}</button>
             </div>
           )
       }

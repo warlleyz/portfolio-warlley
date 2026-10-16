@@ -37,6 +37,15 @@ function subscribe(listener) {
 
 export function useLanguage() {
     const language = useSyncExternalStore(subscribe, () => currentLanguage, () => 'pt-BR')
-    const t = (text) => language === 'en' ? (english[text] ?? text) : text
+    const t = (text) => {
+        if (language !== 'en' || typeof text !== 'string') return text
+        if (english[text]) return english[text]
+        const action = text.match(/^(Abrir|Fechar|Minimizar|Maximizar|Restaurar) (.+)$/)
+        if (action) {
+            const actions = { Abrir: 'Open', Fechar: 'Close', Minimizar: 'Minimize', Maximizar: 'Maximize', Restaurar: 'Restore' }
+            return actions[action[1]] + ' ' + (english[action[2]] ?? action[2])
+        }
+        return text
+    }
     return { language, setLanguage, t }
 }

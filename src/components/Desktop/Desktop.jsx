@@ -1,3 +1,4 @@
+import { useLanguage } from '../../i18n/language'
 import {
     lazy,
     Suspense,
@@ -120,6 +121,7 @@ const apps =
 
 /* === CARREGAMENTO === */
 function AppLoading() {
+    const { t } = useLanguage()
     return (
         <div
             className="desktop-app-loading"
@@ -131,9 +133,7 @@ function AppLoading() {
                 aria-hidden="true"
             />
 
-            <span>
-                Carregando aplicativo...
-            </span>
+            <span>{t("Carregando aplicativo...")}</span>
         </div>
     )
 }
@@ -143,6 +143,8 @@ function Desktop({
     theme,
     toggleTheme,
 }) {
+    const { t } = useLanguage()
+
     /* === JANELAS === */
     const [
         windows,
@@ -1407,7 +1409,7 @@ function Desktop({
             {/* === ATALHOS === */}
             <section
                 className="desktop-shortcuts"
-                aria-label="Aplicativos"
+                aria-label={t("Aplicativos")}
             >
                 {apps
                     .filter(
@@ -1481,7 +1483,7 @@ function Desktop({
                                         )
                                     }
                                     aria-label={
-                                        `Abrir ${app.name}`
+                                        t(`Abrir ${t(app.name)}`)
                                     }
                                     aria-pressed={
                                         isSelected
@@ -1501,9 +1503,7 @@ function Desktop({
                                     </span>
 
                                     <span className="shortcut-name">
-                                        {
-                                            app.name
-                                        }
+                                        {t(app.name)}
                                     </span>
                                 </button>
                             )
@@ -1541,9 +1541,7 @@ function Desktop({
                             hidden={
                                 windowState.minimized
                             }
-                            title={
-                                app.name
-                            }
+                            title={t(app.name)}
                             active={
                                 isActive
                             }

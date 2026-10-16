@@ -68,6 +68,7 @@ function MediaDemo({
                     <p>
                         Demonstração em mídia ainda não configurada.
                     </p>
+                    <a href={project.github ?? ('https://github.com/warlleyz/' + project.repository)} target="_blank" rel="noopener noreferrer">Ver projeto no GitHub</a>
                 </div>
             </div>
         )

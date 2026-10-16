@@ -16,6 +16,7 @@ const projectsData = [
         id: 'api-clima',
         // Data pública de criação do repositório; fallback para indisponibilidade da API.
         createdAt: '2026-08-27T20:40:52Z',
+        screenshot: null, // URL de uma captura real ou GIF do projeto.
         title: 'API Clima',
 
         description:
@@ -55,6 +56,7 @@ const projectsData = [
         id: 'carrinho-compras',
         // Data pública de criação do repositório; fallback para indisponibilidade da API.
         createdAt: '2026-09-08T21:17:02Z',
+        screenshot: null, // URL de uma captura real ou GIF do projeto.
         title: 'Carrinho de Compras',
 
         description:
@@ -81,6 +83,7 @@ const projectsData = [
         id: 'login-puc',
         // Data pública de criação do repositório; fallback para indisponibilidade da API.
         createdAt: '2026-09-10T20:57:16Z',
+        screenshot: null, // URL de uma captura real ou GIF do projeto.
         title: 'Login PUC',
 
         description:
@@ -109,6 +112,7 @@ const projectsData = [
         id: 'snakepy',
         // Data pública de criação do repositório; fallback para indisponibilidade da API.
         createdAt: '2026-05-27T19:43:49Z',
+        screenshot: null, // URL de uma captura real ou GIF do projeto.
         title: 'SnakePy',
 
         description:
@@ -123,13 +127,9 @@ const projectsData = [
         demoType: 'media',
 
         demo: {
-            video:
-                `${BASE_URL}projects/media/snakepy/demo.mp4`,
+            video: null,
 
-            images: [
-                `${BASE_URL}projects/media/snakepy/images/menu.png`,
-                `${BASE_URL}projects/media/snakepy/images/game.png`,
-            ],
+            images: [],
         },
 
         icon: Gamepad2,

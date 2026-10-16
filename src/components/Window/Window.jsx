@@ -1,3 +1,4 @@
+import { useLanguage } from '../../i18n/language'
 import {
     useCallback,
     useEffect,
@@ -64,6 +65,8 @@ function Window({
     onPositionChange,
     onSizeChange,
 }) {
+    const { t } = useLanguage()
+
     /* === REFERÊNCIAS === */
     const dragState =
         useRef(null)
@@ -930,10 +933,10 @@ function Window({
 
                 <div
                     className="window-controls"
-                    aria-label="Controles da janela"
+                    aria-label={t("Controles da janela")}
                 >
                     <Tooltip
-                        text="Minimizar"
+                        text={t("Minimizar")}
                         position="bottom"
                     >
                         <button
@@ -943,7 +946,7 @@ function Window({
                                 onMinimize
                             }
                             aria-label={
-                                `Minimizar ${title}`
+                                t(`Minimizar ${title}`)
                             }
                         >
                             <Minus
@@ -970,8 +973,8 @@ function Window({
                             }
                             aria-label={
                                 maximized
-                                    ? `Restaurar ${title}`
-                                    : `Maximizar ${title}`
+                                    ? t(`Restaurar ${title}`)
+                                    : t(`Maximizar ${title}`)
                             }
                         >
                             {
@@ -995,7 +998,7 @@ function Window({
                     </Tooltip>
 
                     <Tooltip
-                        text="Fechar"
+                        text={t("Fechar")}
                         position="bottom"
                     >
                         <button
@@ -1005,7 +1008,7 @@ function Window({
                                 onClose
                             }
                             aria-label={
-                                `Fechar ${title}`
+                                t(`Fechar ${title}`)
                             }
                         >
                             <X
